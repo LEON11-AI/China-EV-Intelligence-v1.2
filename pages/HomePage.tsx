@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IntelligenceItem } from '../types';
+import BrandLogos from '../components/BrandLogos';
 
 const CheckIcon: React.FC<{className?: string}> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -81,15 +82,7 @@ const HomePage: React.FC = () => {
             {/* Focused Brands Section */}
             <section>
                 <h2 className="text-4xl font-bold text-center mb-12">Focused Brands</h2>
-                <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-text-secondary text-lg font-semibold">
-                    <span>NIO</span>
-                    <span>Xiaomi</span>
-                    <span>Zeekr</span>
-                    <span>Li Auto</span>
-                    <span>XPeng</span>
-                    <span>BYD</span>
-                    <span>AITO</span>
-                </div>
+                <BrandLogos />
             </section>
 
             {/* Pricing Section */}
@@ -97,7 +90,7 @@ const HomePage: React.FC = () => {
                  <h2 className="text-4xl font-bold text-center mb-12">Pricing Plans</h2>
                  <div className="flex flex-col md:flex-row justify-center gap-8 max-w-4xl mx-auto">
                     {/* Free Plan */}
-                    <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-gray-700 flex flex-col">
+                    <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-gray-700 flex flex-col transform hover:scale-105 transition-all duration-300 ease-in-out">
                         <h3 className="text-3xl font-bold text-center mb-2">Free</h3>
                         <p className="text-center text-text-secondary mb-6">Basic access for EV enthusiasts</p>
                         <p className="text-4xl font-bold text-center mb-6">$0<span className="text-lg text-text-secondary">/mo</span></p>
@@ -111,7 +104,7 @@ const HomePage: React.FC = () => {
                         </button>
                     </div>
                     {/* Pro Plan */}
-                    <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-link-blue flex flex-col">
+                    <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-link-blue flex flex-col transform hover:scale-105 transition-all duration-300 ease-in-out">
                         <h3 className="text-3xl font-bold text-center mb-2">Pro</h3>
                         <p className="text-center text-text-secondary mb-6">For industry professionals and investors</p>
                         <p className="text-4xl font-bold text-center mb-6">$49<span className="text-lg text-text-secondary">/mo</span></p>

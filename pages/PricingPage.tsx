@@ -20,7 +20,7 @@ const PricingPage: React.FC = () => {
 
             <div className="flex flex-col md:flex-row justify-center gap-8 max-w-4xl mx-auto">
                 {/* Free Plan */}
-                <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-gray-700 flex flex-col transform hover:-translate-y-1 transition-transform duration-300">
+                <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-gray-700 flex flex-col transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 ease-in-out">
                     <h3 className="text-3xl font-bold text-center mb-2">Free</h3>
                     <p className="text-center text-text-secondary mb-6 h-12">Basic access for EV enthusiasts</p>
                     <p className="text-5xl font-bold text-center mb-6">$0<span className="text-xl text-text-secondary">/mo</span></p>
@@ -34,7 +34,7 @@ const PricingPage: React.FC = () => {
                     </button>
                 </div>
                 {/* Pro Plan */}
-                <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-link-blue flex flex-col transform hover:-translate-y-1 transition-transform duration-300">
+                <div className="flex-1 bg-dark-card p-8 rounded-lg shadow-lg border-2 border-link-blue flex flex-col transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 ease-in-out">
                     <h3 className="text-3xl font-bold text-center mb-2">Pro</h3>
                     <p className="text-center text-text-secondary mb-6 h-12">The ultimate toolkit for industry professionals, analysts, and investors</p>
                     <p className="text-5xl font-bold text-center mb-6">$49<span className="text-xl text-text-secondary">/mo</span></p>

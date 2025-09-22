@@ -9,7 +9,7 @@ const AboutPage: React.FC = () => {
             <div className="grid md:grid-cols-3 gap-8 items-center bg-dark-card p-8 rounded-lg shadow-lg">
                 <div className="md:col-span-1">
                     <img
-                        src="https://picsum.photos/seed/ceo/400/400"
+                        src="/images/leon.jpg"
                         alt="Founder"
                         className="rounded-full mx-auto w-48 h-48 object-cover border-4 border-link-blue"
                     />

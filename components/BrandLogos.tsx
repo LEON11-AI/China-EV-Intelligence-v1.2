@@ -12,21 +12,20 @@ const BrandLogos = () => {
         { name: 'Li Auto', logo: '/images/logo-li-auto.png' },
         { name: 'XPeng', logo: '/images/logo-xpeng.png' },
         { name: 'BYD', logo: '/images/logo-byd.png' },
-        { name: 'AITO', logo: null }, // No logo available
     ];
     return (
          <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
             {brands.map((brand) => (
-                <div key={brand.name} className="flex items-center justify-center p-4 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors">
-                    {brand.logo ? (
-                        <img 
-                            src={brand.logo} 
-                            alt={`${brand.name} logo`} 
-                            className="h-8 w-auto object-contain filter brightness-0 invert"
-                        />
-                    ) : (
-                        <span className="text-lg font-bold text-gray-300">{brand.name}</span>
-                    )}
+                <div key={brand.name} className="flex items-center justify-center p-4 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-300 hover:scale-110">
+                    <img 
+                        src={brand.logo} 
+                        alt={`${brand.name} logo`} 
+                        className="h-8 w-auto object-contain transition-transform duration-300 hover:scale-125"
+                        onLoad={() => console.log(`${brand.name} logo loaded successfully`)}
+                        onError={(e) => {
+                            console.error(`Failed to load ${brand.name} logo:`, brand.logo);
+                        }}
+                    />
                 </div>
             ))}
         </div>
