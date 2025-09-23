@@ -7,6 +7,12 @@ const CheckIcon: React.FC<{className?: string}> = ({ className }) => (
     </svg>
 );
 
+const CrossIcon: React.FC<{className?: string}> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
+);
+
 
 const PricingPage: React.FC = () => {
     return (
@@ -49,6 +55,176 @@ const PricingPage: React.FC = () => {
                    <button className="w-full bg-cta-orange text-white font-bold py-3 px-6 rounded-md hover:bg-cta-hover transition-colors duration-300">
                         Subscribe to Pro
                     </button>
+                </div>
+            </div>
+
+            {/* Feature Comparison Section */}
+            <div className="mt-20 max-w-6xl mx-auto">
+                <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-text-main mb-4">Detailed Feature Comparison</h2>
+                    <p className="text-xl text-text-secondary">Understand the specific differences between Free and Pro versions</p>
+                </div>
+
+                <div className="bg-dark-card rounded-lg shadow-lg overflow-hidden border border-gray-700">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-gray-800">
+                                <tr>
+                                    <th className="px-6 py-4 text-left text-lg font-semibold text-text-main">Feature</th>
+                                    <th className="px-6 py-4 text-center text-lg font-semibold text-text-main">Free</th>
+                                    <th className="px-6 py-4 text-center text-lg font-semibold text-text-main border-l-2 border-link-blue">Pro</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-700">
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">Model Database Access</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-text-secondary">Basic model info</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">Limited vehicle data</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Complete database + analysis</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">All models detailed data</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">Intelligence Updates</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-text-secondary">Public news</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">Basic industry updates</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Exclusive professional analysis</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">Deep market insights</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">CEO Deep Notes</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CrossIcon className="text-red-500 mr-2" />
+                                            <span className="text-red-400">Not available</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">No access</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">All models deep notes</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">Professional insights</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">Data Export</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CrossIcon className="text-red-500 mr-2" />
+                                            <span className="text-red-400">Not supported</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">No export function</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Multiple format export</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">Excel, PDF, CSV</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">Customer Support</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-text-secondary">Community support</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">Forum and FAQ</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Priority technical support</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">Dedicated support team</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">Update Frequency</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-text-secondary">Weekly updates</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">Regular content push</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Real-time updates</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">Instant market dynamics</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">Confidence Ratings</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CrossIcon className="text-red-500 mr-2" />
+                                            <span className="text-red-400">Not available</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">No rating system</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Professional confidence ratings</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">Data reliability indicators</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">API Access</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CrossIcon className="text-red-500 mr-2" />
+                                            <span className="text-red-400">Not supported</span>
+                                        </div>
+                                        <span className="text-sm text-gray-400">No API permissions</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Full API access</span>
+                                        </div>
+                                        <span className="text-sm text-gray-300">Integration development support</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div className="mt-12 text-center">
+                    <div className="bg-gradient-to-r from-link-blue to-cta-orange p-8 rounded-lg shadow-lg">
+                        <h3 className="text-2xl font-bold text-white mb-3">Ready to upgrade to Pro?</h3>
+                        <p className="text-white/90 mb-6 text-lg">Unlock all features and get professional-grade EV market intelligence</p>
+                        <button className="bg-white text-gray-900 font-bold py-3 px-8 rounded-md hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105">
+                            Upgrade to Pro Now
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

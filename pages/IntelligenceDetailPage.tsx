@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { IntelligenceItem } from '../types';
+import AuthorSignature from '../components/AuthorSignature';
 
 interface IntelligenceDetailPageProps {
     isPro: boolean;
@@ -89,6 +90,9 @@ const IntelligenceDetailPage: React.FC<IntelligenceDetailPageProps> = ({ isPro }
                     </div>
                 )}
             </article>
+
+            {/* Author Signature */}
+            <AuthorSignature />
         </div>
     );
 };

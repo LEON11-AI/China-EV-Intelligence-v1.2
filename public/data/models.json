@@ -18,6 +18,37 @@
       "power_kw": "495 kW",
       "battery_kwh": "101 kWh"
     },
+    "detailed_specs": {
+      "battery": {
+        "capacity_kwh": 101,
+        "chemistry": "NMC (Nickel Manganese Cobalt)",
+        "supplier": "CATL",
+        "voltage": "800V",
+        "warranty_years": 8,
+        "warranty_km": 160000,
+        "degradation_rate": "5% after 8 years"
+      },
+      "charging": {
+        "dc_fast_max_kw": 220,
+        "dc_10_to_80_minutes": 19,
+        "ac_max_kw": 11,
+        "ac_0_to_100_hours": 9.2,
+        "charging_ports": ["CCS2", "GB/T"]
+      },
+      "performance": {
+        "top_speed_kmh": 265,
+        "zero_to_100_kmh": 2.78,
+        "zero_to_200_kmh": 9.8,
+        "quarter_mile_seconds": 10.9,
+        "braking_100_to_0_meters": 33.3,
+        "lateral_g_force": 1.02
+      },
+      "efficiency": {
+        "wltp_kwh_per_100km": 16.8,
+        "cltc_kwh_per_100km": 15.2,
+        "real_world_kwh_per_100km": 18.5
+      }
+    },
     "full_specs": {
       "dimensions": "4997x1963x1440 mm",
       "wheelbase": "3000 mm",
@@ -25,6 +56,28 @@
       "battery": "101 kWh, NMC, CATL, 800V",
       "charging": "DC 10-80% in 19 mins",
       "adas": "L2+, Nvidia Orin-X (2x), 1x Lidar"
+    },
+    "market_analysis": {
+      "target_segment": "Premium Performance Sedan",
+      "main_competitors": ["Tesla Model S", "BMW i4 M50", "Mercedes EQS"],
+      "competitive_advantages": ["Tech ecosystem integration", "Aggressive pricing", "Fast charging"],
+      "market_position": "Tech-forward alternative to traditional luxury",
+      "estimated_annual_sales_china": 45000,
+      "global_market_potential": "High in tech-savvy markets"
+    },
+    "competitor_comparison": {
+      "vs_tesla_model_s": {
+        "price_advantage": "-$15,000 to -$25,000",
+        "performance": "Similar 0-100, lower top speed",
+        "tech": "Better smartphone integration",
+        "charging": "Faster DC charging"
+      },
+      "vs_bmw_i4_m50": {
+        "price_advantage": "+$8,000 to +$15,000",
+        "performance": "Significantly faster",
+        "tech": "More advanced infotainment",
+        "brand_prestige": "Lower traditional luxury appeal"
+      }
     },
     "market_plan": {
       "china_launch": "2024-03-28",
@@ -52,6 +105,40 @@
       "power_kw": "520 kW",
       "battery_kwh": "120 kWh"
     },
+    "detailed_specs": {
+      "battery": {
+        "capacity_kwh": 120,
+        "chemistry": "Semi-Solid State",
+        "supplier": "WeLion/NIO",
+        "voltage": "900V",
+        "warranty_years": 8,
+        "warranty_km": 200000,
+        "degradation_rate": "3% after 8 years",
+        "swappable": true,
+        "swap_time_minutes": 3
+      },
+      "charging": {
+        "dc_fast_max_kw": 600,
+        "dc_10_to_80_minutes": 12,
+        "ac_max_kw": 22,
+        "ac_0_to_100_hours": 5.5,
+        "charging_ports": ["CCS2", "GB/T"],
+        "battery_swap_compatible": true
+      },
+      "performance": {
+        "top_speed_kmh": 200,
+        "zero_to_100_kmh": 4.3,
+        "zero_to_200_kmh": 15.8,
+        "quarter_mile_seconds": 12.1,
+        "braking_100_to_0_meters": 35.2,
+        "lateral_g_force": 0.95
+      },
+      "efficiency": {
+        "wltp_kwh_per_100km": 19.2,
+        "cltc_kwh_per_100km": 17.8,
+        "real_world_kwh_per_100km": 21.5
+      }
+    },
     "full_specs": {
       "dimensions": "5324x2016x1620 mm",
       "wheelbase": "3250 mm",
@@ -59,6 +146,28 @@
       "battery": "120 kWh, Swappable, 900V",
       "charging": "Up to 600 kW peak charging",
       "adas": "L2++, 3x Lidar, Adam Supercomputing"
+    },
+    "market_analysis": {
+      "target_segment": "Ultra-Luxury Executive Sedan",
+      "main_competitors": ["Mercedes S-Class EV", "BMW iX xDrive50", "Lucid Air Dream"],
+      "competitive_advantages": ["Battery swap technology", "900V architecture", "Steer-by-wire system"],
+      "market_position": "Technology flagship for brand elevation",
+      "estimated_annual_sales_china": 8000,
+      "global_market_potential": "Limited but high-margin"
+    },
+    "competitor_comparison": {
+      "vs_mercedes_s_class_ev": {
+        "price_advantage": "+$20,000 to +$30,000",
+        "performance": "Similar luxury focus",
+        "tech": "More advanced battery tech",
+        "charging": "Revolutionary swap capability"
+      },
+      "vs_lucid_air_dream": {
+        "price_advantage": "-$50,000 to -$70,000",
+        "performance": "Lower performance focus",
+        "tech": "Different tech philosophy",
+        "brand_prestige": "Established vs startup"
+      }
     },
     "market_plan": {
       "china_launch": "Q1 2025",
@@ -86,6 +195,38 @@
       "power_kw": "930 kW (1247 hp)",
       "battery_kwh": "100 kWh"
     },
+    "detailed_specs": {
+      "battery": {
+        "capacity_kwh": 100,
+        "chemistry": "LFP Qilin CTP 3.0",
+        "supplier": "CATL",
+        "voltage": "800V",
+        "warranty_years": 8,
+        "warranty_km": 160000,
+        "degradation_rate": "8% after 8 years"
+      },
+      "charging": {
+        "dc_fast_max_kw": 300,
+        "dc_10_to_80_minutes": 15,
+        "ac_max_kw": 22,
+        "ac_0_to_100_hours": 4.5,
+        "charging_ports": ["CCS2", "GB/T"]
+      },
+      "performance": {
+        "top_speed_kmh": 280,
+        "zero_to_100_kmh": 2.02,
+        "zero_to_200_kmh": 7.25,
+        "quarter_mile_seconds": 9.9,
+        "braking_100_to_0_meters": 32.8,
+        "lateral_g_force": 1.15,
+        "tank_turn_capable": true
+      },
+      "efficiency": {
+        "wltp_kwh_per_100km": 22.1,
+        "cltc_kwh_per_100km": 18.2,
+        "real_world_kwh_per_100km": 25.8
+      }
+    },
     "full_specs": {
       "dimensions": "5018x1999x1545 mm",
       "wheelbase": "3005 mm",
@@ -93,6 +234,28 @@
       "battery": "100 kWh, Qilin CTP, CATL, 800V",
       "charging": "DC 10-80% in 15 mins",
       "adas": "L2+, Mobileye SuperVision"
+    },
+    "market_analysis": {
+      "target_segment": "Ultra-High Performance Luxury",
+      "main_competitors": ["Tesla Model S Plaid", "Porsche Taycan Turbo S", "Lucid Air Sapphire"],
+      "competitive_advantages": ["Quad-motor setup", "Tank turn capability", "Aggressive pricing"],
+      "market_position": "Performance flagship demonstrator",
+      "estimated_annual_sales_china": 2000,
+      "global_market_potential": "Very limited, halo effect focus"
+    },
+    "competitor_comparison": {
+      "vs_tesla_model_s_plaid": {
+        "price_advantage": "+$15,000 to +$20,000",
+        "performance": "Faster 0-100, similar top speed",
+        "tech": "Tank turn vs Autopilot",
+        "charging": "Faster peak charging"
+      },
+      "vs_porsche_taycan_turbo_s": {
+        "price_advantage": "-$80,000 to -$100,000",
+        "performance": "Much faster acceleration",
+        "tech": "More tech features",
+        "brand_prestige": "Lower traditional prestige"
+      }
     },
     "market_plan": {
       "china_launch": "2023-10-27",
