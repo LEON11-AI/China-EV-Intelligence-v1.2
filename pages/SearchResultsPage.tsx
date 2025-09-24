@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
-import { contentService, IntelligenceItem, ModelItem } from '../services/ContentService';
-import AdvancedSearch from '../../components/AdvancedSearch';
+import { contentService, IntelligenceItem, ModelItem } from '../src/services/ContentService';
+import AdvancedSearch from '../components/AdvancedSearch';
 
 interface SearchResult {
   type: 'intelligence' | 'model';

@@ -11,8 +11,8 @@ import IntelligencePage from './pages/IntelligencePage';
 import PricingPage from './pages/PricingPage';
 import AboutPage from './pages/AboutPage';
 import IntelligenceDetailPage from './pages/IntelligenceDetailPage';
-import SearchResultsPage from './src/pages/SearchResultsPage';
-import CMSTest from './src/pages/CMSTest';
+import SearchResultsPage from './pages/SearchResultsPage';
+import CMSTest from './pages/CMSTest';
 
 const AppContent: React.FC = () => {
   const { user } = useAuth();

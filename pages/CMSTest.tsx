@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ContentService from '../services/ContentService';
-import type { IntelligenceItem, ModelItem } from '../services/ContentService';
+import ContentService from '../src/services/ContentService';
+import type { IntelligenceItem, ModelItem } from '../src/services/ContentService';
 
 const CMSTest: React.FC = () => {
   const [intelligence, setIntelligence] = useState<IntelligenceItem[]>([]);
