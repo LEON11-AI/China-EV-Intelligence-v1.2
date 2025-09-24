@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { CarModel } from '../types';
+import { contentService, ModelItem } from '../src/services/ContentService';
 
 interface ModelCardProps {
-    model: CarModel;
+    model: ModelItem;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({ model }) => (
@@ -40,7 +40,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => (
 
 
 const DatabasePage: React.FC = () => {
-    const [models, setModels] = useState<CarModel[]>([]);
+    const [models, setModels] = useState<ModelItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [brandFilter, setBrandFilter] = useState<string>('All');
@@ -50,11 +50,7 @@ const DatabasePage: React.FC = () => {
     useEffect(() => {
         const fetchModels = async () => {
             try {
-                const response = await fetch('data/models.json');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch models data');
-                }
-                const data: CarModel[] = await response.json();
+                const data = await contentService.getModels();
                 setModels(data);
             } catch (err: any) {
                 setError(err.message);

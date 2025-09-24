@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { IntelligenceItem } from '../types';
+import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import AuthorSignature from '../components/AuthorSignature';
 
 interface IntelligenceDetailPageProps {
@@ -25,12 +25,7 @@ const IntelligenceDetailPage: React.FC<IntelligenceDetailPageProps> = ({ isPro }
         const fetchItem = async () => {
             if (!id) return;
             try {
-                const response = await fetch('/data/intelligence.json');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch intelligence data');
-                }
-                const data: IntelligenceItem[] = await response.json();
-                const foundItem = data.find(i => i.id === id);
+                const foundItem = await contentService.getIntelligenceById(id);
                 if (foundItem) {
                     setItem(foundItem);
                 } else {

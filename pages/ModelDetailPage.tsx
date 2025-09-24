@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CarModel } from '../types';
+import { contentService, ModelItem } from '../src/services/ContentService';
 import ProLocker from '../components/ProLocker';
 import AuthorSignature from '../components/AuthorSignature';
 
@@ -18,7 +18,7 @@ const SpecItem: React.FC<{ label: string; value: string }> = ({ label, value }) 
 
 const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
     const { id } = useParams<{ id: string }>();
-    const [model, setModel] = useState<CarModel | null>(null);
+    const [model, setModel] = useState<ModelItem | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [activeImage, setActiveImage] = useState<string | null>(null);
@@ -27,12 +27,7 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
         const fetchModel = async () => {
             if (!id) return;
             try {
-                const response = await fetch('/data/models.json');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch models data');
-                }
-                const data: CarModel[] = await response.json();
-                const foundModel = data.find(m => m.id === id);
+                const foundModel = await contentService.getModelById(id);
                 if (foundModel) {
                     setModel(foundModel);
                     setActiveImage(foundModel.images[0]);

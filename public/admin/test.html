@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS Test Page</title>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+</head>
+<body>
+  <div id="loading">正在加载CMS测试页面...</div>
+  
+  <script>
+    console.log('Test: 开始加载CMS测试页面');
+    
+    // 检查config.yml是否可以访问
+    fetch('/admin/config.yml')
+      .then(response => {
+        console.log('Config.yml response status:', response.status);
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw new Error('Config.yml not found or not accessible');
+        }
+      })
+      .then(configText => {
+        console.log('Config.yml content loaded:', configText.substring(0, 200) + '...');
+        
+        // 尝试解析YAML
+        try {
+          // 简单检查YAML格式
+          if (configText.includes('backend:') && configText.includes('collections:')) {
+            console.log('Config.yml appears to be valid YAML');
+          } else {
+            console.error('Config.yml missing required sections');
+          }
+        } catch (e) {
+          console.error('Config.yml parsing error:', e);
+        }
+      })
+      .catch(error => {
+        console.error('Failed to load config.yml:', error);
+      });
+    
+    // 等待CMS加载
+    window.addEventListener('load', function() {
+      console.log('Test: 页面加载完成');
+      
+      if (typeof window.DecapCMS !== 'undefined') {
+        console.log('Test: DecapCMS对象可用');
+        
+        try {
+          // 尝试初始化CMS
+          window.DecapCMS.init();
+          console.log('Test: CMS初始化成功');
+          
+          document.getElementById('loading').innerHTML = 'CMS初始化成功！';
+        } catch (error) {
+          console.error('Test: CMS初始化失败:', error);
+          document.getElementById('loading').innerHTML = 'CMS初始化失败: ' + error.message;
+        }
+      } else {
+        console.error('Test: DecapCMS对象不可用');
+        document.getElementById('loading').innerHTML = 'DecapCMS对象不可用';
+      }
+    });
+  </script>
+</body>
+</html>

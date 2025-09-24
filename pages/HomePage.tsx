@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { IntelligenceItem } from '../types';
+import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import BrandLogos from '../components/BrandLogos';
 
 const CheckIcon: React.FC<{className?: string}> = ({ className }) => (
@@ -16,10 +16,8 @@ const HomePage: React.FC = () => {
     useEffect(() => {
         const fetchLatestIntel = async () => {
             try {
-                const response = await fetch('data/intelligence.json');
-                const data: IntelligenceItem[] = await response.json();
-                data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                setLatestIntel(data.slice(0, 3));
+                const data = await contentService.getLatestIntelligence(3);
+                setLatestIntel(data);
             } catch (error) {
                 console.error("Failed to fetch latest intelligence:", error);
             }

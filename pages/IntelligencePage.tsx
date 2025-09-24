@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { IntelligenceItem } from '../types';
 import { Link } from 'react-router-dom';
+import { contentService, IntelligenceItem } from '../src/services/ContentService';
 
 interface IntelligencePageProps {
     isPro: boolean;
@@ -22,11 +22,7 @@ const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
     useEffect(() => {
         const fetchItems = async () => {
             try {
-                const response = await fetch('data/intelligence.json');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch intelligence data');
-                }
-                const data: IntelligenceItem[] = await response.json();
+                const data = await contentService.getIntelligence();
                 // Sort by date descending
                 data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                 setItems(data);

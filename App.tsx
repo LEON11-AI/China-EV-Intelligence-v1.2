@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import DatabasePage from './pages/DatabasePage';
@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const [isPro, setIsPro] = useState<boolean>(false);
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Layout isPro={isPro} onTogglePro={() => setIsPro(!isPro)}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -24,9 +24,11 @@ const App: React.FC = () => {
           <Route path="/intelligence/:id" element={<IntelligenceDetailPage isPro={isPro}/>} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/about" element={<AboutPage />} />
+          {/* Admin route - handled by vite middleware redirect */}
+          <Route path="/admin/*" element={<div>Redirecting to admin...</div>} />
         </Routes>
       </Layout>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 

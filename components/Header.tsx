@@ -3,11 +3,13 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 const CompanyLogo: React.FC = () => (
-    <img 
-        src="/images/logo.png" 
-        alt="Company Logo" 
-        className="h-16 w-16 object-contain"
-    />
+    <div className="h-16 w-16 rounded-lg flex items-center justify-center overflow-hidden">
+        <img 
+            src="/images/logo.png" 
+            alt="China EV Intelligence" 
+            className="h-full w-full object-contain"
+        />
+    </div>
 );
 
 interface HeaderProps {

@@ -10,7 +10,10 @@
     "publish": "git add . && git commit -m \"chore: Update content and deploy\" && git push"
   },
   "dependencies": {
+    "decap-cms-app": "^3.8.3",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.544.0",
+    "multer": "^2.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.1"
