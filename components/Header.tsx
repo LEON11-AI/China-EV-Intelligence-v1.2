@@ -1,6 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import AuthModal from './AuthModal';
 
 const CompanyLogo: React.FC = () => (
     <div className="h-16 w-16 rounded-lg flex items-center justify-center overflow-hidden">
@@ -12,15 +14,29 @@ const CompanyLogo: React.FC = () => (
     </div>
 );
 
-interface HeaderProps {
-  isPro: boolean;
-  onTogglePro: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ isPro, onTogglePro }) => {
+const Header: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
+  const authDropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (authDropdownRef.current && !authDropdownRef.current.contains(event.target as Node)) {
+        setIsAuthDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 ease-in-out ${
@@ -47,13 +63,38 @@ const Header: React.FC<HeaderProps> = ({ isPro, onTogglePro }) => {
     }
   };
 
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      setAuthModalMode('login');
+      setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleRegister = () => {
+    setAuthModalMode('register');
+    setIsAuthModalOpen(true);
+    setIsAuthDropdownOpen(false);
+  };
+
+  const handleSignIn = () => {
+    setAuthModalMode('login');
+    setIsAuthModalOpen(true);
+    setIsAuthDropdownOpen(false);
+  };
+
+  const toggleAuthDropdown = () => {
+    setIsAuthDropdownOpen(!isAuthDropdownOpen);
+  };
+
   return (
     <header className="bg-dark-card shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-6 group">
             <CompanyLogo />
-            <span className="text-xl font-bold text-link-blue group-hover:text-link-hover transition-colors duration-300 ease-in-out">China EV Intelligence Center</span>
+            <span className="text-xl font-bold text-link-blue group-hover:text-link-hover transition-colors duration-300 ease-in-out">China EV Intelligence</span>
           </Link>
           
           {/* Search Bar */}
@@ -80,12 +121,58 @@ const Header: React.FC<HeaderProps> = ({ isPro, onTogglePro }) => {
             <NavLink to="/database" className={navLinkClass}>Focused Database</NavLink>
             <NavLink to="/pricing" className={navLinkClass}>Pricing</NavLink>
             <NavLink to="/about" className={navLinkClass}>About</NavLink>
-            <button 
-              onClick={onTogglePro} 
-              className="ml-4 px-4 py-2 rounded-md text-sm font-medium text-white bg-cta-orange hover:bg-cta-hover transition-all duration-300 ease-in-out"
-            >
-              {isPro ? 'Logout (Simulated)' : 'Login (Simulated)'}
-            </button>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-3 ml-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
+                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                  </div>
+                  <span className="text-sm text-text-main hidden lg:block">
+                    {user?.name || 'User'}
+                  </span>
+                  {user?.isPro && (
+                    <span className="px-2 py-1 text-xs bg-yellow-500 text-white rounded-full">
+                      PRO
+                    </span>
+                  )}
+                </div>
+                <button 
+                  onClick={handleAuthAction}
+                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-all duration-300 ease-in-out"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="relative ml-4" ref={authDropdownRef}>
+                <button 
+                  onClick={toggleAuthDropdown}
+                  className="flex items-center space-x-1 px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 ease-in-out"
+                >
+                  <span>Account</span>
+                  <svg className={`w-4 h-4 transition-transform duration-200 ${isAuthDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {isAuthDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <button 
+                      onClick={handleSignIn}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      Sign In
+                    </button>
+                    <button 
+                      onClick={handleRegister}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -137,19 +224,62 @@ const Header: React.FC<HeaderProps> = ({ isPro, onTogglePro }) => {
               <NavLink to="/pricing" className={mobileNavLinkClass} onClick={closeMobileMenu}>Pricing</NavLink>
               <NavLink to="/about" className={mobileNavLinkClass} onClick={closeMobileMenu}>About</NavLink>
               
-              {/* Mobile Login Button */}
-              <div className="px-3 py-2">
-                <button 
-                  onClick={() => { onTogglePro(); closeMobileMenu(); }}
-                  className="w-full px-4 py-2 rounded-md text-sm font-medium text-white bg-cta-orange hover:bg-cta-hover transition-all duration-300 ease-in-out"
-                >
-                  {isPro ? 'Logout (Simulated)' : 'Login (Simulated)'}
-                </button>
+              {/* Mobile Auth Buttons */}
+              <div className="px-3 py-2 space-y-2">
+                {isAuthenticated ? (
+                  <div>
+                    <div className="flex items-center space-x-2 mb-3 p-2 bg-gray-700 rounded-md">
+                      <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
+                        {user?.name?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                      <div>
+                        <p className="text-sm text-white font-medium">{user?.name || 'User'}</p>
+                        <p className="text-xs text-gray-300">{user?.email}</p>
+                      </div>
+                      {user?.isPro && (
+                        <span className="px-2 py-1 text-xs bg-yellow-500 text-white rounded-full">
+                          PRO
+                        </span>
+                      )}
+                    </div>
+                    <button 
+                      onClick={() => { handleAuthAction(); closeMobileMenu(); }}
+                      className="w-full px-4 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-all duration-300 ease-in-out"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="bg-gray-700 rounded-md p-2">
+                      <p className="text-sm text-gray-300 mb-2 px-2">Account Options</p>
+                      <button 
+                        onClick={() => { handleSignIn(); closeMobileMenu(); }}
+                        className="w-full px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 ease-in-out mb-2"
+                      >
+                        Sign In
+                      </button>
+                      <button 
+                        onClick={() => { handleRegister(); closeMobileMenu(); }}
+                        className="w-full px-4 py-2 rounded-md text-sm font-medium text-blue-600 border border-blue-600 hover:bg-blue-50 transition-all duration-300 ease-in-out"
+                      >
+                        Sign Up
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authModalMode}
+      />
     </header>
   );
 };

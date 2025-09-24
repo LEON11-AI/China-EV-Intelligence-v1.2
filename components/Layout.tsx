@@ -4,14 +4,12 @@ import Header from './Header';
 
 interface LayoutProps {
   children: React.ReactNode;
-  isPro: boolean;
-  onTogglePro: () => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, isPro, onTogglePro }) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header isPro={isPro} onTogglePro={onTogglePro} />
+      <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
         {children}
       </main>

@@ -77,54 +77,63 @@ const PricingPage: React.FC = () => {
                             </thead>
                             <tbody className="divide-y divide-gray-700">
                                 <tr className="hover:bg-gray-800 transition-colors duration-300">
-                                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-text-main text-sm sm:text-base">Model Database Access</td>
+                                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-text-main text-sm sm:text-base">Database Access</td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
                                         <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
-                                            <span className="text-text-secondary text-xs sm:text-sm">Basic model info</span>
+                                            <span className="text-text-secondary text-xs sm:text-sm">Essential models only</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-400">Limited vehicle data</span>
                                     </td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4 text-center border-l-2 border-link-blue">
                                         <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
                                             <span className="text-green-400 text-xs sm:text-sm">Complete database + analysis</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-300">All models detailed data</span>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-gray-800 transition-colors duration-300">
-                                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-text-main text-sm sm:text-base">Intelligence Updates</td>
+                                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-text-main text-sm sm:text-base">Intelligence Feed</td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
                                         <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
-                                            <span className="text-text-secondary text-xs sm:text-sm">Public news</span>
+                                            <span className="text-text-secondary text-xs sm:text-sm">Weekly summaries</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-400">Basic industry updates</span>
                                     </td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4 text-center border-l-2 border-link-blue">
                                         <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
-                                            <span className="text-green-400 text-xs sm:text-sm">Exclusive professional analysis</span>
+                                            <span className="text-green-400 text-xs sm:text-sm">Insider reports + early access</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-300">Deep market insights</span>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-gray-800 transition-colors duration-300">
                                     <td className="px-6 py-4 font-medium text-text-main">CEO Deep Notes</td>
                                     <td className="px-6 py-4 text-center">
                                         <div className="flex items-center justify-center mb-2">
-                                            <CrossIcon className="text-red-500 mr-2" />
-                                            <span className="text-red-400">Not available</span>
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-text-secondary">Sample previews</span>
                                         </div>
-                                        <span className="text-sm text-gray-400">No access</span>
                                     </td>
                                     <td className="px-6 py-4 text-center border-l-2 border-link-blue">
                                         <div className="flex items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-2" />
-                                            <span className="text-green-400">All models deep notes</span>
+                                            <span className="text-green-400">Full analysis + video content</span>
                                         </div>
-                                        <span className="text-sm text-gray-300">Professional insights</span>
+                                    </td>
+                                </tr>
+                                <tr className="hover:bg-gray-800 transition-colors duration-300">
+                                    <td className="px-6 py-4 font-medium text-text-main">Video Content</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CrossIcon className="text-red-500 mr-2" />
+                                            <span className="text-red-400">Not available</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
+                                        <div className="flex items-center justify-center mb-2">
+                                            <CheckIcon className="text-green-500 mr-2" />
+                                            <span className="text-green-400">Complete library access</span>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-gray-800 transition-colors duration-300">
@@ -134,82 +143,57 @@ const PricingPage: React.FC = () => {
                                             <CrossIcon className="text-red-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
                                             <span className="text-red-400 text-xs sm:text-sm">Not supported</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-400">No export function</span>
                                     </td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4 text-center border-l-2 border-link-blue">
                                         <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
-                                            <span className="text-green-400 text-xs sm:text-sm">Multiple format export</span>
+                                            <span className="text-green-400 text-xs sm:text-sm">Excel, PDF, CSV export</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-300">Excel, PDF, CSV</span>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-gray-800 transition-colors duration-300">
-                                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-text-main text-sm sm:text-base">Customer Support</td>
+                                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-text-main text-sm sm:text-base">Priority Support</td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
                                         <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
-                                            <span className="text-text-secondary text-xs sm:text-sm">Community support</span>
+                                            <span className="text-text-secondary text-xs sm:text-sm">Community forum</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-400">Forum and FAQ</span>
                                     </td>
                                     <td className="px-3 sm:px-6 py-3 sm:py-4 text-center border-l-2 border-link-blue">
                                         <div className="flex flex-col sm:flex-row items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-0 sm:mr-2 mb-1 sm:mb-0 h-4 w-4 sm:h-6 sm:w-6" />
-                                            <span className="text-green-400 text-xs sm:text-sm">Priority technical support</span>
+                                            <span className="text-green-400 text-xs sm:text-sm">Direct CEO consultation</span>
                                         </div>
-                                        <span className="text-xs sm:text-sm text-gray-300">Dedicated support team</span>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-gray-800 transition-colors duration-300">
-                                    <td className="px-6 py-4 font-medium text-text-main">Update Frequency</td>
+                                    <td className="px-6 py-4 font-medium text-text-main">Content Schedule</td>
                                     <td className="px-6 py-4 text-center">
                                         <div className="flex items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-2" />
-                                            <span className="text-text-secondary">Weekly updates</span>
+                                            <span className="text-text-secondary">Standard release</span>
                                         </div>
-                                        <span className="text-sm text-gray-400">Regular content push</span>
                                     </td>
                                     <td className="px-6 py-4 text-center border-l-2 border-link-blue">
                                         <div className="flex items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-2" />
-                                            <span className="text-green-400">Real-time updates</span>
+                                            <span className="text-green-400">VIP early access (48h ahead)</span>
                                         </div>
-                                        <span className="text-sm text-gray-300">Instant market dynamics</span>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-gray-800 transition-colors duration-300">
-                                    <td className="px-6 py-4 font-medium text-text-main">Confidence Ratings</td>
+                                    <td className="px-6 py-4 font-medium text-text-main">Supply Chain Intel</td>
                                     <td className="px-6 py-4 text-center">
                                         <div className="flex items-center justify-center mb-2">
                                             <CrossIcon className="text-red-500 mr-2" />
                                             <span className="text-red-400">Not available</span>
                                         </div>
-                                        <span className="text-sm text-gray-400">No rating system</span>
                                     </td>
                                     <td className="px-6 py-4 text-center border-l-2 border-link-blue">
                                         <div className="flex items-center justify-center mb-2">
                                             <CheckIcon className="text-green-500 mr-2" />
-                                            <span className="text-green-400">Professional confidence ratings</span>
+                                            <span className="text-green-400">Exclusive supplier insights</span>
                                         </div>
-                                        <span className="text-sm text-gray-300">Data reliability indicators</span>
-                                    </td>
-                                </tr>
-                                <tr className="hover:bg-gray-800 transition-colors duration-300">
-                                    <td className="px-6 py-4 font-medium text-text-main">API Access</td>
-                                    <td className="px-6 py-4 text-center">
-                                        <div className="flex items-center justify-center mb-2">
-                                            <CrossIcon className="text-red-500 mr-2" />
-                                            <span className="text-red-400">Not supported</span>
-                                        </div>
-                                        <span className="text-sm text-gray-400">No API permissions</span>
-                                    </td>
-                                    <td className="px-6 py-4 text-center border-l-2 border-link-blue">
-                                        <div className="flex items-center justify-center mb-2">
-                                            <CheckIcon className="text-green-500 mr-2" />
-                                            <span className="text-green-400">Full API access</span>
-                                        </div>
-                                        <span className="text-sm text-gray-300">Integration development support</span>
                                     </td>
                                 </tr>
                             </tbody>

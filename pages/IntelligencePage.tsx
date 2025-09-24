@@ -2,10 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
-
-interface IntelligencePageProps {
-    isPro: boolean;
-}
+import { useAuth } from '../components/AuthContext';
 
 const LockIcon: React.FC = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cta-orange inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -14,8 +11,12 @@ const LockIcon: React.FC = () => (
 );
 
 
-const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
+const IntelligencePage: React.FC = () => {
+    const { user } = useAuth();
+    const isPro = user?.isPro || false;
     const [items, setItems] = useState<IntelligenceItem[]>([]);
+    const [filteredItems, setFilteredItems] = useState<IntelligenceItem[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>('All');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -26,8 +27,7 @@ const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
                 // Sort by date descending
                 data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                 setItems(data);
-            } catch (err: any)
-{
+            } catch (err: any) {
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -35,6 +35,31 @@ const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
         };
         fetchItems();
     }, []);
+
+    useEffect(() => {
+        let filtered = items;
+        
+        // Filter by category
+        if (selectedCategory !== 'All') {
+            filtered = filtered.filter(item => item.category === selectedCategory);
+        }
+        
+        // Filter Supply Chain content for non-Pro users
+        if (!isPro) {
+            filtered = filtered.filter(item => item.category !== 'Supply Chain');
+        }
+        
+        setFilteredItems(filtered);
+    }, [items, selectedCategory, isPro]);
+
+    const getAvailableCategories = () => {
+        const categories = ['All', ...new Set(items.map(item => item.category))];
+        // Remove Supply Chain from categories for non-Pro users
+        if (!isPro) {
+            return categories.filter(cat => cat !== 'Supply Chain');
+        }
+        return categories;
+    };
 
     const getConfidenceClass = (confidence: string) => {
         switch (confidence) {
@@ -50,8 +75,50 @@ const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
 
     return (
         <div>
-            <h1 className="text-4xl font-bold mb-4">Intelligence Feed</h1>
-            <p className="text-text-secondary mb-8">Real-time updates from the Chinese EV market, rated for confidence.</p>
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h1 className="text-4xl font-bold mb-2">Intelligence Feed</h1>
+                    <p className="text-text-secondary">Real-time updates from the Chinese EV market, rated for confidence.</p>
+                </div>
+                <div className="text-right">
+                    {isPro ? (
+                        <div className="bg-green-600 text-white px-4 py-2 rounded-lg">
+                            <span className="font-bold">Insider Reports + Early Access</span>
+                        </div>
+                    ) : (
+                        <div className="bg-gray-600 text-white px-4 py-2 rounded-lg">
+                            <span className="font-bold">Weekly Summaries</span>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Category Filter */}
+            <div className="mb-6">
+                <div className="flex flex-wrap gap-2">
+                    {getAvailableCategories().map(category => (
+                        <button
+                            key={category}
+                            onClick={() => setSelectedCategory(category)}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+                                selectedCategory === category
+                                    ? 'bg-cta-orange text-white'
+                                    : 'bg-gray-700 text-text-secondary hover:bg-gray-600'
+                            }`}
+                        >
+                            {category}
+                            {category === 'Supply Chain' && isPro && (
+                                <span className="ml-2 text-xs bg-green-600 px-2 py-1 rounded">PRO</span>
+                            )}
+                        </button>
+                    ))}
+                </div>
+                {selectedCategory === 'Supply Chain' && isPro && (
+                    <p className="text-sm text-green-400 mt-2">
+                        🔒 Exclusive supplier insights - Pro members only
+                    </p>
+                )}
+            </div>
 
             <div className="bg-dark-card rounded-lg shadow-lg overflow-hidden">
                 <div className="overflow-x-auto">
@@ -60,13 +127,14 @@ const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
                             <tr>
                                 <th className="p-4 font-bold">Date</th>
                                 <th className="p-4 font-bold">Title</th>
+                                <th className="p-4 font-bold">Category</th>
                                 <th className="p-4 font-bold">Brand</th>
                                 <th className="p-4 font-bold">Source</th>
                                 <th className="p-4 font-bold text-center">Confidence</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-700">
-                            {items.map(item => (
+                            {filteredItems.map(item => (
                                 <tr key={item.id} className="hover:bg-gray-700/50 transition-colors duration-200">
                                     <td className="p-4 whitespace-nowrap font-mono text-text-secondary">{item.date}</td>
                                     <td className="p-4 max-w-md">
@@ -80,6 +148,18 @@ const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
                                                 <span className="text-text-main">{item.title} {item.is_pro && <span className="text-xs font-bold text-cta-orange ml-2">[PRO]</span>}</span>
                                             )}
                                         </Link>
+                                    </td>
+                                    <td className="p-4 text-text-secondary">
+                                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                            item.category === 'Supply Chain' ? 'bg-green-600 text-white' :
+                                            item.category === 'Product Launch' ? 'bg-blue-600 text-white' :
+                                            item.category === 'Market Expansion' ? 'bg-purple-600 text-white' :
+                                            item.category === 'Safety Rating' ? 'bg-yellow-600 text-white' :
+                                            item.category === 'Software Update' ? 'bg-indigo-600 text-white' :
+                                            'bg-gray-600 text-white'
+                                        }`}>
+                                            {item.category}
+                                        </span>
                                     </td>
                                     <td className="p-4 text-text-secondary">{item.brand}</td>
                                     <td className="p-4 text-text-secondary">{item.source}</td>
@@ -99,11 +179,11 @@ const IntelligencePage: React.FC<IntelligencePageProps> = ({ isPro }) => {
              {!isPro && (
                 <div className="mt-8 text-center bg-dark-card p-6 rounded-lg shadow-lg">
                     <LockIcon />
-                    <h3 className="text-xl font-bold">Unlock Pro Intelligence</h3>
-                    <p className="text-text-secondary mt-2 mb-4">Subscribe to access exclusive, high-confidence intelligence items and in-depth analysis.</p>
+                    <h3 className="text-xl font-bold">Upgrade to Insider Reports</h3>
+                    <p className="text-text-secondary mt-2 mb-4">Get exclusive insider reports with early access to high-confidence intelligence and in-depth market analysis.</p>
                     <Link to="/pricing">
                         <button className="bg-cta-orange text-white font-bold py-2 px-6 rounded-md hover:bg-cta-hover transition-colors duration-300">
-                            Upgrade Now
+                            Upgrade to Pro
                         </button>
                     </Link>
                 </div>

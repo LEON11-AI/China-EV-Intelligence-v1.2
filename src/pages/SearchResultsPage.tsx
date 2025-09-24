@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
 import { contentService, IntelligenceItem, ModelItem } from '../services/ContentService';
+import AdvancedSearch from '../../components/AdvancedSearch';
 
 interface SearchResult {
   type: 'intelligence' | 'model';
@@ -9,89 +10,260 @@ interface SearchResult {
   score?: number;
 }
 
+interface SearchFilters {
+  contentType: 'all' | 'intelligence' | 'models';
+  brand: string;
+  dateRange: 'all' | 'week' | 'month' | 'quarter' | 'year';
+  priceRange: [number, number];
+  status: 'all' | 'active' | 'discontinued';
+  isPro: boolean | null;
+  sortBy: 'relevance' | 'date' | 'price' | 'popularity';
+  sortOrder: 'asc' | 'desc';
+}
+
 const SearchResultsPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const query = searchParams.get('q') || '';
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalResults, setTotalResults] = useState(0);
+  const [currentFilters, setCurrentFilters] = useState<SearchFilters>({
+    contentType: 'all',
+    brand: '',
+    dateRange: 'all',
+    priceRange: [0, 200000],
+    status: 'all',
+    isPro: null,
+    sortBy: 'relevance',
+    sortOrder: 'desc'
+  });
 
-  useEffect(() => {
-    const performSearch = async () => {
-      if (!query.trim()) {
-        setResults([]);
-        setTotalResults(0);
-        setLoading(false);
-        return;
+  // Helper function to check for exact matches
+  const isExactMatch = (result: SearchResult, query: string): boolean => {
+    const searchTerm = query.toLowerCase().trim();
+    
+    if (result.type === 'intelligence') {
+      const item = result.item as IntelligenceItem;
+      return (
+        item.title.toLowerCase().includes(searchTerm) ||
+        item.brand.toLowerCase() === searchTerm ||
+        item.tags.some(tag => tag.toLowerCase() === searchTerm)
+      );
+    } else {
+      const item = result.item as ModelItem;
+      return (
+        item.model_name.toLowerCase().includes(searchTerm) ||
+        item.brand.toLowerCase() === searchTerm
+      );
+    }
+  };
+
+  const performSearch = async (searchQuery: string, filters: SearchFilters) => {
+    if (!searchQuery.trim()) {
+      setResults([]);
+      setTotalResults(0);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Get all data
+      const [intelligence, models] = await Promise.all([
+        contentService.getIntelligence(),
+        contentService.getModels()
+      ]);
+
+      // Apply content type filter
+      let filteredIntelligence = intelligence;
+      let filteredModels = models;
+
+      if (filters.contentType === 'intelligence') {
+        filteredModels = [];
+      } else if (filters.contentType === 'models') {
+        filteredIntelligence = [];
       }
 
-      setLoading(true);
-      try {
-        // Get all data
-        const [intelligence, models] = await Promise.all([
-          contentService.getIntelligence(),
-          contentService.getModels()
-        ]);
+      // Apply brand filter
+      if (filters.brand) {
+        filteredIntelligence = filteredIntelligence.filter(item => 
+          item.brand.toLowerCase() === filters.brand.toLowerCase()
+        );
+        filteredModels = filteredModels.filter(item => 
+          item.brand.toLowerCase() === filters.brand.toLowerCase()
+        );
+      }
 
-        // Configure Fuse.js search options
-        const intelligenceOptions = {
-          keys: [
-            { name: 'title', weight: 0.4 },
-            { name: 'summary', weight: 0.3 },
-            { name: 'brand', weight: 0.2 },
-            { name: 'tags', weight: 0.1 }
-          ],
-          threshold: 0.4,
-          includeScore: true
-        };
+      // Apply date range filter
+      if (filters.dateRange !== 'all') {
+        const now = new Date();
+        const cutoffDate = new Date();
+        
+        switch (filters.dateRange) {
+          case 'week':
+            cutoffDate.setDate(now.getDate() - 7);
+            break;
+          case 'month':
+            cutoffDate.setMonth(now.getMonth() - 1);
+            break;
+          case 'quarter':
+            cutoffDate.setMonth(now.getMonth() - 3);
+            break;
+          case 'year':
+            cutoffDate.setFullYear(now.getFullYear() - 1);
+            break;
+        }
+        
+        filteredIntelligence = filteredIntelligence.filter(item => 
+          new Date(item.date) >= cutoffDate
+        );
+      }
 
-        const modelsOptions = {
-          keys: [
-            { name: 'model_name', weight: 0.4 },
-            { name: 'brand', weight: 0.3 },
-            { name: 'ceo_note', weight: 0.2 },
-            { name: 'market_analysis.target_segment', weight: 0.1 }
-          ],
-          threshold: 0.4,
-          includeScore: true
-        };
+      // Apply status filter for models
+      if (filters.status !== 'all') {
+        filteredModels = filteredModels.filter(item => item.status === filters.status);
+      }
 
-        // Execute search
-        const intelligenceFuse = new Fuse(intelligence, intelligenceOptions);
-        const modelsFuse = new Fuse(models, modelsOptions);
+      // Apply price range filter for models
+      filteredModels = filteredModels.filter(item => {
+        const minPrice = item.price_usd_estimated[0];
+        const maxPrice = item.price_usd_estimated[1];
+        return minPrice >= filters.priceRange[0] && maxPrice <= filters.priceRange[1];
+      });
 
-        const intelligenceResults = intelligenceFuse.search(query);
-        const modelsResults = modelsFuse.search(query);
+      // Apply pro content filter
+      if (filters.isPro !== null) {
+        filteredIntelligence = filteredIntelligence.filter(item => 
+          item.is_pro === filters.isPro
+        );
+      }
 
-        // Merge results
-        const combinedResults: SearchResult[] = [
-          ...intelligenceResults.map(result => ({
+      // Configure Fuse.js search options with improved precision
+      const intelligenceOptions = {
+        keys: [
+          { name: 'title', weight: 0.5 },
+          { name: 'brand', weight: 0.3 },
+          { name: 'summary', weight: 0.15 },
+          { name: 'tags', weight: 0.05 }
+        ],
+        threshold: 0.25,
+        includeScore: true,
+        ignoreLocation: true,
+        findAllMatches: true,
+        minMatchCharLength: 2
+      };
+
+      const modelsOptions = {
+        keys: [
+          { name: 'model_name', weight: 0.5 },
+          { name: 'brand', weight: 0.3 },
+          { name: 'ceo_note', weight: 0.15 },
+          { name: 'market_analysis.target_segment', weight: 0.05 }
+        ],
+        threshold: 0.25,
+        includeScore: true,
+        ignoreLocation: true,
+        findAllMatches: true,
+        minMatchCharLength: 2
+      };
+
+      // Execute search
+      const intelligenceFuse = new Fuse(filteredIntelligence, intelligenceOptions);
+      const modelsFuse = new Fuse(filteredModels, modelsOptions);
+
+      const intelligenceResults = intelligenceFuse.search(searchQuery);
+      const modelsResults = modelsFuse.search(searchQuery);
+
+      // Merge and filter results by relevance score
+      const maxRelevanceScore = 0.6; // Filter out results with score > 0.6 (lower is better in Fuse.js)
+      
+      let combinedResults: SearchResult[] = [
+        ...intelligenceResults
+          .filter(result => (result.score || 0) <= maxRelevanceScore)
+          .map(result => ({
             type: 'intelligence' as const,
             item: result.item,
             score: result.score
           })),
-          ...modelsResults.map(result => ({
+        ...modelsResults
+          .filter(result => (result.score || 0) <= maxRelevanceScore)
+          .map(result => ({
             type: 'model' as const,
             item: result.item,
             score: result.score
           }))
-        ];
+      ];
 
-        // Sort by relevance
-        combinedResults.sort((a, b) => (a.score || 0) - (b.score || 0));
+      // Enhanced sorting with exact match priority
+      combinedResults.sort((a, b) => {
+        switch (filters.sortBy) {
+          case 'relevance':
+            // Check for exact matches first
+            const aExactMatch = isExactMatch(a, searchQuery);
+            const bExactMatch = isExactMatch(b, searchQuery);
+            
+            if (aExactMatch && !bExactMatch) return -1;
+            if (!aExactMatch && bExactMatch) return 1;
+            
+            // Then sort by relevance score (lower is better in Fuse.js)
+            return (a.score || 0) - (b.score || 0);
+          case 'date':
+            const dateA = a.type === 'intelligence' 
+              ? new Date((a.item as IntelligenceItem).date)
+              : new Date(); // Models don't have dates, use current date
+            const dateB = b.type === 'intelligence' 
+              ? new Date((b.item as IntelligenceItem).date)
+              : new Date();
+            return filters.sortOrder === 'asc' 
+              ? dateA.getTime() - dateB.getTime()
+              : dateB.getTime() - dateA.getTime();
+          case 'price':
+            const priceA = a.type === 'model' 
+              ? (a.item as ModelItem).price_usd_estimated[0]
+              : 0;
+            const priceB = b.type === 'model' 
+              ? (b.item as ModelItem).price_usd_estimated[0]
+              : 0;
+            return filters.sortOrder === 'asc' 
+              ? priceA - priceB
+              : priceB - priceA;
+          case 'popularity':
+            // Mock popularity based on score for now
+            return filters.sortOrder === 'asc' 
+              ? (a.score || 0) - (b.score || 0)
+              : (b.score || 0) - (a.score || 0);
+          default:
+            return 0;
+        }
+      });
 
-        setResults(combinedResults);
-        setTotalResults(combinedResults.length);
-      } catch (error) {
-        console.error('Search error:', error);
-        setResults([]);
-        setTotalResults(0);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setResults(combinedResults);
+      setTotalResults(combinedResults.length);
+    } catch (error) {
+      console.error('Search error:', error);
+      setResults([]);
+      setTotalResults(0);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    performSearch();
+  const handleSearch = (searchQuery: string, filters: SearchFilters) => {
+    setCurrentFilters(filters);
+    
+    // Update URL with search query
+    const newSearchParams = new URLSearchParams();
+    if (searchQuery.trim()) {
+      newSearchParams.set('q', searchQuery);
+    }
+    setSearchParams(newSearchParams);
+    
+    performSearch(searchQuery, filters);
+  };
+
+  useEffect(() => {
+    performSearch(query, currentFilters);
   }, [query]);
 
   const renderIntelligenceResult = (item: IntelligenceItem) => (
@@ -201,8 +373,18 @@ const SearchResultsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-dark-bg py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-dark-bg py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Advanced Search Component */}
+        <div className="mb-8">
+          <AdvancedSearch
+            onSearch={handleSearch}
+            initialQuery={query}
+            isLoading={loading}
+            className="mb-6"
+          />
+        </div>
+
         {/* Search Results Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-text-main mb-2">

@@ -159,8 +159,8 @@ const HomePage: React.FC = () => {
                         <p className="text-text-secondary">We focus on the most important models from key players, ensuring you get signal, not noise. All specs are verified and standardized.</p>
                     </div>
                     <div className="bg-dark-card p-8 rounded-lg shadow-lg">
-                        <h3 className="text-2xl font-bold mb-4 text-link-blue">Real-Time Intelligence</h3>
-                        <p className="text-text-secondary">From MIIT filings to exclusive supply chain insights, our intelligence feed gives you a critical edge with confidence ratings.</p>
+                        <h3 className="text-2xl font-bold mb-4 text-link-blue">VOLT Intelligence Feed</h3>
+                        <p className="text-text-secondary">From exclusive industry insights to verified market intelligence, our curated feed delivers the context you need to stay ahead of China's EV revolution.</p>
                     </div>
                 </div>
             </section>

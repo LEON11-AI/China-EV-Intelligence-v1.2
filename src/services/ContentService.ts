@@ -6,101 +6,170 @@ export interface IntelligenceItem {
   title: string;
   date: string;
   brand: string;
+  model?: string;
   category: string;
+  source: string;
+  status: 'verified' | 'pending' | 'rumor';
+  confidence: 'high' | 'medium' | 'low';
+  is_pro: boolean;
   tags: string[];
   summary: string;
   content: string;
   author: string;
-  read_time: number;
-  importance: 'high' | 'medium' | 'low';
-  is_pro: boolean;
-  confidence: string;
-  source: string;
-  status: string;
+  reading_time: number;
+  importance: 'High' | 'Medium' | 'Low';
+  published: boolean;
+  seo_title?: string;
+  seo_description?: string;
+  related_links?: Array<{
+    title: string;
+    url: string;
+  }>;
+  data_sources?: string[];
+  featured: boolean;
 }
 
 export interface ModelItem {
   id: string;
+  title: string;
   brand: string;
-  model_name: string;
-  status: string;
-  ceo_note: string;
-  images: string[];
-  price_usd_estimated: [number, number];
+  model: string;
+  status: 'available' | 'pre_order' | 'concept' | 'discontinued';
+  ceo_note?: string;
+  images: Array<{
+    url: string;
+  }>;
+  price_usd_estimated: Array<{
+    variant: string;
+    price: number;
+  }>;
   key_specs: {
-    range_cltc: string;
-    zero_to_100: string;
-    power_kw: string;
-    battery_kwh: string;
+    range_km: number;
+    battery_kwh: number;
+    power_kw: number;
+    acceleration_0_100: number;
+    top_speed_kmh: number;
+    seating: number;
+    drive_type: string;
   };
   detailed_specs: {
     battery: {
       capacity_kwh: number;
-      chemistry: string;
+      type: string;
       supplier: string;
-      voltage: string;
       warranty_years: number;
-      warranty_km: number;
-      degradation_rate: string;
-      swappable?: boolean;
-      swap_time_minutes?: number;
     };
     charging: {
-      dc_fast_max_kw: number;
-      dc_10_to_80_minutes: number;
-      ac_max_kw: number;
-      ac_0_to_100_hours: number;
-      charging_ports: string[];
-      battery_swap_compatible?: boolean;
+      dc_fast_kw: number;
+      ac_slow_kw: number;
+      time_10_80_min: number;
+      connector_type: string;
     };
     performance: {
-      top_speed_kmh: number;
-      zero_to_100_kmh: number;
-      zero_to_200_kmh?: number;
-      quarter_mile_seconds: number;
-      braking_100_to_0_meters: number;
-      lateral_g_force: number;
+      motor_type: string;
+      total_power_kw: number;
+      total_torque_nm: number;
+      drive_config: string;
     };
     efficiency: {
-      wltp_kwh_per_100km: number;
-      cltc_kwh_per_100km: number;
-      real_world_kwh_per_100km: number;
+      wltp_kwh_100km: number;
+      nedc_kwh_100km: number;
+      epa_kwh_100km: number;
     };
   };
-  full_specs: {
-    dimensions: string;
-    wheelbase: string;
-    powertrain: string;
-    battery: string;
-    charging: string;
-    adas: string;
-  };
   market_analysis: {
-    target_segment: string;
-    main_competitors: string[];
-    competitive_advantages: string[];
-    market_position: string;
-    estimated_annual_sales_china: number;
-    global_market_potential: string;
+    target_market: string;
+    positioning: string;
+    key_selling_points: string[];
+    market_challenges: string[];
+    expected_sales_volume: string;
   };
-  competitor_comparison: {
-    [key: string]: {
-      price_advantage: string;
-      performance: string;
-      tech: string;
-      brand_prestige?: string;
-      charging?: string;
+  competitor_comparison: Array<{
+    competitor: string;
+    price_difference: string;
+    key_advantages: string[];
+    key_disadvantages: string[];
+  }>;
+  pricing_history: Array<{
+    date: string;
+    price_usd: number;
+    notes: string;
+  }>;
+  user_ratings: {
+    overall: number;
+    performance: number;
+    range: number;
+    charging: number;
+    interior: number;
+    technology: number;
+    value: number;
+    total_reviews: number;
+  };
+  sales_data: {
+    monthly_sales: Array<{
+      month: string;
+      units: number;
+    }>;
+    total_sales: number;
+    market_share_percent: number;
+  };
+  full_specs: {
+    dimensions: {
+      length_mm: number;
+      width_mm: number;
+      height_mm: number;
+      wheelbase_mm: number;
+      ground_clearance_mm: number;
+    };
+    weight: {
+      curb_weight_kg: number;
+      gross_weight_kg: number;
+      payload_kg: number;
+    };
+    interior: {
+      seating_capacity: number;
+      cargo_volume_l: number;
+      infotainment_screen: string;
+      driver_display: string;
+    };
+    safety: {
+      ncap_rating: string;
+      safety_features: string[];
+      adas_features: string[];
+    };
+    connectivity: {
+      ota_updates: boolean;
+      mobile_app: boolean;
+      wifi_hotspot: boolean;
+      bluetooth: string;
     };
   };
   market_plan: {
-    china_launch: string;
-    global_rollout: string;
+    launch_timeline: {
+      announcement: string;
+      pre_orders: string;
+      deliveries: string;
+      mass_production: string;
+    };
+    production_targets: {
+      year_1: number;
+      year_2: number;
+      year_3: number;
+    };
+    market_expansion: {
+      domestic_launch: string;
+      export_markets: string[];
+      international_launch: string;
+    };
   };
   sources: Array<{
-    date: string;
     type: string;
-    confidence: string;
+    url: string;
+    date: string;
+    reliability: string;
   }>;
+  updated_date: string;
+  published: boolean;
 }
 
 class ContentService {
@@ -199,30 +268,182 @@ class ContentService {
     }
   }
 
-  // Load intelligence articles from CMS content directory
+  // Load intelligence from CMS
   private async loadIntelligenceFromCMS(): Promise<IntelligenceItem[]> {
-    const items: IntelligenceItem[] = [];
-    
     try {
-      // In production environment, actual file system access needs to be implemented here
-      // Currently return empty array, waiting for data migration completion
-      return items;
+      // TODO: Replace with actual CMS API endpoint
+      const response = await fetch('/api/cms/intelligence');
+      if (!response.ok) {
+        throw new Error('Failed to fetch from CMS');
+      }
+      
+      const cmsData = await response.json();
+      
+      // Transform CMS data to match our interface
+      return cmsData.map((item: any) => ({
+        id: item.id || item.slug,
+        date: item.date || item.published_date,
+        brand: item.brand,
+        model: item.model || '',
+        title: item.title,
+        source: item.source,
+        status: item.status || 'pending',
+        confidence: item.confidence || 'medium',
+        is_pro: item.is_pro || false,
+        content: item.content,
+        category: item.category,
+        tags: item.tags || [],
+        summary: item.summary || '',
+        author: item.author,
+        reading_time: item.reading_time || 5,
+        importance: item.importance || 'Medium',
+        published: item.published !== false,
+        seo_title: item.seo_title,
+        seo_description: item.seo_description,
+        related_links: item.related_links || [],
+        data_sources: item.data_sources || [],
+        featured: item.featured || false
+      }));
     } catch (error) {
-      console.error('Error loading intelligence from CMS:', error);
+      console.warn('Failed to load intelligence from CMS:', error);
       return [];
     }
   }
 
-  // Load models data from CMS content directory
+  // Load models from CMS
   private async loadModelsFromCMS(): Promise<ModelItem[]> {
-    const items: ModelItem[] = [];
-    
     try {
-      // In production environment, actual file system access needs to be implemented here
-      // Currently return empty array, waiting for data migration completion
-      return items;
+      // TODO: Replace with actual CMS API endpoint
+      const response = await fetch('/api/cms/models');
+      if (!response.ok) {
+        throw new Error('Failed to fetch from CMS');
+      }
+      
+      const cmsData = await response.json();
+      
+      // Transform CMS data to match our interface
+      return cmsData.map((item: any) => ({
+        id: item.id || item.slug,
+        title: item.title || `${item.brand} ${item.model}`,
+        brand: item.brand,
+        model: item.model,
+        status: item.status || 'available',
+        ceo_note: item.ceo_note || '',
+        images: Array.isArray(item.images) ? item.images : [item.image || item.featured_image].filter(Boolean),
+        price_usd_estimated: item.price_usd_estimated || [],
+        key_specs: item.key_specs || {
+          range_km: 0,
+          battery_kwh: 0,
+          power_kw: 0,
+          acceleration_0_100: 0,
+          top_speed_kmh: 0,
+          seating: 0,
+          drive_type: ''
+        },
+        detailed_specs: item.detailed_specs || {
+          battery: {
+            capacity_kwh: 0,
+            type: '',
+            supplier: '',
+            warranty_years: 0
+          },
+          charging: {
+            dc_fast_kw: 0,
+            ac_slow_kw: 0,
+            time_10_80_min: 0,
+            connector_type: ''
+          },
+          performance: {
+            motor_type: '',
+            total_power_kw: 0,
+            total_torque_nm: 0,
+            drive_config: ''
+          },
+          efficiency: {
+            wltp_kwh_100km: 0,
+            nedc_kwh_100km: 0,
+            epa_kwh_100km: 0
+          }
+        },
+        market_analysis: item.market_analysis || {
+          target_market: '',
+          positioning: '',
+          key_selling_points: [],
+          market_challenges: [],
+          expected_sales_volume: ''
+        },
+        competitor_comparison: item.competitor_comparison || [],
+        pricing_history: item.pricing_history || [],
+        user_ratings: item.user_ratings || {
+          overall: 0,
+          performance: 0,
+          range: 0,
+          charging: 0,
+          interior: 0,
+          technology: 0,
+          value: 0,
+          total_reviews: 0
+        },
+        sales_data: item.sales_data || {
+          monthly_sales: [],
+          total_sales: 0,
+          market_share_percent: 0
+        },
+        full_specs: item.full_specs || {
+          dimensions: {
+            length_mm: 0,
+            width_mm: 0,
+            height_mm: 0,
+            wheelbase_mm: 0,
+            ground_clearance_mm: 0
+          },
+          weight: {
+            curb_weight_kg: 0,
+            gross_weight_kg: 0,
+            payload_kg: 0
+          },
+          interior: {
+            seating_capacity: 0,
+            cargo_volume_l: 0,
+            infotainment_screen: '',
+            driver_display: ''
+          },
+          safety: {
+            ncap_rating: '',
+            safety_features: [],
+            adas_features: []
+          },
+          connectivity: {
+            ota_updates: false,
+            mobile_app: false,
+            wifi_hotspot: false,
+            bluetooth: ''
+          }
+        },
+        market_plan: item.market_plan || {
+          launch_timeline: {
+            announcement: '',
+            pre_orders: '',
+            deliveries: '',
+            mass_production: ''
+          },
+          production_targets: {
+            year_1: 0,
+            year_2: 0,
+            year_3: 0
+          },
+          market_expansion: {
+            domestic_launch: '',
+            export_markets: [],
+            international_launch: ''
+          }
+        },
+        sources: item.sources || [],
+        updated_date: item.updated_date,
+        published: item.published !== false
+      }));
     } catch (error) {
-      console.error('Error loading models from CMS:', error);
+      console.warn('Failed to load models from CMS:', error);
       return [];
     }
   }
@@ -262,7 +483,7 @@ class ContentService {
   // Get active models
   public async getActiveModels(): Promise<ModelItem[]> {
     const models = await this.getModels();
-    return models.filter(item => item.status === 'active');
+    return models.filter(item => item.status === 'available');
   }
 
   // Get all unique categories from intelligence articles
@@ -282,7 +503,10 @@ class ContentService {
   public async getFilteredIntelligence(filters: {
     category?: string;
     brand?: string;
-    importance?: 'high' | 'medium' | 'low';
+    importance?: 'High' | 'Medium' | 'Low';
+    is_pro?: boolean;
+    status?: 'verified' | 'pending' | 'rumor';
+    confidence?: 'high' | 'medium' | 'low';
     limit?: number;
   }): Promise<IntelligenceItem[]> {
     let intelligence = await this.getIntelligence();
@@ -297,6 +521,18 @@ class ContentService {
     
     if (filters.importance) {
       intelligence = intelligence.filter(item => item.importance === filters.importance);
+    }
+    
+    if (filters.is_pro !== undefined) {
+      intelligence = intelligence.filter(item => item.is_pro === filters.is_pro);
+    }
+    
+    if (filters.status) {
+      intelligence = intelligence.filter(item => item.status === filters.status);
+    }
+    
+    if (filters.confidence) {
+      intelligence = intelligence.filter(item => item.confidence === filters.confidence);
     }
     
     // Sort by date (newest first)

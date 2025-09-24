@@ -5,10 +5,9 @@ import { contentService, ModelItem } from '../src/services/ContentService';
 import LazyImage from '../components/LazyImage';
 import ProLocker from '../components/ProLocker';
 import AuthorSignature from '../components/AuthorSignature';
-
-interface ModelDetailPageProps {
-    isPro: boolean;
-}
+import CommentSystem from '../components/CommentSystem';
+import { VideoCard, VideoModal } from '../components/VideoEmbed';
+import { useAuth } from '../components/AuthContext';
 
 const SpecItem: React.FC<{ label: string; value: string }> = ({ label, value }) => (
     <div className="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -17,7 +16,9 @@ const SpecItem: React.FC<{ label: string; value: string }> = ({ label, value }) 
     </div>
 );
 
-const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
+const ModelDetailPage: React.FC = () => {
+    const { user } = useAuth();
+    const isPro = user?.isPro || false;
     const { id } = useParams<{ id: string }>();
     const [model, setModel] = useState<ModelItem | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -25,23 +26,26 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
     const [activeImage, setActiveImage] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchModel = async () => {
-            if (!id) return;
+        const loadModel = async () => {
+            setLoading(true);
+            setError(null);
             try {
-                const foundModel = await contentService.getModelById(id);
-                if (foundModel) {
-                    setModel(foundModel);
-                    setActiveImage(foundModel.images[0]);
+                const modelData = await contentService.getModelById(id!);
+                if (modelData) {
+                    setModel(modelData);
+                    setActiveImage(modelData.images?.[0] || null);
                 } else {
                     setError('Model not found');
                 }
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err) {
+                console.error('Failed to load model data:', err);
+                setError('Failed to load model data');
             } finally {
                 setLoading(false);
             }
         };
-        fetchModel();
+
+        loadModel();
     }, [id]);
 
     if (loading) return <div className="text-center">Loading model details...</div>;
@@ -56,6 +60,38 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                 <Link to="/database" className="text-link-blue hover:text-link-hover">&larr; Back to Database</Link>
                 <h1 className="text-5xl font-bold mt-2">{model.brand} {model.model_name}</h1>
                 <p className="text-xl text-text-secondary mt-1">{model.status}</p>
+                
+                {/* Database Access Level Indicator */}
+                {!isPro && (
+                    <div className="mt-4 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h3 className="text-lg font-semibold text-amber-400">Essential Model View</h3>
+                                <p className="text-sm text-text-secondary mt-1">
+                                    You're viewing basic specifications. Upgrade to Pro for complete database access with detailed analysis.
+                                </p>
+                            </div>
+                            <Link to="/pricing">
+                                <button className="bg-cta-orange text-white font-bold py-2 px-4 rounded-md hover:bg-cta-hover transition-colors duration-300 text-sm whitespace-nowrap">
+                                    Upgrade to Pro
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                )}
+                
+                {isPro && (
+                    <div className="mt-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-lg p-3">
+                        <div className="flex items-center">
+                            <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium mr-3">
+                                PRO
+                            </span>
+                            <p className="text-sm text-blue-300">
+                                Complete database access with detailed analysis and market insights
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="grid lg:grid-cols-5 gap-8">
@@ -86,16 +122,31 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
             </div>
 
              <div className="bg-dark-card p-8 rounded-lg shadow-lg border-l-4 border-cta-orange">
-                <h2 className="text-2xl font-bold text-cta-orange mb-4">Chief Experience Officer Note</h2>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-cta-orange">CEO Deep Notes</h2>
+                    {!isPro && (
+                        <span className="bg-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-sm font-medium">
+                            Sample Preview
+                        </span>
+                    )}
+                    {isPro && (
+                        <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Full Analysis + Video Content
+                        </span>
+                    )}
+                </div>
                 {!isPro ? (
                      <div className="relative">
                         <p className="text-text-secondary italic">
                            {ceoNoteTeaser}
                         </p>
-                        <div className="mt-4">
+                        <div className="mt-4 p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-lg">
+                            <p className="text-sm text-amber-300 mb-3">
+                                🎯 <strong>Pro members get:</strong> Full analysis + exclusive video content + market insights
+                            </p>
                            <Link to="/pricing">
                             <button className="bg-cta-orange text-white font-bold py-2 px-5 rounded-md hover:bg-cta-hover transition-colors duration-300 text-sm">
-                                Read Full Note with Pro
+                                Unlock Full Analysis
                             </button>
                            </Link>
                         </div>
@@ -111,9 +162,14 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                 )}
             </div>
 
-            {/* Detailed Technical Specifications - PRO Feature */}
+            {/* Detailed Specifications - PRO Feature */}
             {model.detailed_specs && (
-                <ProLocker isPro={isPro}>
+                <ProLocker 
+                    isPro={isPro}
+                    title="Complete Database + Analysis"
+                    description="Access detailed specifications and technical analysis with Pro membership."
+                    upgradeText="Upgrade to Pro"
+                >
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-2xl font-bold">Detailed Technical Specifications</h2>
@@ -245,7 +301,12 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
 
             {/* Market Analysis - PRO Feature */}
             {model.market_analysis && (
-                <ProLocker isPro={isPro}>
+                <ProLocker 
+                    isPro={isPro}
+                    title="Complete Database + Analysis"
+                    description="Get comprehensive market analysis and sales projections with Pro access."
+                    upgradeText="Upgrade to Pro"
+                >
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-2xl font-bold">Market Analysis</h2>
@@ -294,8 +355,13 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
             )}
 
             {/* Competitive Comparison - PRO Feature */}
-            {model.competitor_comparison && (
-                <ProLocker isPro={isPro}>
+            {model.competitive_comparison && (
+                <ProLocker 
+                    isPro={isPro}
+                    title="Complete Database + Analysis"
+                    description="Compare with competitors and get detailed insights with Pro membership."
+                    upgradeText="Upgrade to Pro"
+                >
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-2xl font-bold">Competitive Comparison</h2>
@@ -339,7 +405,12 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
 
 
             <div className="grid md:grid-cols-2 gap-8">
-                <ProLocker isPro={isPro}>
+                <ProLocker 
+                    isPro={isPro}
+                    title="Complete Database + Analysis"
+                    description="Access full specifications and technical details with Pro membership."
+                    upgradeText="Upgrade to Pro"
+                >
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg h-full">
                         <h2 className="text-2xl font-bold border-b border-gray-600 pb-2 mb-4">Full Specifications</h2>
                         <dl className="divide-y divide-gray-700">
@@ -352,7 +423,12 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                         </dl>
                     </div>
                 </ProLocker>
-                 <ProLocker isPro={isPro}>
+                 <ProLocker 
+                    isPro={isPro}
+                    title="Complete Database + Analysis"
+                    description="Access detailed market plans and source information with Pro membership."
+                    upgradeText="Upgrade to Pro"
+                >
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg h-full">
                         <h2 className="text-2xl font-bold border-b border-gray-600 pb-2 mb-4">Market Plan & Sources</h2>
                         <dl className="divide-y divide-gray-700">
@@ -367,6 +443,67 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                         </ul>
                     </div>
                 </ProLocker>
+            </div>
+
+            {/* Video Content - PRO Feature */}
+            <ProLocker 
+                isPro={isPro}
+                title="Complete Library Access"
+                description="Get full analysis + video content with Pro membership."
+                upgradeText="Upgrade to Pro"
+            >
+                <div className="bg-dark-card p-6 rounded-lg shadow-lg">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-2xl font-bold">Video Content</h2>
+                        <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Complete Library Access
+                        </span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <VideoCard
+                            video={{
+                                id: "dQw4w9WgXcQ",
+                                title: `${model.brand} ${model.model_name} 深度评测`,
+                                description: `全面解析${model.brand} ${model.model_name}的性能表现、续航能力和智能科技配置。`,
+                                thumbnail: `https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg`,
+                                duration: "PT15M30S",
+                                viewCount: "125000",
+                                publishedAt: "2024-01-15T00:00:00Z",
+                                channelTitle: "EV Review Channel"
+                            }}
+                        />
+                        <VideoCard
+                            video={{
+                                id: "ScMzIvxBSi4",
+                                title: `${model.brand} ${model.model_name} 试驾体验`,
+                                description: `实际道路试驾${model.brand} ${model.model_name}，感受真实的驾驶体验和操控性能。`,
+                                thumbnail: `https://img.youtube.com/vi/ScMzIvxBSi4/maxresdefault.jpg`,
+                                duration: "PT12M45S",
+                                viewCount: "89000",
+                                publishedAt: "2024-01-10T00:00:00Z",
+                                channelTitle: "EV Test Drive"
+                            }}
+                        />
+                        <VideoCard
+                            video={{
+                                id: "jNQXAC9IVRw",
+                                title: `${model.brand} ${model.model_name} 充电测试`,
+                                description: `详细测试${model.brand} ${model.model_name}的充电速度和续航表现。`,
+                                thumbnail: `https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg`,
+                                duration: "PT18M20S",
+                                viewCount: "67000",
+                                publishedAt: "2024-01-05T00:00:00Z",
+                                channelTitle: "EV Charging Tests"
+                            }}
+                        />
+                    </div>
+                </div>
+            </ProLocker>
+
+            {/* Comments Section */}
+            <div className="bg-dark-card p-6 rounded-lg shadow-lg">
+                <h2 className="text-2xl font-bold border-b border-gray-600 pb-2 mb-4">用户评论</h2>
+                <CommentSystem contentId={`model-${model.id}`} contentType="model" />
             </div>
 
             {/* Author Signature */}

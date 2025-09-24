@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 interface ProLockerProps {
     isPro: boolean;
     children: React.ReactNode;
+    title?: string;
+    description?: string;
+    upgradeText?: string;
 }
 
 const LockIcon: React.FC = () => (
@@ -13,7 +16,13 @@ const LockIcon: React.FC = () => (
     </svg>
 );
 
-const ProLocker: React.FC<ProLockerProps> = ({ isPro, children }) => {
+const ProLocker: React.FC<ProLockerProps> = ({ 
+    isPro, 
+    children, 
+    title = "Pro Content",
+    description = "This section is available for Pro members.",
+    upgradeText = "Unlock with Pro"
+}) => {
     if (isPro) {
         return <>{children}</>;
     }
@@ -25,11 +34,11 @@ const ProLocker: React.FC<ProLockerProps> = ({ isPro, children }) => {
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-dark-card/80 rounded-lg p-4">
                 <LockIcon />
-                <p className="text-white font-bold text-lg mt-2 text-center">Pro Content</p>
-                <p className="text-text-secondary text-sm text-center mb-4">This section is available for Pro members.</p>
+                <p className="text-white font-bold text-lg mt-2 text-center">{title}</p>
+                <p className="text-text-secondary text-sm text-center mb-4">{description}</p>
                 <Link to="/pricing">
                     <button className="bg-cta-orange text-white font-bold py-2 px-5 rounded-md hover:bg-cta-hover transition-colors duration-300">
-                        Unlock with Pro
+                        {upgradeText}
                     </button>
                 </Link>
             </div>

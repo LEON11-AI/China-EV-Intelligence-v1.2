@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { AuthProvider, useAuth } from './components/AuthContext';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import DatabasePage from './pages/DatabasePage';
@@ -11,28 +12,40 @@ import PricingPage from './pages/PricingPage';
 import AboutPage from './pages/AboutPage';
 import IntelligenceDetailPage from './pages/IntelligenceDetailPage';
 import SearchResultsPage from './src/pages/SearchResultsPage';
+import CMSTest from './src/pages/CMSTest';
 
-const App: React.FC = () => {
-  const [isPro, setIsPro] = useState<boolean>(false);
+const AppContent: React.FC = () => {
+  const { user } = useAuth();
+  const isPro = user?.isPro || false;
 
   return (
+    <BrowserRouter>
+      <Layout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/database" element={<DatabasePage />} />
+              <Route path="/model/:id" element={<ModelDetailPage />} />
+              <Route path="/intelligence" element={<IntelligencePage />} />
+              <Route path="/intelligence/:id" element={<IntelligenceDetailPage />} />
+              <Route path="/search" element={<SearchResultsPage />} />
+              <Route path="/cms-test" element={<CMSTest />} />
+
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              {/* Admin route - handled by vite middleware redirect */}
+              <Route path="/admin/*" element={<div>Redirecting to admin...</div>} />
+            </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
+};
+
+const App: React.FC = () => {
+  return (
     <HelmetProvider>
-      <BrowserRouter>
-        <Layout isPro={isPro} onTogglePro={() => setIsPro(!isPro)}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/database" element={<DatabasePage />} />
-            <Route path="/model/:id" element={<ModelDetailPage isPro={isPro}/>} />
-            <Route path="/intelligence" element={<IntelligencePage isPro={isPro}/>} />
-            <Route path="/intelligence/:id" element={<IntelligenceDetailPage isPro={isPro}/>} />
-            <Route path="/search" element={<SearchResultsPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            {/* Admin route - handled by vite middleware redirect */}
-            <Route path="/admin/*" element={<div>Redirecting to admin...</div>} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </HelmetProvider>
   );
 };
