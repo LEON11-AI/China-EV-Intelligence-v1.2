@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import BrandLogos from '../components/BrandLogos';
+import NewsletterSubscription from '../src/components/NewsletterSubscription';
 
 const CheckIcon: React.FC<{className?: string}> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -13,18 +14,50 @@ const CheckIcon: React.FC<{className?: string}> = ({ className }) => (
 
 const HomePage: React.FC = () => {
     const [latestIntel, setLatestIntel] = useState<IntelligenceItem[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const fetchLatestIntel = async () => {
+        const fetchData = async () => {
             try {
-                const data = await contentService.getLatestIntelligence(3);
-                setLatestIntel(data);
+                setIsLoading(true);
+                const [intelData, categoriesData] = await Promise.all([
+                    contentService.getLatestIntelligence(6),
+                    contentService.getIntelligenceCategories()
+                ]);
+                setLatestIntel(intelData);
+                setCategories(categoriesData);
             } catch (error) {
-                console.error("Failed to fetch latest intelligence:", error);
+                console.error("Failed to fetch data:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
-        fetchLatestIntel();
+        fetchData();
     }, []);
+
+    const handleCategoryFilter = async (category: string) => {
+        setSelectedCategory(category);
+        setIsLoading(true);
+        
+        try {
+            let data;
+            if (category === 'all') {
+                data = await contentService.getLatestIntelligence(6);
+            } else {
+                data = await contentService.getFilteredIntelligence({
+                    category,
+                    limit: 6
+                });
+            }
+            setLatestIntel(data);
+        } catch (error) {
+            console.error("Failed to filter intelligence:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <>
@@ -55,10 +88,49 @@ const HomePage: React.FC = () => {
                 </Link>
             </section>
             
+            {/* Newsletter Subscription Section */}
+            <section className="max-w-4xl mx-auto">
+                <NewsletterSubscription variant="hero" />
+            </section>
+            
             {/* Latest Intelligence Section */}
             <section>
-                <h2 className="text-4xl font-bold text-center mb-12">Latest Intelligence</h2>
-                <div className="grid md:grid-cols-3 gap-8">
+                <h2 className="text-4xl font-bold text-center mb-8">Latest Intelligence</h2>
+                
+                {/* Category Filter */}
+                <div className="flex flex-wrap justify-center gap-3 mb-8">
+                    <button
+                        onClick={() => handleCategoryFilter('all')}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                            selectedCategory === 'all'
+                                ? 'bg-link-blue text-white'
+                                : 'bg-dark-card text-text-secondary hover:bg-gray-700 hover:text-white'
+                        }`}
+                    >
+                        All
+                    </button>
+                    {categories.map(category => (
+                        <button
+                            key={category}
+                            onClick={() => handleCategoryFilter(category)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 capitalize ${
+                                selectedCategory === category
+                                    ? 'bg-link-blue text-white'
+                                    : 'bg-dark-card text-text-secondary hover:bg-gray-700 hover:text-white'
+                            }`}
+                        >
+                            {category}
+                        </button>
+                    ))}
+                </div>
+                
+                {/* Loading State */}
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-12">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-link-blue"></div>
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {latestIntel.map(item => (
                         <div key={item.id} className="bg-dark-card p-6 rounded-lg shadow-lg flex flex-col transform hover:-translate-y-1 transition-transform duration-300">
                            <div className="flex-grow">
@@ -70,7 +142,8 @@ const HomePage: React.FC = () => {
                             </Link>
                         </div>
                     ))}
-                </div>
+                    </div>
+                )}
             </section>
 
             {/* Why Choose Us Section */}

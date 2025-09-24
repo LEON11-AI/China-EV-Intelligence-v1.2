@@ -10,6 +10,7 @@
     "publish": "git add . && git commit -m \"chore: Update content and deploy\" && git push"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "decap-cms-app": "^3.8.3",
     "fuse.js": "^7.1.0",
     "gray-matter": "^4.0.3",

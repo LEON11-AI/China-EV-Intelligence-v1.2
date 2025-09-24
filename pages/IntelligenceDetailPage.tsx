@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import AuthorSignature from '../components/AuthorSignature';
+import NewsletterSubscription from '../src/components/NewsletterSubscription';
 import {
   TwitterShareButton,
   LinkedinShareButton,
@@ -150,6 +151,11 @@ const IntelligenceDetailPage: React.FC<IntelligenceDetailPageProps> = ({ isPro }
                         Help more people stay informed about China's EV industry developments
                     </p>
                 </div>
+            </div>
+
+            {/* Newsletter Subscription */}
+            <div className="mt-6 mb-6">
+                <NewsletterSubscription variant="sidebar" />
             </div>
 
             {/* Author Signature */}

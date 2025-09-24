@@ -264,6 +264,50 @@ class ContentService {
     const models = await this.getModels();
     return models.filter(item => item.status === 'active');
   }
+
+  // Get all unique categories from intelligence articles
+  public async getIntelligenceCategories(): Promise<string[]> {
+    const intelligence = await this.getIntelligence();
+    const categories = [...new Set(intelligence.map(item => item.category))];
+    return categories.sort();
+  }
+
+  // Filter intelligence articles by category
+  public async getIntelligenceByCategory(category: string): Promise<IntelligenceItem[]> {
+    const intelligence = await this.getIntelligence();
+    return intelligence.filter(item => item.category === category);
+  }
+
+  // Get filtered intelligence with multiple criteria
+  public async getFilteredIntelligence(filters: {
+    category?: string;
+    brand?: string;
+    importance?: 'high' | 'medium' | 'low';
+    limit?: number;
+  }): Promise<IntelligenceItem[]> {
+    let intelligence = await this.getIntelligence();
+    
+    if (filters.category) {
+      intelligence = intelligence.filter(item => item.category === filters.category);
+    }
+    
+    if (filters.brand) {
+      intelligence = intelligence.filter(item => item.brand === filters.brand);
+    }
+    
+    if (filters.importance) {
+      intelligence = intelligence.filter(item => item.importance === filters.importance);
+    }
+    
+    // Sort by date (newest first)
+    intelligence = intelligence.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    if (filters.limit) {
+      intelligence = intelligence.slice(0, filters.limit);
+    }
+    
+    return intelligence;
+  }
 }
 
 // Export singleton instance
