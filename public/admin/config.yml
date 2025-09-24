@@ -10,55 +10,59 @@ editor:
 
 collections:
   - name: "intelligence"
-    label: "情报文章"
+    label: "Intelligence Articles"
     folder: "content/intelligence"
     create: true
+    update: true
+    delete: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "ID", name: "id", widget: "string"}
-      - {label: "标题", name: "title", widget: "string"}
-      - {label: "发布日期", name: "date", widget: "datetime"}
-      - {label: "品牌", name: "brand", widget: "string"}
-      - {label: "类别", name: "category", widget: "select", options: ["market_analysis", "technology", "policy", "industry_news", "financial", "supply_chain"]}
-      - {label: "标签", name: "tags", widget: "list"}
-      - {label: "摘要", name: "summary", widget: "text"}
-      - {label: "特色图片", name: "featured_image", widget: "image", required: false}
-      - {label: "内容", name: "body", widget: "markdown"}
-      - {label: "作者", name: "author", widget: "string"}
-      - {label: "阅读时间", name: "read_time", widget: "number", value_type: "int", min: 1, max: 60}
-      - {label: "重要性", name: "importance", widget: "select", options: ["high", "medium", "low"]}
-      - {label: "发布状态", name: "status", widget: "select", options: ["draft", "published", "archived"], default: "draft"}
-      - {label: "SEO标题", name: "seo_title", widget: "string", required: false}
-      - {label: "SEO描述", name: "seo_description", widget: "text", required: false}
-      - {label: "相关链接", name: "related_links", widget: "list", required: false, fields: [{label: "标题", name: "title", widget: "string"}, {label: "URL", name: "url", widget: "string"}]}
-      - {label: "数据来源", name: "data_source", widget: "string", required: false}
-      - {label: "置顶文章", name: "featured", widget: "boolean", default: false}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Brand", name: "brand", widget: "string"}
+      - {label: "Category", name: "category", widget: "select", options: ["market_analysis", "technology", "policy", "industry_news", "financial", "supply_chain"]}
+      - {label: "Tags", name: "tags", widget: "list"}
+      - {label: "Summary", name: "summary", widget: "text"}
+      - {label: "Featured Image", name: "featured_image", widget: "image", required: false}
+      - {label: "Content", name: "body", widget: "markdown"}
+      - {label: "Author", name: "author", widget: "string"}
+      - {label: "Read Time", name: "read_time", widget: "number", value_type: "int", min: 1, max: 60}
+      - {label: "Importance", name: "importance", widget: "select", options: ["high", "medium", "low"]}
+      - {label: "Publish Status", name: "status", widget: "select", options: ["draft", "published", "archived"], default: "draft"}
+      - {label: "SEO Title", name: "seo_title", widget: "string", required: false}
+      - {label: "SEO Description", name: "seo_description", widget: "text", required: false}
+      - {label: "Related Links", name: "related_links", widget: "list", required: false, fields: [{label: "Title", name: "title", widget: "string"}, {label: "URL", name: "url", widget: "string"}]}
+      - {label: "Data Source", name: "data_source", widget: "string", required: false}
+      - {label: "Featured Article", name: "featured", widget: "boolean", default: false}
 
   - name: "models"
-    label: "车型数据"
+    label: "Vehicle Models"
     folder: "content/models"
     create: true
+    update: true
+    delete: true
     slug: "{{brand}}-{{model_name}}"
     fields:
       - { label: "ID", name: "id", widget: "string" }
-      - { label: "品牌", name: "brand", widget: "select", options: ["NIO", "BYD", "Tesla", "Li Auto", "XPeng", "ZEEKR", "AITO", "Xiaomi", "其他"] }
-      - { label: "车型名称", name: "model_name", widget: "string" }
-      - { label: "状态", name: "status", widget: "select", options: ["active", "discontinued", "upcoming", "concept"] }
-      - { label: "主图片", name: "image", widget: "image" }
-      - { label: "图片库", name: "gallery", widget: "list", field: {label: "图片", name: "image", widget: "image"}, required: false }
-      - { label: "价格范围", name: "price_range", widget: "string" }
-      - { label: "起售价格", name: "starting_price", widget: "number", value_type: "float", required: false }
-      - { label: "车型类别", name: "category", widget: "select", options: ["轿车", "SUV", "MPV", "跑车", "皮卡", "其他"] }
-      - { label: "驱动方式", name: "drivetrain", widget: "select", options: ["前驱", "后驱", "四驱"], required: false }
-      - { label: "续航里程(km)", name: "range", widget: "number", value_type: "int", required: false }
-      - { label: "电池容量(kWh)", name: "battery_capacity", widget: "number", value_type: "float", required: false }
-      - { label: "最大功率(kW)", name: "max_power", widget: "number", value_type: "int", required: false }
-      - { label: "0-100km/h加速(s)", name: "acceleration", widget: "number", value_type: "float", required: false }
-      - { label: "座位数", name: "seats", widget: "number", value_type: "int", min: 2, max: 9, required: false }
-      - { label: "描述", name: "description", widget: "text" }
-      - { label: "详细规格", name: "specifications", widget: "markdown", required: false }
-      - { label: "发布时间", name: "launch_date", widget: "datetime" }
-      - { label: "更新时间", name: "updated_date", widget: "datetime", required: false }
-      - { label: "特色功能", name: "features", widget: "list", required: false }
-      - { label: "竞品对比", name: "competitors", widget: "list", required: false }
-      - { label: "市场表现", name: "market_performance", widget: "text", required: false }
+      - { label: "Brand", name: "brand", widget: "select", options: ["NIO", "BYD", "Tesla", "Li Auto", "XPeng", "ZEEKR", "AITO", "Xiaomi", "Other"] }
+      - { label: "Model Name", name: "model_name", widget: "string" }
+      - { label: "Status", name: "status", widget: "select", options: ["active", "discontinued", "upcoming", "concept"] }
+      - { label: "Main Image", name: "image", widget: "image" }
+      - { label: "Image Gallery", name: "gallery", widget: "list", field: {label: "Image", name: "image", widget: "image"}, required: false }
+      - { label: "Price Range", name: "price_range", widget: "string" }
+      - { label: "Starting Price", name: "starting_price", widget: "number", value_type: "float", required: false }
+      - { label: "Vehicle Category", name: "category", widget: "select", options: ["Sedan", "SUV", "MPV", "Sports Car", "Pickup", "Other"] }
+      - { label: "Drivetrain", name: "drivetrain", widget: "select", options: ["FWD", "RWD", "AWD"], required: false }
+      - { label: "Range (km)", name: "range", widget: "number", value_type: "int", required: false }
+      - { label: "Battery Capacity (kWh)", name: "battery_capacity", widget: "number", value_type: "float", required: false }
+      - { label: "Max Power (kW)", name: "max_power", widget: "number", value_type: "int", required: false }
+      - { label: "0-100km/h Acceleration (s)", name: "acceleration", widget: "number", value_type: "float", required: false }
+      - { label: "Seats", name: "seats", widget: "number", value_type: "int", min: 2, max: 9, required: false }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Detailed Specifications", name: "specifications", widget: "markdown", required: false }
+      - { label: "Launch Date", name: "launch_date", widget: "datetime" }
+      - { label: "Updated Date", name: "updated_date", widget: "datetime", required: false }
+      - { label: "Features", name: "features", widget: "list", required: false }
+      - { label: "Competitors", name: "competitors", widget: "list", required: false }
+      - { label: "Market Performance", name: "market_performance", widget: "text", required: false }

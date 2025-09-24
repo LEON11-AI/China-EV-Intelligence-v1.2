@@ -24,10 +24,10 @@ last_updated: "2025-09-23"
 
 
 
-## 市场分析
+## Market Analysis
 
-**目标细分市场**: Ultra-Luxury Executive Sedan
+**Target Market Segment**: Ultra-Luxury Executive Sedan
 
-**竞争优势**: Battery swap technology, 900V architecture, Steer-by-wire system
+**Competitive Advantages**: Battery swap technology, 900V architecture, Steer-by-wire system
 
 

@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { contentService, ModelItem } from '../src/services/ContentService';
+import LazyImage from '../components/LazyImage';
 
 interface ModelCardProps {
     model: ModelItem;
@@ -10,7 +11,7 @@ interface ModelCardProps {
 const ModelCard: React.FC<ModelCardProps> = ({ model }) => (
     <div className="bg-dark-card rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300 ease-in-out">
         <Link to={`/model/${model.id}`} className="block">
-            <img src={model.images[0]} alt={`${model.brand} ${model.model_name}`} className="w-full h-48 object-cover"/>
+            <LazyImage src={model.images[0]} alt={`${model.brand} ${model.model_name}`} className="w-full h-48 object-cover"/>
             <div className="p-6">
                 <p className="text-sm text-text-secondary">{model.brand}</p>
                 <h3 className="text-2xl font-bold text-text-main mb-2">{model.model_name}</h3>

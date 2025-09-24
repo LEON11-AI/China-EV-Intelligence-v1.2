@@ -1,6 +1,6 @@
 import matter from 'gray-matter';
 
-// 数据类型定义
+// Data type definitions
 export interface IntelligenceItem {
   id: string;
   title: string;
@@ -108,7 +108,7 @@ class ContentService {
   private intelligenceCache: IntelligenceItem[] | null = null;
   private modelsCache: ModelItem[] | null = null;
   private cacheTimestamp: number = 0;
-  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
   private constructor() {}
 
@@ -119,26 +119,26 @@ class ContentService {
     return ContentService.instance;
   }
 
-  // 检查缓存是否有效
+  // Check if cache is valid
   private isCacheValid(): boolean {
     return Date.now() - this.cacheTimestamp < this.CACHE_DURATION;
   }
 
-  // 清除缓存
+  // Clear cache
   public clearCache(): void {
     this.intelligenceCache = null;
     this.modelsCache = null;
     this.cacheTimestamp = 0;
   }
 
-  // 获取情报文章数据
+  // Get intelligence articles data
   public async getIntelligence(): Promise<IntelligenceItem[]> {
     if (this.intelligenceCache && this.isCacheValid()) {
       return this.intelligenceCache;
     }
 
     try {
-      // 首先尝试从CMS内容目录获取
+      // First try to load from CMS content directory
       const cmsData = await this.loadIntelligenceFromCMS();
       if (cmsData.length > 0) {
         this.intelligenceCache = cmsData;
@@ -149,7 +149,7 @@ class ContentService {
       console.warn('Failed to load intelligence from CMS, falling back to JSON:', error);
     }
 
-    // 回退到JSON文件
+    // Fallback to JSON file
     try {
       const response = await fetch('/data/intelligence.json');
       if (!response.ok) {
@@ -165,14 +165,14 @@ class ContentService {
     }
   }
 
-  // 获取车型数据
+  // Get models data
   public async getModels(): Promise<ModelItem[]> {
     if (this.modelsCache && this.isCacheValid()) {
       return this.modelsCache;
     }
 
     try {
-      // 首先尝试从CMS内容目录获取
+      // First try to load from CMS content directory
       const cmsData = await this.loadModelsFromCMS();
       if (cmsData.length > 0) {
         this.modelsCache = cmsData;
@@ -183,7 +183,7 @@ class ContentService {
       console.warn('Failed to load models from CMS, falling back to JSON:', error);
     }
 
-    // 回退到JSON文件
+    // Fallback to JSON file
     try {
       const response = await fetch('/data/models.json');
       if (!response.ok) {
@@ -199,13 +199,13 @@ class ContentService {
     }
   }
 
-  // 从CMS内容目录加载情报文章
+  // Load intelligence articles from CMS content directory
   private async loadIntelligenceFromCMS(): Promise<IntelligenceItem[]> {
     const items: IntelligenceItem[] = [];
     
     try {
-      // 在生产环境中，这里需要实现实际的文件系统访问
-      // 目前先返回空数组，等待数据迁移完成
+      // In production environment, actual file system access needs to be implemented here
+      // Currently return empty array, waiting for data migration completion
       return items;
     } catch (error) {
       console.error('Error loading intelligence from CMS:', error);
@@ -213,13 +213,13 @@ class ContentService {
     }
   }
 
-  // 从CMS内容目录加载车型数据
+  // Load models data from CMS content directory
   private async loadModelsFromCMS(): Promise<ModelItem[]> {
     const items: ModelItem[] = [];
     
     try {
-      // 在生产环境中，这里需要实现实际的文件系统访问
-      // 目前先返回空数组，等待数据迁移完成
+      // In production environment, actual file system access needs to be implemented here
+      // Currently return empty array, waiting for data migration completion
       return items;
     } catch (error) {
       console.error('Error loading models from CMS:', error);
@@ -227,31 +227,31 @@ class ContentService {
     }
   }
 
-  // 根据ID获取单个情报文章
+  // Get single intelligence article by ID
   public async getIntelligenceById(id: string): Promise<IntelligenceItem | null> {
     const intelligence = await this.getIntelligence();
     return intelligence.find(item => item.id === id) || null;
   }
 
-  // 根据ID获取单个车型
+  // Get single model by ID
   public async getModelById(id: string): Promise<ModelItem | null> {
     const models = await this.getModels();
     return models.find(item => item.id === id) || null;
   }
 
-  // 根据品牌筛选情报文章
+  // Filter intelligence articles by brand
   public async getIntelligenceByBrand(brand: string): Promise<IntelligenceItem[]> {
     const intelligence = await this.getIntelligence();
     return intelligence.filter(item => item.brand === brand);
   }
 
-  // 根据品牌筛选车型
+  // Filter models by brand
   public async getModelsByBrand(brand: string): Promise<ModelItem[]> {
     const models = await this.getModels();
     return models.filter(item => item.brand === brand);
   }
 
-  // 获取最新的情报文章
+  // Get latest intelligence articles
   public async getLatestIntelligence(limit: number = 5): Promise<IntelligenceItem[]> {
     const intelligence = await this.getIntelligence();
     return intelligence
@@ -259,13 +259,13 @@ class ContentService {
       .slice(0, limit);
   }
 
-  // 获取活跃的车型
+  // Get active models
   public async getActiveModels(): Promise<ModelItem[]> {
     const models = await this.getModels();
     return models.filter(item => item.status === 'active');
   }
 }
 
-// 导出单例实例
+// Export singleton instance
 export const contentService = ContentService.getInstance();
 export default ContentService;

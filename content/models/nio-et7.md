@@ -4,119 +4,119 @@ brand: "NIO"
 model_name: "ET7"
 status: "active"
 image: "/uploads/nio-et7-main.jpg"
-price_range: "44.80-52.60万元"
+price_range: "448,000-526,000 RMB"
 starting_price: 448000
-category: "轿车"
-drivetrain: "四驱"
+category: "Sedan"
+drivetrain: "AWD"
 range: 500
 battery_capacity: 75.0
 max_power: 480
 acceleration: 3.9
 seats: 5
-description: "蔚来ET7是一款豪华智能电动轿车，搭载蔚来最新的NAD自动驾驶系统和NT2.0技术平台，提供卓越的驾驶体验和智能化功能。"
+description: "NIO ET7 is a luxury intelligent electric sedan equipped with NIO's latest NAD autonomous driving system and NT2.0 technology platform, providing exceptional driving experience and intelligent features."
 launch_date: "2022-03-28T00:00:00Z"
 updated_date: "2024-01-15T10:00:00Z"
-features: ["NAD自动驾驶", "NOMI智能助手", "换电技术", "空气悬架", "女王副驾"]
-competitors: ["宝马iX", "奔驰EQS", "特斯拉Model S"]
-market_performance: "在豪华电动轿车市场表现优异，月销量稳定在2000-3000台之间，用户满意度较高。"
+features: ["NAD Autonomous Driving", "NOMI AI Assistant", "Battery Swap Technology", "Air Suspension", "Queen Co-pilot Seat"]
+competitors: ["BMW iX", "Mercedes EQS", "Tesla Model S"]
+market_performance: "Excellent performance in the luxury electric sedan market, with stable monthly sales of 2,000-3,000 units and high user satisfaction."
 ---
 
-# 蔚来ET7 - 豪华智能电动轿车
+# NIO ET7 - Luxury Intelligent Electric Sedan
 
-## 产品概述
+## Product Overview
 
-蔚来ET7是蔚来汽车推出的旗舰级豪华智能电动轿车，基于NT2.0技术平台打造，代表了蔚来在智能电动汽车领域的最高技术水准。
+NIO ET7 is a flagship luxury intelligent electric sedan launched by NIO, built on the NT2.0 technology platform, representing NIO's highest technical standards in the intelligent electric vehicle field.
 
-## 核心技术特点
+## Core Technical Features
 
-### 智能驾驶系统
-- **NAD (NIO Autonomous Driving)**: 蔚来自主研发的自动驾驶系统
-- **超感系统**: 配备激光雷达、摄像头、毫米波雷达等多种传感器
-- **超算平台**: 搭载4颗NVIDIA Drive Orin芯片，算力达1016 TOPS
+### Autonomous Driving System
+- **NAD (NIO Autonomous Driving)**: NIO's self-developed autonomous driving system
+- **Sensing System**: Equipped with LiDAR, cameras, millimeter-wave radar and other sensors
+- **Computing Platform**: Powered by 4 NVIDIA Drive Orin chips with 1016 TOPS computing power
 
-### 动力系统
-- **双电机布局**: 前永磁同步电机 + 后感应异步电机
-- **最大功率**: 480kW (653马力)
-- **峰值扭矩**: 850N·m
-- **0-100km/h加速**: 3.9秒
+### Powertrain System
+- **Dual Motor Layout**: Front permanent magnet synchronous motor + rear induction asynchronous motor
+- **Maximum Power**: 480kW (653 horsepower)
+- **Peak Torque**: 850N·m
+- **0-100km/h Acceleration**: 3.9 seconds
 
-### 电池与续航
-- **标准续航版**: 75kWh电池包，CLTC续航500km
-- **长续航版**: 100kWh电池包，CLTC续航675km
-- **超长续航版**: 150kWh固态电池包，CLTC续航1000km+
+### Battery and Range
+- **Standard Range Version**: 75kWh battery pack, CLTC range 500km
+- **Long Range Version**: 100kWh battery pack, CLTC range 675km
+- **Ultra Long Range Version**: 150kWh solid-state battery pack, CLTC range 1000km+
 
-## 设计亮点
+## Design Highlights
 
-### 外观设计
-- **X-Bar前脸**: 蔚来家族式设计语言
-- **隐藏式门把手**: 提升空气动力学性能
-- **贯穿式尾灯**: 科技感十足的LED光源
-- **风阻系数**: 0.208Cd，同级别领先水平
+### Exterior Design
+- **X-Bar Front Face**: NIO family design language
+- **Hidden Door Handles**: Enhance aerodynamic performance
+- **Through-type Taillights**: Tech-savvy LED light sources
+- **Drag Coefficient**: 0.208Cd, leading level in the same class
 
-### 内饰配置
-- **12.8英寸AMOLED中控屏**: 支持左右滑动和上下分屏
-- **10.2英寸HDR仪表屏**: 高清显示驾驶信息
-- **女王副驾**: 支持腿托、按摩、通风加热等功能
-- **23个扬声器音响系统**: 沉浸式音频体验
+### Interior Configuration
+- **12.8-inch AMOLED Central Screen**: Supports left-right sliding and up-down split screen
+- **10.2-inch HDR Instrument Screen**: High-definition display of driving information
+- **Queen Co-pilot Seat**: Supports leg rest, massage, ventilation and heating functions
+- **23-speaker Audio System**: Immersive audio experience
 
-## 智能化功能
+## Intelligent Features
 
-### NOMI智能助手
-- **全新NOMI 3.0**: 更自然的语音交互
-- **情感化表达**: 丰富的表情和动作
-- **个性化服务**: 学习用户习惯，提供定制化体验
+### NOMI AI Assistant
+- **New NOMI 3.0**: More natural voice interaction
+- **Emotional Expression**: Rich expressions and gestures
+- **Personalized Service**: Learn user habits and provide customized experience
 
-### 数字座舱
-- **车载娱乐系统**: 支持爱奇艺、腾讯视频等主流应用
-- **游戏功能**: 内置多款车载游戏
-- **办公场景**: 支持视频会议、文档处理等功能
+### Digital Cockpit
+- **In-car Entertainment System**: Supports mainstream apps like iQiyi and Tencent Video
+- **Gaming Features**: Built-in multiple in-car games
+- **Office Scenarios**: Supports video conferencing, document processing and other functions
 
-## 服务体系
+## Service System
 
-### 换电服务
-- **3分钟换电**: 比加油更快的能源补充方式
-- **全国换电网络**: 超过1000座换电站
-- **电池租用服务**: 降低购车门槛
+### Battery Swap Service
+- **3-minute Battery Swap**: Faster energy replenishment than refueling
+- **National Battery Swap Network**: Over 1,000 battery swap stations
+- **Battery Rental Service**: Lower vehicle purchase threshold
 
 ### NIO House
-- **用户社区**: 提供社交、休闲、工作空间
-- **专属服务**: 一对一用户顾问服务
-- **活动体验**: 定期举办用户活动和产品体验
+- **User Community**: Provides social, leisure, and workspace
+- **Exclusive Service**: One-on-one user advisor service
+- **Event Experience**: Regular user events and product experiences
 
-## 市场表现
+## Market Performance
 
-### 销量数据
-- **2023年全年交付**: 约30,000台
-- **2024年Q1交付**: 8,500台
-- **市场地位**: 豪华电动轿车市场前三
+### Sales Data
+- **2023 Annual Deliveries**: Approximately 30,000 units
+- **2024 Q1 Deliveries**: 8,500 units
+- **Market Position**: Top three in luxury electric sedan market
 
-### 用户评价
-- **整体满意度**: 4.2/5.0
-- **驾驶体验**: 4.5/5.0
-- **智能化功能**: 4.3/5.0
-- **服务体验**: 4.1/5.0
+### User Reviews
+- **Overall Satisfaction**: 4.2/5.0
+- **Driving Experience**: 4.5/5.0
+- **Smart Features**: 4.3/5.0
+- **Service Experience**: 4.1/5.0
 
-## 竞品对比
+## Competitive Comparison
 
-| 车型 | 价格区间 | 续航里程 | 智能驾驶 | 服务模式 |
-|------|----------|----------|----------|----------|
-| 蔚来ET7 | 44.8-52.6万 | 500-1000km | NAD L2+ | 换电+NIO House |
-| 宝马iX | 74.69-99.69万 | 425-630km | L2级 | 传统4S店 |
-| 奔驰EQS | 84.50-181.36万 | 453-849km | L2级 | 传统4S店 |
-| 特斯拉Model S | 78.99-100.99万 | 715-840km | FSD Beta | 直营+超充 |
+| Model | Price Range | Range | Autonomous Driving | Service Model |
+|-------|-------------|-------|-------------------|---------------|
+| NIO ET7 | 448k-526k RMB | 500-1000km | NAD L2+ | Battery Swap + NIO House |
+| BMW iX | 747k-997k RMB | 425-630km | L2 Level | Traditional 4S Stores |
+| Mercedes EQS | 845k-1814k RMB | 453-849km | L2 Level | Traditional 4S Stores |
+| Tesla Model S | 790k-1010k RMB | 715-840km | FSD Beta | Direct Sales + Supercharging |
 
-## 未来发展
+## Future Development
 
-### 技术升级
-- **NAD功能完善**: 逐步开放更多自动驾驶功能
-- **固态电池量产**: 2024年下半年推出150kWh固态电池版本
-- **软件持续更新**: 通过OTA升级持续优化用户体验
+### Technology Upgrades
+- **NAD Function Enhancement**: Gradually open more autonomous driving functions
+- **Solid-state Battery Mass Production**: Launch 150kWh solid-state battery version in H2 2024
+- **Continuous Software Updates**: Continuously optimize user experience through OTA upgrades
 
-### 市场拓展
-- **海外市场**: 计划进入欧洲等发达市场
-- **产能提升**: 新桥工厂二期投产，年产能达30万台
-- **成本优化**: 通过规模效应和技术进步降低成本
+### Market Expansion
+- **Overseas Markets**: Plans to enter developed markets such as Europe
+- **Capacity Expansion**: NeoPark Phase II production, annual capacity of 300,000 units
+- **Cost Optimization**: Reduce costs through economies of scale and technological progress
 
 ---
 
-*数据更新时间: 2024年1月15日*
+*Data updated: January 15, 2024*

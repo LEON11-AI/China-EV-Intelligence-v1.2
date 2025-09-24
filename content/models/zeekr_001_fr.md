@@ -24,10 +24,10 @@ last_updated: "2025-09-23"
 
 
 
-## 市场分析
+## Market Analysis
 
-**目标细分市场**: Ultra-High Performance Luxury
+**Target Market Segment**: Ultra-High Performance Luxury
 
-**竞争优势**: Quad-motor setup, Tank turn capability, Aggressive pricing
+**Competitive Advantages**: Quad-motor setup, Tank turn capability, Aggressive pricing
 
 

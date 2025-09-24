@@ -24,10 +24,10 @@ last_updated: "2025-09-23"
 
 
 
-## 市场分析
+## Market Analysis
 
-**目标细分市场**: Premium Performance Sedan
+**Target Market Segment**: Premium Performance Sedan
 
-**竞争优势**: Tech ecosystem integration, Aggressive pricing, Fast charging
+**Competitive Advantages**: Tech ecosystem integration, Aggressive pricing, Fast charging
 
 

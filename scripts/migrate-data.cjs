@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-// 获取项目根目录
+// Get project root directory
 const projectRoot = path.resolve(__dirname, '..');
 const dataDir = path.join(projectRoot, 'public', 'data');
 const contentDir = path.join(projectRoot, 'content');
 
-// 确保内容目录存在
+// Ensure content directories exist
 function ensureDirectoryExists(dirPath) {
     if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath, { recursive: true });
@@ -14,7 +14,7 @@ function ensureDirectoryExists(dirPath) {
     }
 }
 
-// 转换情报文章数据
+// Convert intelligence article data
 function migrateIntelligence() {
     console.log('Migrating intelligence data...');
     
@@ -63,7 +63,7 @@ ${item.content || item.summary || ''}
     console.log(`Migrated ${intelligenceData.length} intelligence articles`);
 }
 
-// 转换车型数据
+// Convert model data
 function migrateModels() {
     console.log('Migrating models data...');
     
@@ -93,26 +93,26 @@ function migrateModels() {
             last_updated: model.last_updated || new Date().toISOString().split('T')[0]
         };
         
-        // 构建描述内容
+        // Build description content
         let description = model.description || '';
         
-        // 添加市场分析
+        // Add market analysis
         if (model.market_analysis) {
-            description += `\n\n## 市场分析\n\n`;
+            description += `\n\n## Market Analysis\n\n`;
             if (model.market_analysis.target_segment) {
-                description += `**目标细分市场**: ${model.market_analysis.target_segment}\n\n`;
+                description += `**Target Market Segment**: ${model.market_analysis.target_segment}\n\n`;
             }
             if (model.market_analysis.competitive_advantages) {
-                description += `**竞争优势**: ${model.market_analysis.competitive_advantages.join(', ')}\n\n`;
+                description += `**Competitive Advantages**: ${model.market_analysis.competitive_advantages.join(', ')}\n\n`;
             }
             if (model.market_analysis.market_positioning) {
-                description += `**市场定位**: ${model.market_analysis.market_positioning}\n\n`;
+                description += `**Market Positioning**: ${model.market_analysis.market_positioning}\n\n`;
             }
         }
         
-        // 添加技术亮点
+        // Add technical highlights
         if (model.tech_highlights) {
-            description += `\n\n## 技术亮点\n\n${model.tech_highlights.join('\n- ')}\n`;
+            description += `\n\n## Technical Highlights\n\n${model.tech_highlights.join('\n- ')}\n`;
         }
         
         const markdownContent = `---
@@ -139,7 +139,7 @@ ${description}
     console.log(`Migrated ${modelsData.length} car models`);
 }
 
-// 主函数
+// Main function
 function main() {
     console.log('Starting data migration...');
     console.log(`Project root: ${projectRoot}`);
@@ -160,7 +160,7 @@ function main() {
     }
 }
 
-// 运行迁移
+// Run migration
 if (require.main === module) {
     main();
 }

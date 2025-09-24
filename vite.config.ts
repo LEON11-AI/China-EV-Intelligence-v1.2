@@ -1,24 +1,52 @@
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import viteImagemin from 'vite-plugin-imagemin';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       server: {
         watch: {
-          // 忽略admin目录的文件变化，防止频繁重新加载
+          // Ignore admin directory file changes to prevent frequent reloads
           ignored: ['**/public/admin/**']
         }
       },
       plugins: [
         react(),
+        viteImagemin({
+          gifsicle: {
+            optimizationLevel: 7,
+            interlaced: false,
+          },
+          optipng: {
+            optimizationLevel: 7,
+          },
+          mozjpeg: {
+            quality: 80,
+          },
+          pngquant: {
+            quality: [0.8, 0.9],
+            speed: 4,
+          },
+          svgo: {
+            plugins: [
+              {
+                name: 'removeViewBox',
+              },
+              {
+                name: 'removeEmptyAttrs',
+                active: false,
+              },
+            ],
+          },
+        }),
         {
           name: 'admin-redirect-middleware',
           configureServer(server) {
-            // 简单的admin路径重定向处理
+            // Simple admin path redirect handling
             server.middlewares.use((req, res, next) => {
-              // 如果访问/admin或/admin/，重定向到/admin/index.html
+              // If accessing /admin or /admin/, redirect to /admin/index.html
               if (req.url === '/admin' || req.url === '/admin/') {
                 res.writeHead(302, { 'Location': '/admin/index.html' });
                 res.end();
@@ -31,7 +59,7 @@ export default defineConfig(({ mode }) => {
          {
            name: 'api-middleware',
            configureServer(server) {
-             // 处理CMS API请求
+             // Handle CMS API requests
              server.middlewares.use((req, res, next) => {
                if (req.url?.startsWith('/api/')) {
                  import('./api/cms.js').then(({ default: handler }) => {

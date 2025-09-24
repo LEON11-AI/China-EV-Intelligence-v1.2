@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import BrandLogos from '../components/BrandLogos';
 
@@ -26,7 +27,21 @@ const HomePage: React.FC = () => {
     }, []);
 
     return (
-        <div className="space-y-24">
+        <>
+            <Helmet>
+                <title>China EV Intelligence - Unrivaled Intelligence on China's EV Revolution</title>
+                <meta name="description" content="Bridge the information gap with expert analysis and curated data on China's fastest-moving auto market. Get exclusive insights on electric vehicles, market trends, and industry intelligence." />
+                <meta name="keywords" content="China EV, electric vehicles, automotive intelligence, market analysis, Chinese cars, EV database, automotive insights" />
+                <meta property="og:title" content="China EV Intelligence - Expert Analysis & Market Data" />
+                <meta property="og:description" content="Unrivaled intelligence on China's EV revolution. Expert analysis, curated data, and real-time insights on the world's fastest-moving auto market." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://china-ev-intelligence.com/" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="China EV Intelligence - Expert Analysis & Market Data" />
+                <meta name="twitter:description" content="Unrivaled intelligence on China's EV revolution. Expert analysis, curated data, and real-time insights." />
+                <link rel="canonical" href="https://china-ev-intelligence.com/" />
+            </Helmet>
+            <div className="space-y-24">
             {/* Hero Section */}
             <section className="text-center py-20">
                 <h1 className="text-5xl font-bold text-text-main mb-4">Unrivaled Intelligence on China's EV Revolution</h1>
@@ -120,7 +135,8 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
             </section>
-        </div>
+            </div>
+        </>
     );
 };
 

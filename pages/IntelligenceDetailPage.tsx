@@ -1,8 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import AuthorSignature from '../components/AuthorSignature';
+import {
+  TwitterShareButton,
+  LinkedinShareButton,
+  FacebookShareButton,
+  TwitterIcon,
+  LinkedinIcon,
+  FacebookIcon
+} from 'react-share';
 
 interface IntelligenceDetailPageProps {
     isPro: boolean;
@@ -48,7 +57,25 @@ const IntelligenceDetailPage: React.FC<IntelligenceDetailPageProps> = ({ isPro }
     const showPaywall = item.is_pro && !isPro;
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <>
+            <Helmet>
+                <title>{item.title} - China EV Intelligence</title>
+                <meta name="description" content={item.summary || contentTeaser} />
+                <meta name="keywords" content={`${item.brand}, China EV, electric vehicles, ${item.tags?.join(', ') || 'automotive intelligence'}`} />
+                <meta property="og:title" content={item.title} />
+                <meta property="og:description" content={item.summary || contentTeaser} />
+                <meta property="og:type" content="article" />
+                <meta property="og:url" content={window.location.href} />
+                <meta property="article:published_time" content={item.date} />
+                <meta property="article:author" content="China EV Intelligence" />
+                <meta property="article:section" content="Automotive Intelligence" />
+                <meta property="article:tag" content={item.brand} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={item.title} />
+                <meta name="twitter:description" content={item.summary || contentTeaser} />
+                <link rel="canonical" href={window.location.href} />
+            </Helmet>
+            <div className="max-w-4xl mx-auto">
             <Link to="/intelligence" className="text-link-blue hover:text-link-hover mb-4 inline-block">&larr; Back to Intelligence Feed</Link>
             
             <article className="bg-dark-card p-8 rounded-lg shadow-lg">
@@ -86,9 +113,49 @@ const IntelligenceDetailPage: React.FC<IntelligenceDetailPageProps> = ({ isPro }
                 )}
             </article>
 
+            {/* Social Share Buttons */}
+            <div className="mt-6 mb-6">
+                <div className="bg-dark-card p-6 rounded-lg shadow-lg">
+                    <h3 className="text-lg font-semibold text-text-main mb-4">Share This Article</h3>
+                    <div className="flex space-x-4">
+                        <TwitterShareButton
+                            url={window.location.href}
+                            title={item.title}
+                            hashtags={item.tags}
+                            className="hover:opacity-80 transition-opacity"
+                        >
+                            <TwitterIcon size={40} round />
+                        </TwitterShareButton>
+                        
+                        <LinkedinShareButton
+                            url={window.location.href}
+                            title={item.title}
+                            summary={item.summary}
+                            source="China EV Intelligence"
+                            className="hover:opacity-80 transition-opacity"
+                        >
+                            <LinkedinIcon size={40} round />
+                        </LinkedinShareButton>
+                        
+                        <FacebookShareButton
+                            url={window.location.href}
+                            quote={item.title}
+                            hashtag={`#${item.brand}`}
+                            className="hover:opacity-80 transition-opacity"
+                        >
+                            <FacebookIcon size={40} round />
+                        </FacebookShareButton>
+                    </div>
+                    <p className="text-sm text-text-secondary mt-3">
+                        Help more people stay informed about China's EV industry developments
+                    </p>
+                </div>
+            </div>
+
             {/* Author Signature */}
             <AuthorSignature />
-        </div>
+            </div>
+        </>
     );
 };
 

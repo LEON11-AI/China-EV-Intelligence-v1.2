@@ -7,12 +7,12 @@
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
-  <div id="loading">正在加载CMS测试页面...</div>
+  <div id="loading">Loading CMS test page...</div>
   
   <script>
-    console.log('Test: 开始加载CMS测试页面');
+    console.log('Test: Starting to load CMS test page');
     
-    // 检查config.yml是否可以访问
+    // Check if config.yml is accessible
     fetch('/admin/config.yml')
       .then(response => {
         console.log('Config.yml response status:', response.status);
@@ -25,9 +25,9 @@
       .then(configText => {
         console.log('Config.yml content loaded:', configText.substring(0, 200) + '...');
         
-        // 尝试解析YAML
+        // Try to parse YAML
         try {
-          // 简单检查YAML格式
+          // Simple YAML format check
           if (configText.includes('backend:') && configText.includes('collections:')) {
             console.log('Config.yml appears to be valid YAML');
           } else {
@@ -41,26 +41,26 @@
         console.error('Failed to load config.yml:', error);
       });
     
-    // 等待CMS加载
+    // Wait for CMS to load
     window.addEventListener('load', function() {
-      console.log('Test: 页面加载完成');
+      console.log('Test: Page loading completed');
       
       if (typeof window.DecapCMS !== 'undefined') {
-        console.log('Test: DecapCMS对象可用');
+        console.log('Test: DecapCMS object available');
         
         try {
-          // 尝试初始化CMS
+          // Try to initialize CMS
           window.DecapCMS.init();
-          console.log('Test: CMS初始化成功');
+          console.log('Test: CMS initialization successful');
           
-          document.getElementById('loading').innerHTML = 'CMS初始化成功！';
+          document.getElementById('loading').innerHTML = 'CMS initialization successful!';
         } catch (error) {
-          console.error('Test: CMS初始化失败:', error);
-          document.getElementById('loading').innerHTML = 'CMS初始化失败: ' + error.message;
+          console.error('Test: CMS initialization failed:', error);
+          document.getElementById('loading').innerHTML = 'CMS initialization failed: ' + error.message;
         }
       } else {
-        console.error('Test: DecapCMS对象不可用');
-        document.getElementById('loading').innerHTML = 'DecapCMS对象不可用';
+        console.error('Test: DecapCMS object not available');
+        document.getElementById('loading').innerHTML = 'DecapCMS object not available';
       }
     });
   </script>

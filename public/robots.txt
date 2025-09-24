@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://china-ev-intelligence.com/sitemap.xml
+
+# Disallow crawling of search results to avoid duplicate content
+Disallow: /search?*
+
+# Allow crawling of main search page
+Allow: /search$
+
+# Crawl delay (optional, helps with server load)
+Crawl-delay: 1

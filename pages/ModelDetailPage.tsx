@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { contentService, ModelItem } from '../src/services/ContentService';
+import LazyImage from '../components/LazyImage';
 import ProLocker from '../components/ProLocker';
 import AuthorSignature from '../components/AuthorSignature';
 
@@ -59,16 +60,16 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
 
             <div className="grid lg:grid-cols-5 gap-8">
                 <div className="lg:col-span-3 space-y-4">
-                    <img src={activeImage || model.images[0]} alt={`${model.model_name} main view`} className="w-full rounded-lg shadow-lg object-cover aspect-video" />
+                    <LazyImage src={activeImage || model.images[0]} alt={`${model.model_name} main view`} className="w-full rounded-lg shadow-lg object-cover aspect-video" />
                     <div className="flex space-x-2">
                         {model.images.map((img, index) => (
-                            <img 
-                                key={index} 
-                                src={img} 
-                                alt={`${model.model_name} thumbnail ${index+1}`} 
-                                onClick={() => setActiveImage(img)}
-                                className={`w-1/3 h-24 object-cover rounded-md cursor-pointer border-2 ${activeImage === img ? 'border-link-blue' : 'border-transparent'} transition-all duration-200`}
-                            />
+                            <div key={index} onClick={() => setActiveImage(img)} className="w-1/3 cursor-pointer">
+                                <LazyImage 
+                                    src={img} 
+                                    alt={`${model.model_name} thumbnail ${index+1}`} 
+                                    className={`h-24 object-cover rounded-md border-2 ${activeImage === img ? 'border-link-blue' : 'border-transparent'} transition-all duration-200`}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -110,119 +111,119 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                 )}
             </div>
 
-            {/* 详细技术规格 - PRO功能 */}
+            {/* Detailed Technical Specifications - PRO Feature */}
             {model.detailed_specs && (
                 <ProLocker isPro={isPro}>
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-2xl font-bold">详细技术规格</h2>
+                            <h2 className="text-2xl font-bold">Detailed Technical Specifications</h2>
                             <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                                 PRO
                             </span>
                         </div>
                         
-                        {/* 电池详情 */}
+                        {/* Battery Details */}
                         <div className="mb-6">
-                            <h3 className="text-lg font-medium mb-3 text-blue-400">电池系统</h3>
+                            <h3 className="text-lg font-medium mb-3 text-blue-400">Battery System</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">容量：</span>
+                                    <span className="font-medium text-gray-400">Capacity:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.battery.capacity_kwh} kWh</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">化学类型：</span>
+                                    <span className="font-medium text-gray-400">Chemistry:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.battery.chemistry}</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">供应商：</span>
+                                    <span className="font-medium text-gray-400">Supplier:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.battery.supplier}</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">电压：</span>
+                                    <span className="font-medium text-gray-400">Voltage:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.battery.voltage}</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">质保：</span>
-                                    <span className="ml-2 text-white">{model.detailed_specs.battery.warranty_years}年/{model.detailed_specs.battery.warranty_km}万公里</span>
+                                    <span className="font-medium text-gray-400">Warranty:</span>
+                                    <span className="ml-2 text-white">{model.detailed_specs.battery.warranty_years} years/{model.detailed_specs.battery.warranty_km}0k km</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">衰减率：</span>
+                                    <span className="font-medium text-gray-400">Degradation Rate:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.battery.degradation_rate}</span>
                                 </div>
                                 {model.detailed_specs.battery.swappable && (
                                     <div className="bg-gray-800 p-3 rounded">
-                                        <span className="font-medium text-gray-400">换电时间：</span>
-                                        <span className="ml-2 text-white">{model.detailed_specs.battery.swap_time_minutes}分钟</span>
+                                        <span className="font-medium text-gray-400">Swap Time:</span>
+                                        <span className="ml-2 text-white">{model.detailed_specs.battery.swap_time_minutes} minutes</span>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        {/* 充电详情 */}
+                        {/* Charging Details */}
                         <div className="mb-6">
-                            <h3 className="text-lg font-medium mb-3 text-green-400">充电性能</h3>
+                            <h3 className="text-lg font-medium mb-3 text-green-400">Charging Performance</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">直流快充：</span>
+                                    <span className="font-medium text-gray-400">DC Fast Charging:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.charging.dc_fast_max_kw} kW</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">10-80%时间：</span>
-                                    <span className="ml-2 text-white">{model.detailed_specs.charging.dc_10_to_80_minutes}分钟</span>
+                                    <span className="font-medium text-gray-400">10-80% Time:</span>
+                                    <span className="ml-2 text-white">{model.detailed_specs.charging.dc_10_to_80_minutes} minutes</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">交流慢充：</span>
+                                    <span className="font-medium text-gray-400">AC Charging:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.charging.ac_max_kw} kW</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">0-100%时间：</span>
-                                    <span className="ml-2 text-white">{model.detailed_specs.charging.ac_0_to_100_hours}小时</span>
+                                    <span className="font-medium text-gray-400">0-100% Time:</span>
+                                    <span className="ml-2 text-white">{model.detailed_specs.charging.ac_0_to_100_hours} hours</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded col-span-2">
-                                    <span className="font-medium text-gray-400">充电接口：</span>
+                                    <span className="font-medium text-gray-400">Charging Ports:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.charging.charging_ports.join(', ')}</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 性能详情 */}
+                        {/* Performance Details */}
                         <div className="mb-6">
-                            <h3 className="text-lg font-medium mb-3 text-red-400">性能参数</h3>
+                            <h3 className="text-lg font-medium mb-3 text-red-400">Performance Parameters</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">最高时速：</span>
+                                    <span className="font-medium text-gray-400">Top Speed:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.performance.top_speed_kmh} km/h</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">0-100km/h：</span>
-                                    <span className="ml-2 text-white">{model.detailed_specs.performance.zero_to_100_kmh}秒</span>
+                                    <span className="font-medium text-gray-400">0-100km/h:</span>
+                                    <span className="ml-2 text-white">{model.detailed_specs.performance.zero_to_100_kmh} seconds</span>
                                 </div>
                                 {model.detailed_specs.performance.zero_to_200_kmh && (
                                     <div className="bg-gray-800 p-3 rounded">
-                                        <span className="font-medium text-gray-400">0-200km/h：</span>
-                                        <span className="ml-2 text-white">{model.detailed_specs.performance.zero_to_200_kmh}秒</span>
+                                        <span className="font-medium text-gray-400">0-200km/h:</span>
+                                        <span className="ml-2 text-white">{model.detailed_specs.performance.zero_to_200_kmh} seconds</span>
                                     </div>
                                 )}
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">制动距离：</span>
-                                    <span className="ml-2 text-white">{model.detailed_specs.performance.braking_100_to_0_meters}米</span>
+                                    <span className="font-medium text-gray-400">Braking Distance:</span>
+                                    <span className="ml-2 text-white">{model.detailed_specs.performance.braking_100_to_0_meters}m</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">横向G值：</span>
+                                    <span className="font-medium text-gray-400">Lateral G-Force:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.performance.lateral_g_force}G</span>
                                 </div>
                                 {model.detailed_specs.performance.tank_turn_capable && (
                                     <div className="bg-gray-800 p-3 rounded">
-                                        <span className="font-medium text-gray-400">坦克掉头：</span>
-                                        <span className="ml-2 text-green-400">支持</span>
+                                        <span className="font-medium text-gray-400">Tank Turn:</span>
+                                        <span className="ml-2 text-green-400">Supported</span>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        {/* 能耗详情 */}
+                        {/* Energy Efficiency Details */}
                         <div>
-                            <h3 className="text-lg font-medium mb-3 text-purple-400">能耗效率</h3>
+                            <h3 className="text-lg font-medium mb-3 text-purple-400">Energy Efficiency</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="bg-gray-800 p-3 rounded">
                                     <span className="font-medium text-gray-400">WLTP：</span>
@@ -233,7 +234,7 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                                     <span className="ml-2 text-white">{model.detailed_specs.efficiency.cltc_kwh_per_100km} kWh/100km</span>
                                 </div>
                                 <div className="bg-gray-800 p-3 rounded">
-                                    <span className="font-medium text-gray-400">实际能耗：</span>
+                                    <span className="font-medium text-gray-400">Real World:</span>
                                     <span className="ml-2 text-white">{model.detailed_specs.efficiency.real_world_kwh_per_100km} kWh/100km</span>
                                 </div>
                             </div>
@@ -242,27 +243,27 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                 </ProLocker>
             )}
 
-            {/* 市场分析 - PRO功能 */}
+            {/* Market Analysis - PRO Feature */}
             {model.market_analysis && (
                 <ProLocker isPro={isPro}>
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-2xl font-bold">市场分析</h2>
+                            <h2 className="text-2xl font-bold">Market Analysis</h2>
                             <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                                 PRO
                             </span>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h3 className="font-medium text-gray-400 mb-2">目标细分市场</h3>
+                                <h3 className="font-medium text-gray-400 mb-2">Target Segment</h3>
                                 <p className="text-white">{model.market_analysis.target_segment}</p>
                             </div>
                             <div>
-                                <h3 className="font-medium text-gray-400 mb-2">市场定位</h3>
+                                <h3 className="font-medium text-gray-400 mb-2">Market Position</h3>
                                 <p className="text-white">{model.market_analysis.market_position}</p>
                             </div>
                             <div>
-                                <h3 className="font-medium text-gray-400 mb-2">主要竞品</h3>
+                                <h3 className="font-medium text-gray-400 mb-2">Main Competitors</h3>
                                 <div className="flex flex-wrap gap-2">
                                     {model.market_analysis.main_competitors.map((competitor, index) => (
                                         <span key={index} className="bg-blue-600 text-blue-100 px-2 py-1 rounded text-sm">
@@ -272,7 +273,7 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                                 </div>
                             </div>
                             <div>
-                                <h3 className="font-medium text-gray-400 mb-2">竞争优势</h3>
+                                <h3 className="font-medium text-gray-400 mb-2">Competitive Advantages</h3>
                                 <ul className="list-disc list-inside space-y-1">
                                     {model.market_analysis.competitive_advantages.map((advantage, index) => (
                                         <li key={index} className="text-white text-sm">{advantage}</li>
@@ -280,11 +281,11 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                                 </ul>
                             </div>
                             <div>
-                                <h3 className="font-medium text-gray-400 mb-2">预计年销量（中国）</h3>
-                                <p className="text-2xl font-bold text-green-400">{model.market_analysis.estimated_annual_sales_china.toLocaleString()}辆</p>
+                                <h3 className="font-medium text-gray-400 mb-2">Estimated Annual Sales (China)</h3>
+                                <p className="text-2xl font-bold text-green-400">{model.market_analysis.estimated_annual_sales_china.toLocaleString()} units</p>
                             </div>
                             <div>
-                                <h3 className="font-medium text-gray-400 mb-2">全球市场潜力</h3>
+                                <h3 className="font-medium text-gray-400 mb-2">Global Market Potential</h3>
                                 <p className="text-white">{model.market_analysis.global_market_potential}</p>
                             </div>
                         </div>
@@ -292,12 +293,12 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                 </ProLocker>
             )}
 
-            {/* 竞品对比 - PRO功能 */}
+            {/* Competitive Comparison - PRO Feature */}
             {model.competitor_comparison && (
                 <ProLocker isPro={isPro}>
                     <div className="bg-dark-card p-6 rounded-lg shadow-lg">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-2xl font-bold">竞品对比</h2>
+                            <h2 className="text-2xl font-bold">Competitive Comparison</h2>
                             <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                                 PRO
                             </span>
@@ -308,20 +309,20 @@ const ModelDetailPage: React.FC<ModelDetailPageProps> = ({ isPro }) => {
                                     <h3 className="font-bold text-lg mb-3 text-blue-400">{competitor}</h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                         <div>
-                                            <span className="font-medium text-gray-400">价格优势：</span>
+                                            <span className="font-medium text-gray-400">Price Advantage:</span>
                                             <p className="text-white text-sm">{comparison.price_advantage}</p>
                                         </div>
                                         <div>
-                                            <span className="font-medium text-gray-400">性能对比：</span>
+                                            <span className="font-medium text-gray-400">Performance:</span>
                                             <p className="text-white text-sm">{comparison.performance}</p>
                                         </div>
                                         <div>
-                                            <span className="font-medium text-gray-400">技术对比：</span>
+                                            <span className="font-medium text-gray-400">Technology:</span>
                                             <p className="text-white text-sm">{comparison.tech}</p>
                                         </div>
                                         {comparison.charging && (
                                             <div>
-                                                <span className="font-medium text-gray-400">充电对比：</span>
+                                                <span className="font-medium text-gray-400">Charging:</span>
                                                 <p className="text-white text-sm">{comparison.charging}</p>
                                             </div>
                                         )}
