@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+
 import { AuthProvider, useAuth } from './components/AuthContext';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
@@ -42,11 +42,9 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <HelmetProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </HelmetProvider>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 

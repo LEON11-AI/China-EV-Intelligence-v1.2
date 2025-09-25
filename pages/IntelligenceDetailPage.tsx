@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import { useAuth } from '../components/AuthContext';
 import AuthorSignature from '../components/AuthorSignature';
@@ -37,6 +37,8 @@ const IntelligenceDetailPage: React.FC = () => {
                 const foundItem = await contentService.getIntelligenceById(id);
                 if (foundItem) {
                     setItem(foundItem);
+                    // Set document title
+                    document.title = `${foundItem.title} - China EV Intelligence`;
                 } else {
                     setError('Intelligence item not found');
                 }
@@ -58,23 +60,6 @@ const IntelligenceDetailPage: React.FC = () => {
 
     return (
         <>
-            <Helmet>
-                <title>{item.title} - China EV Intelligence</title>
-                <meta name="description" content={item.summary || contentTeaser} />
-                <meta name="keywords" content={`${item.brand}, China EV, electric vehicles, ${item.tags?.join(', ') || 'automotive intelligence'}`} />
-                <meta property="og:title" content={item.title} />
-                <meta property="og:description" content={item.summary || contentTeaser} />
-                <meta property="og:type" content="article" />
-                <meta property="og:url" content={window.location.href} />
-                <meta property="article:published_time" content={item.date} />
-                <meta property="article:author" content="China EV Intelligence" />
-                <meta property="article:section" content="Automotive Intelligence" />
-                <meta property="article:tag" content={item.brand} />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={item.title} />
-                <meta name="twitter:description" content={item.summary || contentTeaser} />
-                <link rel="canonical" href={window.location.href} />
-            </Helmet>
             <div className="max-w-4xl mx-auto">
             <Link to="/intelligence" className="text-link-blue hover:text-link-hover mb-4 inline-block">&larr; Back to Intelligence Feed</Link>
             
