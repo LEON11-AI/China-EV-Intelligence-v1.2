@@ -32,8 +32,20 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+      // Check if EmailJS is properly configured
       if (!serviceId || !templateId || !publicKey) {
-        throw new Error('EmailJS configuration is missing. Please check your environment variables.');
+        console.error('EmailJS configuration missing:', { serviceId: !!serviceId, templateId: !!templateId, publicKey: !!publicKey });
+        setStatus('error');
+        setMessage('Email service is not configured. Please contact the administrator.');
+        return;
+      }
+
+      // Check for placeholder values
+      if (serviceId.includes('xxxxxxx') || templateId.includes('xxxxxxx') || publicKey.includes('xxxxxxx')) {
+        console.error('EmailJS configuration contains placeholder values');
+        setStatus('error');
+        setMessage('Email service is not properly configured. Please contact the administrator.');
+        return;
       }
 
       const templateParams = {
@@ -56,7 +68,21 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
     } catch (error) {
       console.error('EmailJS error:', error);
       setStatus('error');
-      setMessage('Something went wrong. Please try again.');
+      
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes('Invalid template ID')) {
+          setMessage('Email template not found. Please contact the administrator.');
+        } else if (error.message.includes('Invalid service ID')) {
+          setMessage('Email service not configured. Please contact the administrator.');
+        } else if (error.message.includes('Invalid public key')) {
+          setMessage('Email service authentication failed. Please contact the administrator.');
+        } else {
+          setMessage('Failed to send subscription request. Please try again later.');
+        }
+      } else {
+        setMessage('Something went wrong. Please try again later.');
+      }
     }
   };
 
