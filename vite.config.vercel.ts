@@ -1,49 +1,37 @@
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import viteImagemin from 'vite-plugin-imagemin';
 
+// Optimized Vite config for Vercel deployment - faster builds
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      build: {
+        // Optimize build performance
+        target: 'es2020',
+        minify: 'esbuild', // Faster than terser
+        sourcemap: false, // Disable sourcemaps for faster builds
+        rollupOptions: {
+          output: {
+            manualChunks: {
+              vendor: ['react', 'react-dom'],
+              router: ['react-router-dom'],
+              ui: ['lucide-react']
+            }
+          }
+        }
+      },
       server: {
         watch: {
-          // Ignore admin directory file changes to prevent frequent reloads
           ignored: ['**/public/admin/**']
         }
       },
       plugins: [
         react(),
-        // Conditionally enable imagemin only in production and not in CI
-        ...(mode === 'production' && !process.env.CI ? [viteImagemin({
-          gifsicle: {
-            optimizationLevel: 3, // Reduced from 7 to 3 for faster builds
-            interlaced: false,
-          },
-          optipng: {
-            optimizationLevel: 3, // Reduced from 7 to 3
-          },
-          mozjpeg: {
-            quality: 85, // Increased from 80 to reduce compression time
-          },
-          pngquant: {
-            quality: [0.85, 0.95], // Relaxed quality range
-            speed: 1, // Fastest speed setting
-          },
-          svgo: {
-            plugins: [
-              {
-                name: 'removeViewBox',
-              },
-            ],
-          },
-        })] : []),
         {
           name: 'admin-redirect-middleware',
           configureServer(server) {
-            // Simple admin path redirect handling
             server.middlewares.use((req, res, next) => {
-              // If accessing /admin or /admin/, redirect to /admin/index.html
               if (req.url === '/admin' || req.url === '/admin/') {
                 res.writeHead(302, { 'Location': '/admin/index.html' });
                 res.end();
@@ -56,7 +44,6 @@ export default defineConfig(({ mode }) => {
          {
            name: 'api-middleware',
            configureServer(server) {
-             // Handle CMS API requests
              server.middlewares.use((req, res, next) => {
                if (req.url?.startsWith('/api/')) {
                  import('./api/cms.js').then(({ default: handler }) => {

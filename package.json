@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:vercel": "vite build --config vite.config.vercel.ts",
     "preview": "vite preview",
     "publish": "git add . && git commit -m \"chore: Update content and deploy\" && git push"
   },
