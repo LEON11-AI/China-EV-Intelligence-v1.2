@@ -5,6 +5,5 @@ dist
 .trae
 .log
 .figma
-api
+backend-api
 scripts
-content
