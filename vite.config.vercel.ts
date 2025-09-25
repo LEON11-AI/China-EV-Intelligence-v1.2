@@ -40,26 +40,7 @@ export default defineConfig(({ mode }) => {
               next();
             });
           }
-        },
-         {
-           name: 'api-middleware',
-           configureServer(server) {
-             server.middlewares.use((req, res, next) => {
-               if (req.url?.startsWith('/api/')) {
-                 import('./api/cms.js').then(({ default: handler }) => {
-                   handler(req, res);
-                 }).catch(error => {
-                   console.error('API Error:', error);
-                   res.statusCode = 500;
-                   res.end('Internal Server Error');
-                 });
-                 return;
-               }
-               
-               next();
-             });
-           }
-         }
+        }
       ],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
