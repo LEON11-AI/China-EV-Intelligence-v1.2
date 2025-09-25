@@ -31,5 +31,11 @@
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-imagemin": "^0.6.1"
+  },
+  "overrides": {
+    "redux-notifications": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }
