@@ -6,7 +6,6 @@ import viteImagemin from 'vite-plugin-imagemin';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      base: process.env.NODE_ENV === 'production' ? '/China-EV-Intelligence-v1.2/' : '/',
       server: {
         watch: {
           // Ignore admin directory file changes to prevent frequent reloads
