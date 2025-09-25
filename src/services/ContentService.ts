@@ -272,7 +272,7 @@ class ContentService {
   private async loadIntelligenceFromCMS(): Promise<IntelligenceItem[]> {
     try {
       // TODO: Replace with actual CMS API endpoint
-      const response = await fetch('/api/cms/intelligence');
+      const response = await fetch('/backend-api/cms/intelligence');
       if (!response.ok) {
         throw new Error('Failed to fetch from CMS');
       }
@@ -314,7 +314,7 @@ class ContentService {
   private async loadModelsFromCMS(): Promise<ModelItem[]> {
     try {
       // TODO: Replace with actual CMS API endpoint
-      const response = await fetch('/api/cms/models');
+      const response = await fetch('/backend-api/cms/models');
       if (!response.ok) {
         throw new Error('Failed to fetch from CMS');
       }

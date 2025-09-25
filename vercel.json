@@ -8,6 +8,14 @@
   "devCommand": "npm run dev",
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/backend-api/cms.js"
+    },
+    {
+      "source": "/backend-api/(.*)",
+      "destination": "/backend-api/cms.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
