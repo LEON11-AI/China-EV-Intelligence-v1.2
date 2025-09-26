@@ -6,6 +6,16 @@ import viteImagemin from 'vite-plugin-imagemin';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      build: {
+        rollupOptions: {
+          external: [],
+          output: {
+            manualChunks: undefined,
+          },
+        },
+        target: 'esnext',
+        minify: 'esbuild',
+      },
       server: {
         watch: {
           // Ignore admin directory file changes to prevent frequent reloads
