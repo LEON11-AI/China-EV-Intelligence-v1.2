@@ -40,7 +40,7 @@ const ProLocker: React.FC<ProLockerProps> = ({
                     disabled 
                     className="bg-gray-600 text-gray-400 font-bold py-2 px-5 rounded-md cursor-not-allowed transition-colors duration-300"
                 >
-                    即将上线 (Coming Soon)
+                    Coming Soon
                 </button>
             </div>
         </div>

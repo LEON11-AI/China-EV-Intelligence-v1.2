@@ -93,7 +93,7 @@ const IntelligenceDetailPage: React.FC = () => {
                             disabled 
                             className="bg-gray-600 text-gray-400 font-bold py-2 px-6 rounded-md cursor-not-allowed transition-colors duration-300"
                         >
-                            即将上线 (Coming Soon)
+                            Coming Soon
                         </button>
                     </div>
                 )}

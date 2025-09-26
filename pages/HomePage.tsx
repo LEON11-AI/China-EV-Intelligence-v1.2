@@ -192,7 +192,7 @@ const HomePage: React.FC = () => {
                         </ul>
                         <div className="mt-8 w-full">
                            <button className="w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-md cursor-not-allowed transition-colors duration-300" disabled>
-                                即将上线 (Coming Soon)
+                                Coming Soon
                             </button>
                         </div>
                     </div>
