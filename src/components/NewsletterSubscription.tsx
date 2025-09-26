@@ -5,7 +5,7 @@ import emailjs from '@emailjs/browser';
 interface NewsletterSubscriptionProps {
   variant?: 'hero' | 'sidebar' | 'footer';
   className?: string;
-  greetingStyle?: 'formal' | 'casual' | 'chinese';
+  greetingStyle?: 'formal' | 'casual';
 }
 
 const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({ 
@@ -25,8 +25,6 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
         return `Dear ${trimmedName}`;
       case 'casual':
         return `Hi ${trimmedName}`;
-      case 'chinese':
-        return `尊敬的${trimmedName}`;
       default:
         return `Dear ${trimmedName}`;
     }
@@ -73,7 +71,7 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
 
       const templateParams = {
         to_email: email,
-        to_name: `Dear ${name.trim()}`, // 强制使用英文称呼格式
+        to_name: `Dear ${name.trim()}`, // English greeting format
         from_name: 'China EV Intelligence',
         message: 'Thank you for subscribing to our newsletter! You will receive the latest insights about China\'s electric vehicle industry.',
       };

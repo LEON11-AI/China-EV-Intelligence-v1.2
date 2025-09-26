@@ -1,20 +1,19 @@
 # Newsletter Subscription Greeting Configuration
 
-## 问题解决
+## Issue Resolution
 
-之前邮件订阅功能中出现中文称呼（"尊敬的[姓名]"），导致中英文混合的问题。现在已经修复并提供了可配置的称呼格式选项。
+Previously, the email subscription feature contained Chinese greetings ("尊敬的[name]"), causing mixed Chinese-English content issues. This has been fixed and now provides configurable English greeting format options.
 
-## 新功能：可配置称呼格式
+## Feature: Configurable Greeting Formats
 
-`NewsletterSubscription` 组件现在支持 `greetingStyle` 属性，可以配置不同的邮件称呼格式：
+The `NewsletterSubscription` component now supports the `greetingStyle` property to configure different email greeting formats:
 
-### 可用选项
+### Available Options
 
-1. **`formal`** (默认): "Dear [姓名]"
-2. **`casual`**: "Hi [姓名]"
-3. **`chinese`**: "尊敬的[姓名]"
+1. **`formal`** (default): "Dear [name]"
+2. **`casual`**: "Hi [name]"
 
-### 使用方法
+### Usage
 
 ```tsx
 // 默认使用正式英文称呼
@@ -23,33 +22,31 @@
 // 使用随意英文称呼
 <NewsletterSubscription greetingStyle="casual" />
 
-// 使用中文称呼
-<NewsletterSubscription greetingStyle="chinese" />
 
-// 在不同变体中使用
+
+// Use with different variants
 <NewsletterSubscription 
   variant="hero" 
   greetingStyle="formal" 
 />
 ```
 
-### 邮件效果示例
+### Email Effect Examples
 
-假设用户输入姓名为 "张三"：
+Assuming user input name is "John":
 
-- **formal**: "Dear 张三,"
-- **casual**: "Hi 张三,"
-- **chinese**: "尊敬的张三,"
+- **formal**: "Dear John,"
+- **casual**: "Hi John,"
 
-## 技术实现
+## Technical Implementation
 
-### 代码变更
+### Code Changes
 
-1. **接口更新**: 添加了 `greetingStyle` 可选属性
-2. **称呼生成函数**: 新增 `getGreeting()` 函数处理不同格式
-3. **EmailJS 集成**: 使用动态生成的称呼替换硬编码值
+1. **Interface Update**: Added optional `greetingStyle` property
+2. **Greeting Generation Function**: Added `getGreeting()` function to handle different formats
+3. **EmailJS Integration**: Uses dynamically generated greetings to replace hardcoded values
 
-### 核心函数
+### Core Function
 
 ```typescript
 const getGreeting = (name: string, style: string) => {
@@ -59,31 +56,30 @@ const getGreeting = (name: string, style: string) => {
       return `Dear ${trimmedName}`;
     case 'casual':
       return `Hi ${trimmedName}`;
-    case 'chinese':
-      return `尊敬的${trimmedName}`;
+
     default:
       return `Dear ${trimmedName}`;
   }
 };
 ```
 
-## 默认行为
+## Default Behavior
 
-- 如果不指定 `greetingStyle`，默认使用 `formal` 格式
-- 这确保了纯英文的邮件称呼，避免中英文混合
-- 保持了向后兼容性
+- If `greetingStyle` is not specified, defaults to `formal` format
+- This ensures pure English email greetings, avoiding mixed Chinese-English content
+- Maintains backward compatibility
 
-## 注意事项
+## Notes
 
-1. **EmailJS 模板配置**: 确保 EmailJS 模板中使用 `{{to_name}}` 变量
-2. **字符编码**: 如果使用中文称呼，确保 EmailJS 支持 UTF-8 编码
-3. **测试**: 每次更改称呼格式后都应进行测试
+1. **EmailJS Template Configuration**: Ensure EmailJS template uses `{{to_name}}` variable
+2. **Character Encoding**: Ensure EmailJS supports UTF-8 encoding for international names
+3. **Testing**: Test after each greeting format change
 
-## 故障排除
+## Troubleshooting
 
-如果邮件称呼仍然显示不正确：
+If email greetings still display incorrectly:
 
-1. 检查 EmailJS 模板是否使用了正确的 `{{to_name}}` 变量
-2. 确认 `greetingStyle` 属性值正确
-3. 清除浏览器缓存后重新测试
-4. 检查浏览器控制台是否有错误信息
+1. Check if EmailJS template uses the correct `{{to_name}}` variable
+2. Confirm `greetingStyle` property value is correct
+3. Clear browser cache and retest
+4. Check browser console for error messages

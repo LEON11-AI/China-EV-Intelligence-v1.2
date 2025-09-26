@@ -1,129 +1,129 @@
-# Netlify 连接部署详细指南
+# Netlify Connection and Deployment Guide
 
-## 📋 部署前准备
+## 📋 Pre-deployment Checklist
 
-✅ 项目已构建成功 (`npm run build`)
-✅ 代码已推送到 GitHub 仓库: `leon11-ai/China-EV-Intelligence-v1.2`
-✅ Netlify 配置文件 `netlify.toml` 已准备就绪
+✅ Project built successfully (`npm run build`)
+✅ Code pushed to GitHub repository: `leon11-ai/China-EV-Intelligence-v1.2`
+✅ Netlify configuration file `netlify.toml` ready
 
-## 🚀 Netlify 部署步骤
+## 🚀 Netlify Deployment Steps
 
-### 步骤 1: 访问 Netlify 网站
+### Step 1: Access Netlify Website
 
-1. 打开浏览器，访问 [https://www.netlify.com](https://www.netlify.com)
-2. 如果没有账户，点击 **"Sign up"** 注册
-3. 如果已有账户，点击 **"Log in"** 登录
+1. Open your browser and visit [https://www.netlify.com](https://www.netlify.com)
+2. If you don't have an account, click **"Sign up"** to register
+3. If you already have an account, click **"Log in"** to sign in
 
-### 步骤 2: 创建新站点
+### Step 2: Create New Site
 
-#### 方法一：通过 Git 连接（推荐）
+#### Method 1: Connect via Git (Recommended)
 
-1. 登录后，在 Netlify 控制台主页面查找以下按钮之一：
-   - **"Add new site"** 按钮（通常在右上角）
-   - **"Import from Git"** 按钮
-   - **"New site from Git"** 按钮
-   - 或者直接点击 **"+"** 号图标
+1. After logging in, look for one of the following buttons on the Netlify dashboard:
+   - **"Add new site"** button (usually in the top right)
+   - **"Import from Git"** button
+   - **"New site from Git"** button
+   - Or click the **"+"** icon directly
 
-2. 如果界面布局不同，寻找类似的选项：
-   - **"Sites"** 标签页中的 **"Add new site"**
-   - **"Deploy"** 相关的按钮
+2. If the interface layout is different, look for similar options:
+   - **"Add new site"** in the **"Sites"** tab
+   - **"Deploy"** related buttons
 
-### 步骤 3: 连接 GitHub 账户
+### Step 3: Connect GitHub Account
 
-1. 在创建新站点页面，选择 **"GitHub"** 作为 Git 提供商
-2. 如果首次使用，需要授权 Netlify 访问您的 GitHub 账户
-3. 点击 **"Authorize Netlify"** 完成授权
+1. On the create new site page, select **"GitHub"** as your Git provider
+2. If this is your first time, you'll need to authorize Netlify to access your GitHub account
+3. Click **"Authorize Netlify"** to complete authorization
 
-### 步骤 4: 选择仓库
+### Step 4: Select Repository
 
-1. 在仓库列表中找到 **`leon11-ai/China-EV-Intelligence-v1.2`**
-2. 如果看不到仓库，可以：
-   - 使用搜索框搜索 "China-EV-Intelligence"
-   - 检查仓库是否为公开状态
-   - 点击 **"Configure Netlify on GitHub"** 重新配置权限
+1. Find **`leon11-ai/China-EV-Intelligence-v1.2`** in the repository list
+2. If you can't see the repository, you can:
+   - Use the search box to search for "China-EV-Intelligence"
+   - Check if the repository is public
+   - Click **"Configure Netlify on GitHub"** to reconfigure permissions
 
-3. 找到仓库后，点击仓库名称选择它
+3. Once you find the repository, click on the repository name to select it
 
-### 步骤 5: 配置构建设置
+### Step 5: Configure Build Settings
 
-在部署配置页面，确认以下设置：
+On the deployment configuration page, confirm the following settings:
 
 ```
-分支 (Branch): main
-构建命令 (Build command): npm run build
-发布目录 (Publish directory): dist
-Node.js 版本: 22
+Branch: main
+Build command: npm run build
+Publish directory: dist
+Node.js version: 22
 ```
 
-**重要提示：** 这些设置应该会自动从 `netlify.toml` 文件中读取，如果没有自动填充，请手动输入上述值。
+**Important Note:** These settings should be automatically read from the `netlify.toml` file. If they're not auto-filled, please manually enter the above values.
 
-### 步骤 6: 开始部署
+### Step 6: Start Deployment
 
-1. 确认所有设置正确后，点击 **"Deploy site"** 按钮
-2. Netlify 将开始构建和部署过程
-3. 构建过程大约需要 2-5 分钟
+1. After confirming all settings are correct, click the **"Deploy site"** button
+2. Netlify will start the build and deployment process
+3. The build process takes approximately 2-5 minutes
 
-### 步骤 7: 获取访问链接
+### Step 7: Get Access Link
 
-1. 部署完成后，Netlify 会生成一个随机的站点名称，格式如：
+1. After deployment is complete, Netlify will generate a random site name in the format:
    ```
    https://amazing-cupcake-123456.netlify.app
    ```
 
-2. 您可以在站点设置中自定义域名：
-   - 点击 **"Site settings"**
-   - 选择 **"Change site name"**
-   - 输入自定义名称（如：china-ev-intelligence）
+2. You can customize the domain name in site settings:
+   - Click **"Site settings"**
+   - Select **"Change site name"**
+   - Enter a custom name (e.g., china-ev-intelligence)
 
-## 🔧 故障排除
+## 🔧 Troubleshooting
 
-### 如果找不到 "New site from Git" 按钮
+### If You Can't Find the "New site from Git" Button
 
-**新版 Netlify 界面可能的按钮位置：**
+**Possible button locations in the new Netlify interface:**
 
-1. **主控制台页面：**
-   - 查找 **"Add new site"** 下拉菜单
-   - 选择 **"Import an existing project"**
+1. **Main Dashboard:**
+   - Look for the **"Add new site"** dropdown menu
+   - Select **"Import an existing project"**
 
-2. **Sites 页面：**
-   - 点击左侧导航的 **"Sites"**
-   - 查找 **"Add new site"** 按钮
-   - 或者 **"Import from Git"** 选项
+2. **Sites Page:**
+   - Click **"Sites"** in the left navigation
+   - Look for the **"Add new site"** button
+   - Or the **"Import from Git"** option
 
-3. **直接访问：**
-   - 访问 [https://app.netlify.com/start](https://app.netlify.com/start)
-   - 这会直接跳转到创建新站点页面
+3. **Direct Access:**
+   - Visit [https://app.netlify.com/start](https://app.netlify.com/start)
+   - This will directly take you to the create new site page
 
-### 替代部署方法：手动拖拽
+### Alternative Deployment Method: Manual Drag & Drop
 
-如果 Git 连接遇到问题，可以使用手动部署：
+If Git connection encounters issues, you can use manual deployment:
 
-1. 在本地运行 `npm run build` 生成 `dist` 文件夹
-2. 在 Netlify 控制台选择 **"Deploy manually"**
-3. 将 `dist` 文件夹拖拽到指定区域
-4. 等待上传和部署完成
+1. Run `npm run build` locally to generate the `dist` folder
+2. In the Netlify console, select **"Deploy manually"**
+3. Drag the `dist` folder to the designated area
+4. Wait for upload and deployment to complete
 
-## 📊 部署状态检查
+## 📊 Deployment Status Check
 
-部署完成后，您可以：
+After deployment is complete, you can:
 
-1. **查看部署日志：** 检查构建过程是否成功
-2. **测试网站功能：** 确保所有页面和功能正常工作
-3. **检查邮件订阅：** 验证 EmailJS 配置是否正确
+1. **View deployment logs:** Check if the build process was successful
+2. **Test website functionality:** Ensure all pages and features work properly
+3. **Check email subscription:** Verify EmailJS configuration is correct
 
-## 🌐 最终访问方式
+## 🌐 Final Access Methods
 
-部署成功后，您的项目将可以通过以下方式访问：
+After successful deployment, your project will be accessible via:
 
-- **Netlify 站点：** `https://your-site-name.netlify.app`
-- **GitHub Pages：** `https://leon11-ai.github.io/China-EV-Intelligence-v1.2/`
-- **本地开发：** `http://localhost:5173`
+- **Netlify Site:** `https://your-site-name.netlify.app`
+- **GitHub Pages:** `https://leon11-ai.github.io/China-EV-Intelligence-v1.2/`
+- **Local Development:** `http://localhost:5173`
 
-## 📞 需要帮助？
+## 📞 Need Help?
 
-如果在部署过程中遇到任何问题，请提供：
-1. 具体的错误信息
-2. 当前看到的界面截图
-3. 操作步骤描述
+If you encounter any issues during deployment, please provide:
+1. Specific error messages
+2. Screenshots of the current interface
+3. Description of the steps taken
 
-我将为您提供进一步的协助！
+I'll provide further assistance!
