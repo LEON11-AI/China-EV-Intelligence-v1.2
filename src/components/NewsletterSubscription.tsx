@@ -5,16 +5,32 @@ import emailjs from '@emailjs/browser';
 interface NewsletterSubscriptionProps {
   variant?: 'hero' | 'sidebar' | 'footer';
   className?: string;
+  greetingStyle?: 'formal' | 'casual' | 'chinese';
 }
 
 const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({ 
   variant = 'hero', 
-  className = '' 
+  className,
+  greetingStyle = 'formal'
 }) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+
+  const getGreeting = (name: string, style: string) => {
+    const trimmedName = name.trim();
+    switch (style) {
+      case 'formal':
+        return `Dear ${trimmedName}`;
+      case 'casual':
+        return `Hi ${trimmedName}`;
+      case 'chinese':
+        return `尊敬的${trimmedName}`;
+      default:
+        return `Dear ${trimmedName}`;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +73,7 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
 
       const templateParams = {
         to_email: email,
-        to_name: `尊敬的${name.trim()}`, // 使用用户输入的姓名
+        to_name: getGreeting(name, greetingStyle), // 使用可配置的称呼格式
         from_name: 'China EV Intelligence',
         message: 'Thank you for subscribing to our newsletter! You will receive the latest insights about China\'s electric vehicle industry.',
       };
