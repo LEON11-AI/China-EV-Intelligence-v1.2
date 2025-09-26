@@ -144,11 +144,12 @@ const ModelDetailPage: React.FC = () => {
                             <p className="text-sm text-amber-300 mb-3">
                                 🎯 <strong>Pro members get:</strong> Full analysis + exclusive video content + market insights
                             </p>
-                           <Link to="/pricing">
-                            <button className="bg-cta-orange text-white font-bold py-2 px-5 rounded-md hover:bg-cta-hover transition-colors duration-300 text-sm">
-                                Unlock Full Analysis
+                            <button 
+                                disabled 
+                                className="bg-gray-600 text-gray-400 font-bold py-2 px-5 rounded-md cursor-not-allowed transition-colors duration-300 text-sm"
+                            >
+                                即将上线 (Coming Soon)
                             </button>
-                           </Link>
                         </div>
                     </div>
                 ) : (

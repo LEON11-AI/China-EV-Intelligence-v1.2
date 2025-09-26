@@ -52,8 +52,8 @@ const PricingPage: React.FC = () => {
                         <li className="flex items-start"><CheckIcon className="text-green-500 mr-3 flex-shrink-0" /> Priority support</li>
                         <li className="flex items-start"><CheckIcon className="text-green-500 mr-3 flex-shrink-0" /> Export data options (coming soon)</li>
                     </ul>
-                   <button className="w-full bg-cta-orange text-white font-bold py-3 px-6 rounded-md hover:bg-cta-hover transition-all duration-300 touch-manipulation active:scale-95">
-                        Subscribe to Pro
+                   <button className="w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-md cursor-not-allowed transition-all duration-300 touch-manipulation" disabled>
+                        即将上线 (Coming Soon)
                     </button>
                 </div>
             </div>
@@ -205,8 +205,8 @@ const PricingPage: React.FC = () => {
                     <div className="bg-gradient-to-r from-link-blue to-cta-orange p-6 sm:p-8 rounded-lg">
                         <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Ready to upgrade?</h3>
                         <p className="text-base sm:text-lg text-gray-200 mb-4 sm:mb-6 px-2">Join thousands of professionals who rely on our intelligence for strategic decisions.</p>
-                        <button className="bg-white text-link-blue font-bold py-3 px-6 sm:px-8 rounded-md hover:bg-gray-100 transition-all duration-300 touch-manipulation active:scale-95 text-sm sm:text-base">
-                            Upgrade to Pro Now
+                        <button className="bg-gray-400 text-gray-700 font-bold py-3 px-6 sm:px-8 rounded-md cursor-not-allowed transition-all duration-300 touch-manipulation text-sm sm:text-base" disabled>
+                            即将上线 (Coming Soon)
                         </button>
                     </div>
                 </div>

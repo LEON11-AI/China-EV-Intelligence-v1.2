@@ -36,11 +36,12 @@ const ProLocker: React.FC<ProLockerProps> = ({
                 <LockIcon />
                 <p className="text-white font-bold text-lg mt-2 text-center">{title}</p>
                 <p className="text-text-secondary text-sm text-center mb-4">{description}</p>
-                <Link to="/pricing">
-                    <button className="bg-cta-orange text-white font-bold py-2 px-5 rounded-md hover:bg-cta-hover transition-colors duration-300">
-                        {upgradeText}
-                    </button>
-                </Link>
+                <button 
+                    disabled 
+                    className="bg-gray-600 text-gray-400 font-bold py-2 px-5 rounded-md cursor-not-allowed transition-colors duration-300"
+                >
+                    即将上线 (Coming Soon)
+                </button>
             </div>
         </div>
     );

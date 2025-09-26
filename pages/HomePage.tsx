@@ -190,11 +190,11 @@ const HomePage: React.FC = () => {
                             <li className="flex items-start"><CheckIcon className="text-green-500 mr-2 flex-shrink-0" /> In-depth CEO Notes on all models</li>
                             <li className="flex items-start"><CheckIcon className="text-green-500 mr-2 flex-shrink-0" /> Export data options (coming soon)</li>
                         </ul>
-                        <Link to="/pricing" className="mt-8 w-full">
-                           <button className="w-full bg-cta-orange text-white font-bold py-3 px-6 rounded-md hover:bg-cta-hover transition-colors duration-300">
-                                Subscribe Now
+                        <div className="mt-8 w-full">
+                           <button className="w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-md cursor-not-allowed transition-colors duration-300" disabled>
+                                即将上线 (Coming Soon)
                             </button>
-                        </Link>
+                        </div>
                     </div>
                 </div>
             </section>

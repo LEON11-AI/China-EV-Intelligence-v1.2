@@ -89,11 +89,12 @@ const IntelligenceDetailPage: React.FC = () => {
                         <LockIcon />
                         <h3 className="text-xl font-bold">You're reading a Pro content preview.</h3>
                         <p className="text-text-secondary mt-2 mb-4">Subscribe to unlock the full analysis, plus our entire database of exclusive intelligence.</p>
-                        <Link to="/pricing">
-                            <button className="bg-cta-orange text-white font-bold py-2 px-6 rounded-md hover:bg-cta-hover transition-colors duration-300">
-                                Subscribe to Unlock
-                            </button>
-                        </Link>
+                        <button 
+                            disabled 
+                            className="bg-gray-600 text-gray-400 font-bold py-2 px-6 rounded-md cursor-not-allowed transition-colors duration-300"
+                        >
+                            即将上线 (Coming Soon)
+                        </button>
                     </div>
                 )}
             </article>
