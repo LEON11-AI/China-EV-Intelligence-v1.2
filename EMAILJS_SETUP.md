@@ -25,7 +25,7 @@ This project uses EmailJS for handling newsletter subscriptions. Follow these st
 ```
 Subject: Welcome to China EV Intelligence Newsletter!
 
-Hi there,
+{{to_name}}，
 
 Thank you for subscribing to China EV Intelligence newsletter!
 

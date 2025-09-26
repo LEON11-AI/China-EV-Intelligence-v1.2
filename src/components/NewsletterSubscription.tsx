@@ -12,6 +12,7 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
   className = '' 
 }) => {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
 
@@ -21,6 +22,12 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
     if (!email || !email.includes('@')) {
       setStatus('error');
       setMessage('Please enter a valid email address');
+      return;
+    }
+
+    if (!name || name.trim().length < 2) {
+      setStatus('error');
+      setMessage('Please enter your name');
       return;
     }
 
@@ -50,6 +57,7 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
 
       const templateParams = {
         to_email: email,
+        to_name: `尊敬的${name.trim()}`, // 使用用户输入的姓名
         from_name: 'China EV Intelligence',
         message: 'Thank you for subscribing to our newsletter! You will receive the latest insights about China\'s electric vehicle industry.',
       };
@@ -59,6 +67,7 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
       setStatus('success');
       setMessage('Thank you for subscribing! Check your email for confirmation.');
       setEmail('');
+      setName('');
       
       // Reset status after 5 seconds
       setTimeout(() => {
@@ -93,8 +102,8 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
           container: 'bg-gradient-to-r from-cta-orange to-cta-hover p-8 rounded-2xl shadow-xl',
           title: 'text-3xl font-bold text-white mb-4',
           description: 'text-white/90 mb-6 text-lg',
-          form: 'flex flex-col sm:flex-row gap-4',
-          input: 'flex-1 px-4 py-3 rounded-lg border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white focus:outline-none',
+          form: 'flex flex-col gap-4',
+          input: 'px-4 py-3 rounded-lg border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white focus:outline-none',
           button: 'px-6 py-3 bg-white text-cta-orange font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-300 flex items-center justify-center gap-2'
         };
       case 'sidebar':
@@ -111,8 +120,8 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
           container: 'bg-dark-card/50 p-6 rounded-lg',
           title: 'text-lg font-semibold text-text-main mb-3',
           description: 'text-text-secondary mb-4 text-sm',
-          form: 'flex gap-2',
-          input: 'flex-1 px-3 py-2 bg-dark-bg border border-gray-600 rounded-md text-text-main placeholder-text-secondary focus:ring-2 focus:ring-cta-orange focus:border-transparent focus:outline-none',
+          form: 'flex flex-col gap-3',
+          input: 'px-3 py-2 bg-dark-bg border border-gray-600 rounded-md text-text-main placeholder-text-secondary focus:ring-2 focus:ring-cta-orange focus:border-transparent focus:outline-none',
           button: 'px-4 py-2 bg-cta-orange text-white font-medium rounded-md hover:bg-cta-hover transition-colors duration-300 flex items-center justify-center gap-1'
         };
       default:
@@ -153,6 +162,15 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
       </div>
       
       <form onSubmit={handleSubmit} className={styles.form}>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          className={styles.input}
+          disabled={status === 'loading'}
+          required
+        />
         <input
           type="email"
           value={email}
