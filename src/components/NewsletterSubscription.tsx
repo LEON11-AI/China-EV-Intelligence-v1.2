@@ -73,7 +73,7 @@ const NewsletterSubscription: React.FC<NewsletterSubscriptionProps> = ({
 
       const templateParams = {
         to_email: email,
-        to_name: getGreeting(name, greetingStyle), // 使用可配置的称呼格式
+        to_name: `Dear ${name.trim()}`, // 强制使用英文称呼格式
         from_name: 'China EV Intelligence',
         message: 'Thank you for subscribing to our newsletter! You will receive the latest insights about China\'s electric vehicle industry.',
       };
