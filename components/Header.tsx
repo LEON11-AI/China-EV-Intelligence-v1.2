@@ -118,6 +118,7 @@ const Header: React.FC = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-4">
             <NavLink to="/intelligence" className={navLinkClass}>Intelligence</NavLink>
+            <NavLink to="/reports/why-japan-is-rejecting-evs" className={navLinkClass}>Reports</NavLink>
             <NavLink to="/database" className={navLinkClass}>Focused Database</NavLink>
             <NavLink to="/pricing" className={navLinkClass}>Pricing</NavLink>
             <NavLink to="/about" className={navLinkClass}>About</NavLink>
@@ -220,6 +221,7 @@ const Header: React.FC = () => {
               
               {/* Mobile Navigation Links */}
               <NavLink to="/intelligence" className={mobileNavLinkClass} onClick={closeMobileMenu}>Intelligence</NavLink>
+              <NavLink to="/reports/why-japan-is-rejecting-evs" className={mobileNavLinkClass} onClick={closeMobileMenu}>Reports</NavLink>
               <NavLink to="/database" className={mobileNavLinkClass} onClick={closeMobileMenu}>Focused Database</NavLink>
               <NavLink to="/pricing" className={mobileNavLinkClass} onClick={closeMobileMenu}>Pricing</NavLink>
               <NavLink to="/about" className={mobileNavLinkClass} onClick={closeMobileMenu}>About</NavLink>

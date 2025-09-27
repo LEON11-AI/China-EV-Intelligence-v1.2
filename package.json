@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "chart.js": "^4.5.0",
     "date-fns": "^4.1.0",
     "decap-cms-app": "^3.8.3",
     "fuse.js": "^7.1.0",

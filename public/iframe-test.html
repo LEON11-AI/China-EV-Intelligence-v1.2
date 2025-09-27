@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iframe Chart Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .iframe-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>Iframe Chart Test</h1>
+    
+    <div class="test-info">
+        <h3>Test 1: Original HTML with sandbox attributes (same as HTMLContentRenderer)</h3>
+        <p>This iframe uses the same sandbox settings as the HTMLContentRenderer component.</p>
+    </div>
+
+    <div class="iframe-container">
+        <iframe 
+            src="/the-real-reason-japan-is-rejecting-electric-cars.html"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-top-navigation allow-downloads"
+            title="Original HTML with Charts">
+        </iframe>
+    </div>
+
+    <div class="test-info">
+        <h3>Test 2: Debug HTML with sandbox attributes</h3>
+        <p>This iframe loads our debug version to see detailed Chart.js loading information.</p>
+    </div>
+
+    <div class="iframe-container">
+        <iframe 
+            src="/debug-chart.html"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-top-navigation allow-downloads"
+            title="Debug Chart HTML">
+        </iframe>
+    </div>
+
+    <script>
+        console.log('Iframe test page loaded');
+        
+        // Listen for iframe load events
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach((iframe, index) => {
+            iframe.addEventListener('load', function() {
+                console.log(`Iframe ${index + 1} loaded successfully`);
+            });
+            
+            iframe.addEventListener('error', function() {
+                console.error(`Iframe ${index + 1} failed to load`);
+            });
+        });
+    </script>
+</body>
+</html>

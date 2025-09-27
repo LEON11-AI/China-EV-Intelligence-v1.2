@@ -15,6 +15,9 @@ export interface IntelligenceItem {
   tags: string[];
   summary: string;
   content: string;
+  content_type?: 'text' | 'html';
+  html_file?: string;
+  raw_html_content?: string;
   author: string;
   reading_time: number;
   importance: 'High' | 'Medium' | 'Low';
@@ -323,7 +326,10 @@ class ContentService {
         is_pro: item.is_pro || false,
         tags: item.tags || [],
         summary: item.summary || '',
-        content: `html:${item.html_file}`, // Special prefix to indicate HTML content
+        content: item.raw_html_content ? 'raw_html' : `html:${item.html_file}`, // Use raw_html_content if available
+        content_type: item.raw_html_content ? 'html' : 'text',
+        html_file: item.html_file,
+        raw_html_content: item.raw_html_content,
         author: item.author || 'China EV Intelligence',
         reading_time: item.reading_time || 10,
         importance: item.importance || 'High',

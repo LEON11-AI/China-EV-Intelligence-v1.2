@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
+import { formatDateSmart } from '../src/services/DateUtils';
 import { useAuth } from '../components/AuthContext';
+import { AdvancedSearch } from '../components/AdvancedSearch';
+import { SearchSuggestions } from '../components/SearchSuggestions';
 
 const LockIcon: React.FC = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cta-orange inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -146,7 +149,7 @@ const IntelligencePage: React.FC = () => {
                         <tbody className="divide-y divide-gray-700">
                             {filteredItems.map(item => (
                                 <tr key={item.id} className="hover:bg-gray-700/50 transition-colors duration-200">
-                                    <td className="p-4 whitespace-nowrap font-mono text-text-secondary">{item.date}</td>
+                                    <td className="p-4 whitespace-nowrap font-mono text-text-secondary">{formatDateSmart(item.date)}</td>
                                     <td className="p-4 max-w-md">
                                         <Link to={`/intelligence/${item.id}`} className="hover:text-link-blue transition-colors">
                                             {item.is_pro && !isPro ? (
