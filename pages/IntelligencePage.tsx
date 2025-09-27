@@ -61,8 +61,18 @@ const IntelligencePage: React.FC = () => {
         return categories;
     };
 
+    const getConfidenceGrade = (confidence: string) => {
+        switch (confidence.toLowerCase()) {
+            case 'high': return 'A';
+            case 'medium': return 'B';
+            case 'low': return 'C';
+            default: return confidence; // fallback to original value
+        }
+    };
+
     const getConfidenceClass = (confidence: string) => {
-        switch (confidence) {
+        const grade = getConfidenceGrade(confidence);
+        switch (grade) {
             case 'A': return 'bg-green-500';
             case 'B': return 'bg-yellow-500';
             case 'C': return 'bg-red-500';
@@ -156,6 +166,10 @@ const IntelligencePage: React.FC = () => {
                                             item.category === 'Market Expansion' ? 'bg-purple-600 text-white' :
                                             item.category === 'Safety Rating' ? 'bg-yellow-600 text-white' :
                                             item.category === 'Software Update' ? 'bg-indigo-600 text-white' :
+                                            item.category === 'Market Analysis' ? 'bg-emerald-600 text-white' :
+                                            item.category === 'market_analysis' ? 'bg-emerald-600 text-white' :
+                                            item.category === 'technology' ? 'bg-cyan-600 text-white' :
+                                            item.category === 'general' ? 'bg-slate-600 text-white' :
                                             'bg-gray-600 text-white'
                                         }`}>
                                             {item.category}
@@ -166,7 +180,7 @@ const IntelligencePage: React.FC = () => {
                                     <td className="p-4 text-center">
                                         <div className="flex justify-center">
                                             <span className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-sm ${getConfidenceClass(item.confidence)}`}>
-                                                {item.confidence}
+                                                {getConfidenceGrade(item.confidence)}
                                             </span>
                                         </div>
                                     </td>

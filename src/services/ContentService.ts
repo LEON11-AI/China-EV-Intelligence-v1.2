@@ -206,19 +206,7 @@ class ContentService {
       return this.intelligenceCache;
     }
 
-    try {
-      // First try to load from CMS content directory
-      const cmsData = await this.loadIntelligenceFromCMS();
-      if (cmsData.length > 0) {
-        this.intelligenceCache = cmsData;
-        this.cacheTimestamp = Date.now();
-        return cmsData;
-      }
-    } catch (error) {
-      console.warn('Failed to load intelligence from CMS, falling back to JSON:', error);
-    }
-
-    // Fallback to JSON file
+    // Load directly from JSON file (skip CMS API for now)
     try {
       const response = await fetch('/data/intelligence.json');
       if (!response.ok) {
@@ -245,19 +233,7 @@ class ContentService {
       return this.modelsCache;
     }
 
-    try {
-      // First try to load from CMS content directory
-      const cmsData = await this.loadModelsFromCMS();
-      if (cmsData.length > 0) {
-        this.modelsCache = cmsData;
-        this.cacheTimestamp = Date.now();
-        return cmsData;
-      }
-    } catch (error) {
-      console.warn('Failed to load models from CMS, falling back to JSON:', error);
-    }
-
-    // Fallback to JSON file
+    // Load directly from JSON file (skip CMS API for now)
     try {
       const response = await fetch('/data/models.json');
       if (!response.ok) {

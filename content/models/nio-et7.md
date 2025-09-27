@@ -1,24 +1,122 @@
 ---
-id: "nio-et7-2024"
+title: "NIO ET7"
 brand: "NIO"
-model_name: "ET7"
-status: "active"
-image: "/uploads/nio-et7-main.jpg"
-price_range: "448,000-526,000 RMB"
-starting_price: 448000
-category: "Sedan"
-drivetrain: "AWD"
-range: 500
-battery_capacity: 75.0
-max_power: 480
-acceleration: 3.9
-seats: 5
-description: "NIO ET7 is a luxury intelligent electric sedan equipped with NIO's latest NAD autonomous driving system and NT2.0 technology platform, providing exceptional driving experience and intelligent features."
-launch_date: "2022-03-28T00:00:00Z"
+model: "ET7"
+status: "available"
+ceo_note: ""
+images:
+  - url: "/uploads/nio-et7-main.jpg"
+price_usd_estimated:
+  - variant: "Standard Range"
+    price: 65000
+  - variant: "Long Range"
+    price: 75000
+key_specs:
+  range_km: 500
+  battery_kwh: 75.0
+  power_kw: 480
+  acceleration_0_100: 3.9
+  top_speed_kmh: 200
+  seating: 5
+  drive_type: "AWD"
+detailed_specs:
+  battery:
+    capacity_kwh: 75.0
+    type: "Lithium Iron Phosphate"
+    supplier: "CATL"
+    warranty_years: 8
+  charging:
+    dc_fast_kw: 150
+    ac_slow_kw: 11
+    time_10_80_min: 30
+    connector_type: "CCS2"
+  performance:
+    motor_type: "Dual Motor"
+    total_power_kw: 480
+    total_torque_nm: 850
+    drive_config: "AWD"
+  efficiency:
+    wltp_kwh_100km: 15.0
+    nedc_kwh_100km: 14.5
+    epa_kwh_100km: 16.0
+market_analysis:
+  target_market: "Luxury Sedan"
+  positioning: "Premium Electric Sedan"
+  key_selling_points: ["NAD Autonomous Driving", "Battery Swap Technology", "Premium Interior"]
+  market_challenges: ["High Price Point", "Competition from Tesla"]
+  expected_sales_volume: "30,000 units annually"
+competitor_comparison:
+  - competitor: "Tesla Model S"
+    price_difference: "-$10,000"
+    key_advantages: ["Battery Swap", "Better Service"]
+    key_disadvantages: ["Lower Brand Recognition"]
+pricing_history:
+  - date: "2022-03-28"
+    price_usd: 65000
+    notes: "Initial Launch Price"
+user_ratings:
+  overall: 4.2
+  performance: 4.5
+  range: 4.0
+  charging: 4.3
+  interior: 4.4
+  technology: 4.6
+  value: 3.8
+  total_reviews: 1250
+sales_data:
+  monthly_sales:
+    - month: "2024-01"
+      units: 2500
+    - month: "2024-02"
+      units: 2800
+  total_sales: 30000
+  market_share_percent: 2.5
+full_specs:
+  dimensions:
+    length_mm: 5098
+    width_mm: 1987
+    height_mm: 1505
+    wheelbase_mm: 3060
+    ground_clearance_mm: 120
+  weight:
+    curb_weight_kg: 2425
+    gross_weight_kg: 2925
+    payload_kg: 500
+  interior:
+    seating_capacity: 5
+    cargo_volume_l: 580
+    infotainment_screen: "12.8-inch AMOLED"
+    driver_display: "10.2-inch HDR"
+  safety:
+    ncap_rating: "5-star"
+    safety_features: ["AEB", "LKA", "ACC", "BSM"]
+    adas_features: ["NAD", "Highway Pilot", "Traffic Jam Pilot"]
+  connectivity:
+    ota_updates: true
+    mobile_app: true
+    wifi_hotspot: true
+    bluetooth: "5.0"
+market_plan:
+  launch_timeline:
+    announcement: "2021-01-09"
+    pre_orders: "2021-04-19"
+    deliveries: "2022-03-28"
+    mass_production: "2022-01-01"
+  production_targets:
+    year_1: 20000
+    year_2: 35000
+    year_3: 50000
+  market_expansion:
+    domestic_launch: "2022-03-28"
+    export_markets: ["Norway", "Germany", "Netherlands"]
+    international_launch: "2022-09-01"
+sources:
+  - type: "Official"
+    url: "https://www.nio.com/et7"
+    date: "2024-01-15"
+    reliability: "High"
 updated_date: "2024-01-15T10:00:00Z"
-features: ["NAD Autonomous Driving", "NOMI AI Assistant", "Battery Swap Technology", "Air Suspension", "Queen Co-pilot Seat"]
-competitors: ["BMW iX", "Mercedes EQS", "Tesla Model S"]
-market_performance: "Excellent performance in the luxury electric sedan market, with stable monthly sales of 2,000-3,000 units and high user satisfaction."
+published: true
 ---
 
 # NIO ET7 - Luxury Intelligent Electric Sedan
