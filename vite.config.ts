@@ -20,6 +20,13 @@ export default defineConfig(({ mode }) => {
         watch: {
           // Ignore admin directory file changes to prevent frequent reloads
           ignored: ['**/public/admin/**']
+        },
+        proxy: {
+          '/backend-api/cms': {
+            target: 'http://localhost:3000',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/backend-api\/cms/, '/api/cms')
+          }
         }
       },
       plugins: [
