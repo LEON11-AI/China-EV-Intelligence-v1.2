@@ -17,6 +17,9 @@ const REPORTS_DIR = path.join(__dirname, '..', 'public', 'reports');
 // Function to read markdown files and convert to JSON
 function syncIntelligenceContent() {
   console.log('Syncing intelligence content...');
+  console.log('CONTENT_DIR:', CONTENT_DIR);
+  console.log('REPORTS_DIR:', REPORTS_DIR);
+  console.log('DATA_FILE:', DATA_FILE);
   
   const intelligenceData = [];
   
@@ -59,38 +62,45 @@ function syncIntelligenceContent() {
   
   // Read HTML reports
   if (fs.existsSync(REPORTS_DIR)) {
-    const htmlFiles = fs.readdirSync(REPORTS_DIR).filter(file => file.endsWith('.html'));
+    console.log('Reading reports directory:', REPORTS_DIR);
+    const reportFiles = fs.readdirSync(REPORTS_DIR).filter(file => file.endsWith('.md'));
+    console.log('Found report files:', reportFiles);
     
-    htmlFiles.forEach(file => {
-      const htmlPath = path.join(REPORTS_DIR, file);
-      const metadataPath = path.join(REPORTS_DIR, file.replace('.html', '.json'));
+    reportFiles.forEach(file => {
+      const filePath = path.join(REPORTS_DIR, file);
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const { data, content } = matter(fileContent);
       
-      if (fs.existsSync(metadataPath)) {
-        const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
-        
+      console.log(`Processing file: ${file}`);
+      console.log(`File data:`, data);
+      
+      // Check if this is an HTML report
+      if (data.type === 'html_report' && data.html_file) {
+        console.log(`Found HTML report: ${file}`);
         const item = {
-          id: metadata.id || file.replace('.html', ''),
-          title: metadata.title || '',
-          date: metadata.date || new Date().toISOString().split('T')[0],
-          brand: metadata.brand || 'Industry',
-          model: metadata.model || '',
-          category: metadata.category || 'Market Analysis',
-          tags: metadata.tags || [],
-          summary: metadata.summary || '',
-          content: `html:/${file}`,
-          author: metadata.author || 'China EV Intelligence Team',
-          read_time: metadata.reading_time || metadata.read_time || 10,
-          importance: metadata.importance || 'high',
-          is_pro: metadata.is_pro !== false,
-          confidence: metadata.confidence || 'high',
-          source: metadata.source || 'Market Research',
-          status: metadata.status || 'verified',
-          featured: metadata.featured || false,
+          id: data.id || (file === 'test-html-report.md' ? 'test_001' : file.replace('.md', '')),
+          title: data.title || '',
+          date: data.date ? (typeof data.date === 'string' ? data.date.split('T')[0] : new Date(data.date).toISOString().split('T')[0]) : new Date().toISOString().split('T')[0],
+          brand: data.brand || 'Industry',
+          model: data.model || '',
+          category: data.category || 'market_analysis',
+          tags: data.tags || [],
+          summary: data.summary || '',
+          content: content,
+          author: data.author || 'China EV Intelligence',
+          read_time: data.reading_time || data.read_time || 10,
+          importance: data.importance?.toLowerCase() || 'high',
+          is_pro: data.is_pro !== false,
+          confidence: data.confidence || 'high',
+          source: data.source || 'China EV Intelligence',
+          status: data.status || 'verified',
+          featured: data.featured || false,
+          html_file: data.html_file,
           content_type: 'html'
         };
         
         // Only include published content
-        if (metadata.published !== false) {
+        if (data.published !== false) {
           intelligenceData.push(item);
         }
       }
@@ -133,16 +143,14 @@ function watchContent() {
   }
 }
 
-// Main execution
-if (import.meta.url === `file://${__filename}`) {
-  const command = process.argv[2];
-  
-  if (command === 'watch') {
-    syncIntelligenceContent();
-    watchContent();
-  } else {
-    syncIntelligenceContent();
-  }
+// Main execution - always run when script is executed directly
+const command = process.argv[2];
+
+if (command === 'watch') {
+  syncIntelligenceContent();
+  watchContent();
+} else {
+  syncIntelligenceContent();
 }
 
 export { syncIntelligenceContent };
