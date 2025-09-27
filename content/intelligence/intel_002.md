@@ -1,6 +1,7 @@
 ---
+id: "intel_002"
 title: "Xiaomi announces OTA update 2.1, enhancing ADAS features."
-date: "2024-07-18T00:00:00Z"
+date: "2024-07-18"
 brand: "Xiaomi"
 model: "SU7"
 category: "technology"
@@ -10,16 +11,29 @@ confidence: "high"
 is_pro: false
 tags: ["Xiaomi", "SU7", "OTA", "ADAS", "software update"]
 summary: "Xiaomi has announced a major OTA update 2.1 for the SU7, bringing enhanced ADAS features and improved autonomous driving capabilities."
-image: ""
 author: "China EV Intelligence"
 reading_time: 4
-importance: "Medium"
+importance: "medium"
 published: true
-seo_title: ""
-seo_description: ""
-related_links: []
-data_sources: ["Xiaomi Official Announcement"]
 featured: false
 ---
 
-Xiaomi Auto has officially pushed its latest Over-the-Air (OTA) update, version 2.1, to all SU7 models. The update primarily focuses on enhancing the vehicle's Advanced Driver-Assistance Systems (ADAS). Key improvements include more responsive lane-keeping assist on curved roads and better object detection for cyclists and pedestrians in low-light conditions. The update also includes minor bug fixes for the infotainment system.
+# Xiaomi Announces OTA Update 2.1, Enhancing ADAS Features
+
+Xiaomi Auto has officially pushed its latest Over-the-Air (OTA) update, version 2.1, to all SU7 models. The update primarily focuses on enhancing the vehicle's Advanced Driver-Assistance Systems (ADAS).
+
+## Key Improvements
+
+### Enhanced ADAS Features
+- More responsive lane-keeping assist on curved roads
+- Better object detection for cyclists and pedestrians in low-light conditions
+- Improved autonomous driving capabilities
+
+### System Updates
+- Minor bug fixes for the infotainment system
+- Performance optimizations
+- Enhanced user interface responsiveness
+
+## Impact Analysis
+
+This update demonstrates Xiaomi's commitment to continuous improvement of their vehicle software ecosystem, positioning the SU7 as a competitive option in the smart EV market.

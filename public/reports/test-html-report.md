@@ -1,23 +1,32 @@
 ---
-title: "测试HTML报告"
-date: 2024-01-20T10:00:00Z
-brand: "Tesla"
-category: "market_analysis"
-type: "html_report"
-html_file: "/reports/sample-report.html"
-summary: "这是一个测试HTML报告，用于验证CMS功能是否正常工作。"
-tags: ["测试", "HTML报告", "市场分析"]
-is_pro: true
-author: "China EV Intelligence"
+title: "The REAL Reason Japan is Rejecting Electric Cars "
+date: 2025-09-27T13:31:00.000+08:00
+brand: BYD
+category: market_analysis
+type: html_report
+html_file: /the-real-reason-japan-is-rejecting-electric-cars.html
+summary: >-
+  Japan's electric vehicle market is facing severe challenges. In the first half
+  of 2025, Japan's EV sales declined by 7% year-over-year, marking the second
+  consecutive year of decline. Data from the Japan Automobile Dealers
+  Association and the Japan Mini Vehicles Association shows that in February
+  2025, Japan's EV sales (passenger cars only) plummeted 20% year-over-year to
+  4,390 units, representing 16 consecutive months of market contraction.
+
+
+  From a market penetration perspective, Japan's EV market performance is equally concerning. From January to August 2025, Japan's total EV sales were approximately 33,600 units, while passenger car sales totaled 2.41 million units, resulting in a pure EV penetration rate of only 1.4%, declining for two consecutive years. This figure is far below the global average and even lower than many developing countries.
+tags: []
+is_pro: false
+author: leon
 reading_time: 5
-importance: "Medium"
-status: "verified"
-confidence: "high"
-source: "内部测试"
+importance: Medium
+status: verified
+confidence: high
+source: China EV Intelligence
 published: true
 featured: false
-seo_title: "测试HTML报告 - China EV Intelligence"
-seo_description: "用于验证CMS HTML报告功能的测试文件"
+seo_title: 测试HTML报告 - China EV Intelligence
+seo_description: 用于验证CMS HTML报告功能的测试文件
 ---
 
 # 测试HTML报告
