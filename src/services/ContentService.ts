@@ -299,6 +299,14 @@ class ContentService {
         // If no HTML reports exist, return empty array
         return [];
       }
+      
+      // Check if response is actually JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        // Not JSON, probably an HTML error page
+        return [];
+      }
+      
       const htmlReportsData = await response.json();
       
       // Transform HTML reports data to match IntelligenceItem interface
@@ -327,7 +335,7 @@ class ContentService {
         featured: item.featured || false
       }));
     } catch (error) {
-      console.warn('Failed to load HTML reports from CMS:', error);
+      // Silently return empty array - this is expected when no HTML reports exist
       return [];
     }
   }
