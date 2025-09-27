@@ -5,13 +5,8 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Enable Netlify Identity for CMS authentication
-[context.production]
-  environment = { NETLIFY_IDENTITY_ENABLED = "true" }
-
-# Git Gateway configuration for CMS
-[[plugins]]
-  package = "netlify-plugin-git-gateway"
+# CMS is configured for local development with test-repo backend
+# No Netlify Identity or Git Gateway needed
 
 [[redirects]]
   from = "/*"
