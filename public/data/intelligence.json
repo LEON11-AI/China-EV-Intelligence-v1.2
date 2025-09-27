@@ -135,5 +135,24 @@
     "confidence": "A",
     "source": "Market Analysis",
     "status": "Verified"
+  },
+  {
+    "id": "intel_009",
+    "title": "The REAL Reason Japan is Rejecting Electric Cars",
+    "date": "2024-12-19",
+    "brand": "Industry",
+    "category": "Market Analysis",
+    "tags": ["Japan", "Market Analysis", "EV Adoption", "Policy", "Cultural Factors"],
+    "summary": "Comprehensive analysis of Japan's resistance to electric vehicle adoption, examining cultural, economic, and policy factors that differentiate the Japanese market from global EV trends.",
+    "content": "html:/The REAL Reason Japan is Rejecting Electric Cars.html",
+    "author": "China EV Intelligence Team",
+    "read_time": 12,
+    "importance": "high",
+    "is_pro": true,
+    "confidence": "A",
+    "source": "Market Research",
+    "status": "Verified",
+    "featured": true,
+    "content_type": "html"
   }
 ]

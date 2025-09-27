@@ -80,7 +80,18 @@ const IntelligenceDetailPage: React.FC = () => {
                    {showPaywall ? (
                        <p>{contentTeaser}</p>
                    ) : (
-                       <p>{item.content}</p>
+                       item.content.startsWith('html:') ? (
+                           <div className="w-full">
+                               <iframe 
+                                   src={item.content.replace('html:', '')} 
+                                   className="w-full h-screen border-0 rounded-lg"
+                                   title={item.title}
+                                   style={{ minHeight: '800px' }}
+                               />
+                           </div>
+                       ) : (
+                           <p>{item.content}</p>
+                       )
                    )}
                 </div>
 
