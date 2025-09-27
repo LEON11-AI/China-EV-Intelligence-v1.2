@@ -63,3 +63,32 @@ collections:
       - {label: "Data Sources", name: "sources", widget: "list", fields: [{label: "Type", name: "type", widget: "string"}, {label: "URL", name: "url", widget: "string"}, {label: "Date", name: "date", widget: "string"}, {label: "Reliability", name: "reliability", widget: "string"}]}
       - {label: "Last Updated", name: "updated_date", widget: "datetime"}
       - {label: "Published", name: "published", widget: "boolean", default: false}
+
+  - name: "html_reports"
+    label: "HTML Reports"
+    folder: "public/reports"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Brand", name: "brand", widget: "select", options: ["BYD", "Tesla", "NIO", "XPeng", "Li Auto", "Geely", "GAC", "SAIC", "Other"], required: false}
+      - {label: "Category", name: "category", widget: "select", options: ["market_analysis", "technology", "policy", "competition", "financial", "supply_chain", "regulatory", "partnerships", "deep_analysis"], default: "deep_analysis"}
+      - {label: "Type", name: "type", widget: "select", options: ["html_report", "external_content"], default: "html_report"}
+      - {label: "HTML File", name: "html_file", widget: "file", media_folder: "public", public_folder: "/", allow_multiple: false}
+      - {label: "Summary", name: "summary", widget: "text"}
+      - {label: "Tags", name: "tags", widget: "list", default: []}
+      - {label: "Pro Content", name: "is_pro", widget: "boolean", default: true}
+      - {label: "Featured Image", name: "image", widget: "image", required: false}
+      - {label: "Author", name: "author", widget: "string", default: "China EV Intelligence"}
+      - {label: "Reading Time", name: "reading_time", widget: "number", default: 10}
+      - {label: "Importance", name: "importance", widget: "select", options: ["High", "Medium", "Low"], default: "High"}
+      - {label: "Status", name: "status", widget: "select", options: ["verified", "pending", "draft"], default: "pending"}
+      - {label: "Confidence Level", name: "confidence", widget: "select", options: ["high", "medium", "low"], default: "high"}
+      - {label: "Source", name: "source", widget: "string"}
+      - {label: "Published", name: "published", widget: "boolean", default: false}
+      - {label: "Featured Article", name: "featured", widget: "boolean", default: false}
+      - {label: "SEO Title", name: "seo_title", widget: "string", required: false}
+      - {label: "SEO Description", name: "seo_description", widget: "text", required: false}
+      - {label: "Related Links", name: "related_links", widget: "list", required: false, fields: [{label: "Title", name: "title", widget: "string"}, {label: "URL", name: "url", widget: "string"}]}
+      - {label: "Data Sources", name: "data_sources", widget: "list", required: false}

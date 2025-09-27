@@ -225,9 +225,14 @@ class ContentService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const jsonData = await response.json();
-      this.intelligenceCache = jsonData;
+      
+      // Merge with HTML reports
+      const htmlReports = await this.loadHtmlReports();
+      const combinedData = [...jsonData, ...htmlReports];
+      
+      this.intelligenceCache = combinedData;
       this.cacheTimestamp = Date.now();
-      return jsonData;
+      return combinedData;
     } catch (error) {
       console.error('Failed to load intelligence data:', error);
       return [];
@@ -306,6 +311,47 @@ class ContentService {
       }));
     } catch (error) {
       console.warn('Failed to load intelligence from CMS:', error);
+      return [];
+    }
+  }
+
+  // Load HTML reports from CMS
+  private async loadHtmlReports(): Promise<IntelligenceItem[]> {
+    try {
+      const response = await fetch('/admin/content/html_reports.json');
+      if (!response.ok) {
+        // If no HTML reports exist, return empty array
+        return [];
+      }
+      const htmlReportsData = await response.json();
+      
+      // Transform HTML reports data to match IntelligenceItem interface
+      return htmlReportsData.map((item: any) => ({
+        id: item.id || `html-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        title: item.title,
+        date: item.date,
+        brand: item.brand,
+        model: item.model || '',
+        category: item.category,
+        source: item.source || '',
+        status: item.status || 'verified',
+        confidence: item.confidence || 'high',
+        is_pro: item.is_pro || false,
+        tags: item.tags || [],
+        summary: item.summary || '',
+        content: `html:${item.html_file}`, // Special prefix to indicate HTML content
+        author: item.author || 'China EV Intelligence',
+        reading_time: item.reading_time || 10,
+        importance: item.importance || 'High',
+        published: item.published !== false,
+        seo_title: item.seo_title || item.title,
+        seo_description: item.seo_description || item.summary,
+        related_links: item.related_links || [],
+        data_sources: item.data_sources || [],
+        featured: item.featured || false
+      }));
+    } catch (error) {
+      console.warn('Failed to load HTML reports from CMS:', error);
       return [];
     }
   }
