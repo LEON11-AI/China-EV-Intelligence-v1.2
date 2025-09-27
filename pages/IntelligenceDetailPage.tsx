@@ -84,9 +84,11 @@ const IntelligenceDetailPage: React.FC = () => {
                            <div className="w-full">
                                <iframe 
                                    src={item.content.replace('html:', '')} 
-                                   className="w-full h-screen border-0 rounded-lg"
+                                   className="w-full border-0 rounded-lg"
                                    title={item.title}
-                                   style={{ minHeight: '800px' }}
+                                   style={{ minHeight: '800px', height: '800px' }}
+                                   sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                   loading="lazy"
                                />
                            </div>
                        ) : (
