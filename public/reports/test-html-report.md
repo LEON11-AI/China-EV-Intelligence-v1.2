@@ -1,5 +1,5 @@
 ---
-title: "The REAL Reason Japan is Rejecting Electric Cars "
+title: "The REAL Reason Japan is Rejecting Electric Cars  "
 date: 2025-09-27T13:31:00.000+08:00
 brand: BYD
 category: market_analysis
@@ -25,8 +25,8 @@ confidence: high
 source: China EV Intelligence
 published: true
 featured: false
-seo_title: 测试HTML报告 - China EV Intelligence
-seo_description: 用于验证CMS HTML报告功能的测试文件
+seo_title: ""
+seo_description: ""
 ---
 
 # 测试HTML报告
