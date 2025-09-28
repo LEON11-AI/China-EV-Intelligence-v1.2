@@ -1,26 +1,5 @@
 [
   {
-    "id": "test_001",
-    "title": "The REAL Reason Japan is Rejecting Electric Cars  ",
-    "date": "2025-09-27",
-    "brand": "BYD",
-    "model": "",
-    "category": "market_analysis",
-    "tags": [],
-    "summary": "Japan's electric vehicle market is facing severe challenges. In the first half of 2025, Japan's EV sales declined by 7% year-over-year, marking the second consecutive year of decline. Data from the Japan Automobile Dealers Association and the Japan Mini Vehicles Association shows that in February 2025, Japan's EV sales (passenger cars only) plummeted 20% year-over-year to 4,390 units, representing 16 consecutive months of market contraction.\n\nFrom a market penetration perspective, Japan's EV market performance is equally concerning. From January to August 2025, Japan's total EV sales were approximately 33,600 units, while passenger car sales totaled 2.41 million units, resulting in a pure EV penetration rate of only 1.4%, declining for two consecutive years. This figure is far below the global average and even lower than many developing countries.",
-    "content": "\r\n# 测试HTML报告\r\n\r\n这是一个用于测试CMS HTML Reports功能的示例文件。该文件验证了以下功能：\r\n\r\n## 功能验证\r\n\r\n1. **HTML文件上传**: 支持上传HTML文件到reports目录\r\n2. **元数据管理**: 完整的标题、日期、品牌等信息\r\n3. **分类系统**: 支持多种内容分类\r\n4. **标签系统**: 灵活的标签管理\r\n5. **SEO优化**: SEO标题和描述字段\r\n6. **状态管理**: 内容状态和置信度管理\r\n\r\n## 测试结果\r\n\r\n✅ 文件创建成功  \r\n✅ 元数据字段完整  \r\n✅ 配置格式正确  \r\n\r\n该测试文件确认HTML Reports集合配置正确，可以正常使用。\n",
-    "author": "leon",
-    "read_time": 5,
-    "importance": "medium",
-    "is_pro": false,
-    "confidence": "high",
-    "source": "China EV Intelligence",
-    "status": "verified",
-    "featured": false,
-    "html_file": "/the-real-reason-japan-is-rejecting-electric-cars.html",
-    "content_type": "html"
-  },
-  {
     "id": "intel_001",
     "title": "NIO ET9 final production specs revealed in MIIT filing.",
     "date": "2024-07-20",
@@ -167,6 +146,30 @@
     "confidence": "medium",
     "source": "Internal Analysis",
     "status": "published",
+    "featured": true
+  },
+  {
+    "id": "test_001",
+    "title": "The REAL Reason Japan is Rejecting Electric Cars",
+    "date": "2024-01-10",
+    "brand": "Industry Analysis",
+    "model": "Market Trends",
+    "category": "market_analysis",
+    "tags": [
+      "Japan",
+      "Electric Cars",
+      "Market Analysis",
+      "Industry Trends"
+    ],
+    "summary": "An in-depth analysis of why Japan's automotive market has been slower to adopt electric vehicles compared to other major markets.",
+    "content": "\r\n# The REAL Reason Japan is Rejecting Electric Cars\r\n\r\nJapan, once a leader in automotive innovation, has been notably slower in adopting electric vehicles compared to China, Europe, and even the United States. This analysis explores the complex factors behind this phenomenon.\r\n\r\n## Historical Context\r\n\r\nJapan's automotive industry built its reputation on hybrid technology, particularly with Toyota's Prius. This early success in hybrid vehicles may have created a technological path dependency that has made the transition to full electric vehicles more challenging.\r\n\r\n## Key Factors Behind the Slow Adoption\r\n\r\n### 1. Infrastructure Challenges\r\n- Limited charging infrastructure in urban areas\r\n- High cost of electricity compared to gasoline\r\n- Apartment living makes home charging difficult\r\n\r\n### 2. Consumer Preferences\r\n- Strong preference for reliable, proven technology\r\n- Concerns about battery life and replacement costs\r\n- Cultural resistance to early adoption of new technology\r\n\r\n### 3. Industry Strategy\r\n- Major automakers' continued investment in hydrogen fuel cells\r\n- Focus on hybrid technology as a transitional solution\r\n- Export market considerations\r\n\r\n## Government Policy Impact\r\n\r\nWhile the Japanese government has announced ambitious EV targets, the policy implementation has been gradual compared to more aggressive approaches in China and Europe.\r\n\r\n## Future Outlook\r\n\r\nDespite current challenges, Japan is beginning to accelerate its EV transition with new government incentives and increased investment from major automakers.\r\n\r\n## Conclusion\r\n\r\nJapan's slower EV adoption reflects a combination of infrastructure, cultural, and strategic factors. However, recent policy changes and market pressures suggest this trend may be reversing.",
+    "author": "China EV Intelligence",
+    "read_time": 6,
+    "importance": "high",
+    "is_pro": false,
+    "confidence": "high",
+    "source": "Industry Research",
+    "status": "verified",
     "featured": true
   }
 ]

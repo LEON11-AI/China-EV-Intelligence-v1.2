@@ -16,6 +16,8 @@ collections:
     folder: "content/intelligence"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
     fields:
       - {label: "Title", name: "title", widget: "string"}
       - {label: "Date", name: "date", widget: "datetime"}
@@ -77,7 +79,6 @@ collections:
       - {label: "Brand", name: "brand", widget: "select", options: ["BYD", "Tesla", "NIO", "XPeng", "Li Auto", "Geely", "GAC", "SAIC", "Other"], required: false}
       - {label: "Category", name: "category", widget: "select", options: ["market_analysis", "technology", "policy", "competition", "financial", "supply_chain", "regulatory", "partnerships", "deep_analysis"], default: "deep_analysis"}
       - {label: "Type", name: "type", widget: "select", options: ["html_report", "external_content"], default: "html_report"}
-      - {label: "HTML File", name: "html_file", widget: "file", media_folder: "public", public_folder: "/", allow_multiple: false}
       - {label: "Raw HTML Content", name: "raw_html_content", widget: "code", default_language: "html", allow_language_selection: false, hint: "Paste your complete standalone HTML file content here, including <style>, <script>, and all HTML tags. This content will be rendered as-is without sanitization."}
       - {label: "Summary", name: "summary", widget: "text"}
       - {label: "Tags", name: "tags", widget: "list", default: []}

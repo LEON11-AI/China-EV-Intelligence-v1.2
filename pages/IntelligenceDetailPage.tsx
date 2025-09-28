@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
@@ -23,29 +23,99 @@ interface RawHTMLContentRendererProps {
 }
 
 const RawHTMLContentRenderer: React.FC<RawHTMLContentRendererProps> = ({ htmlContent, title }) => {
+  const [processedContent, setProcessedContent] = useState<string>('');
+  
+  useEffect(() => {
+    // Process HTML content to ensure proper rendering
+    let processed = htmlContent;
+    
+    // Ensure scripts are executable
+    processed = processed.replace(/<script([^>]*)>/gi, '<script$1>');
+    
+    // Ensure styles are applied
+    processed = processed.replace(/<style([^>]*)>/gi, '<style$1>');
+    
+    setProcessedContent(processed);
+  }, [htmlContent]);
+  
   return (
     <div className="w-full relative">
       <style>{`
         .raw-html-content {
-          /* Reset any inherited styles that might interfere */
-          all: initial;
-          font-family: inherit;
-          /* Allow the raw HTML to define its own styles */
+          /* Minimal reset to preserve HTML content styling */
           display: block;
           width: 100%;
+          line-height: 1.6;
+          color: inherit;
+          /* Isolate styles to prevent conflicts */
+          all: initial;
+          font-family: inherit;
+          background: transparent;
         }
         .raw-html-content * {
-          /* Preserve the original HTML styling */
+          /* Reset box model for all child elements */
           box-sizing: border-box;
+        }
+        .raw-html-content h1,
+        .raw-html-content h2,
+        .raw-html-content h3,
+        .raw-html-content h4,
+        .raw-html-content h5,
+        .raw-html-content h6 {
+          margin: 1em 0 0.5em 0;
+          font-weight: bold;
+          line-height: 1.2;
+        }
+        .raw-html-content p {
+          margin: 0.5em 0;
+          line-height: 1.6;
+        }
+        .raw-html-content img {
+          max-width: 100%;
+          height: auto;
+          display: block;
+        }
+        .raw-html-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1em 0;
+        }
+        .raw-html-content th,
+        .raw-html-content td {
+          padding: 0.5em;
+          border: 1px solid #ccc;
+          text-align: left;
+        }
+        /* Preserve chart and visualization styles */
+        .raw-html-content canvas,
+        .raw-html-content svg {
+          max-width: 100%;
+          height: auto;
+          display: block;
+        }
+        /* Ensure interactive elements work properly */
+        .raw-html-content button,
+        .raw-html-content input,
+        .raw-html-content select {
+          font-family: inherit;
+          font-size: inherit;
+        }
+        /* Preserve custom styles and animations */
+        .raw-html-content .chart-container,
+        .raw-html-content .progress-bar,
+        .raw-html-content .interactive-element {
+          /* Allow custom styles to take precedence */
+          all: revert;
         }
       `}</style>
       <div 
         className="raw-html-content"
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
+        dangerouslySetInnerHTML={{ __html: processedContent }}
         style={{
           minHeight: '400px',
           maxWidth: '100%',
-          overflow: 'auto'
+          overflow: 'auto',
+          backgroundColor: 'transparent'
         }}
       />
     </div>
@@ -62,9 +132,37 @@ const HTMLContentRenderer: React.FC<HTMLContentRendererProps> = ({ htmlFile, tit
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [iframeKey, setIframeKey] = useState<number>(0);
+  const [iframeHeight, setIframeHeight] = useState<number>(800);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleIframeLoad = () => {
     setLoading(false);
+    
+    // Auto-resize iframe based on content
+    try {
+      const iframe = iframeRef.current;
+      if (iframe && iframe.contentWindow) {
+        const resizeIframe = () => {
+          try {
+            const contentHeight = iframe.contentWindow?.document.body.scrollHeight;
+            if (contentHeight && contentHeight > 400) {
+              setIframeHeight(Math.min(contentHeight + 50, 2000)); // Max height 2000px
+            }
+          } catch (e) {
+            // Cross-origin restrictions, keep default height
+            console.log('Cannot access iframe content for auto-resize');
+          }
+        };
+        
+        // Initial resize
+        setTimeout(resizeIframe, 100);
+        
+        // Listen for content changes
+        iframe.contentWindow.addEventListener('resize', resizeIframe);
+      }
+    } catch (e) {
+      console.log('Auto-resize not available for cross-origin content');
+    }
   };
 
   const handleIframeError = () => {
@@ -77,6 +175,7 @@ const HTMLContentRenderer: React.FC<HTMLContentRendererProps> = ({ htmlFile, tit
     setLoading(true);
     setError(null);
     setIframeKey(prev => prev + 1);
+    setIframeHeight(800); // Reset height
   }, [htmlFile]);
 
   if (error) {
@@ -84,6 +183,16 @@ const HTMLContentRenderer: React.FC<HTMLContentRendererProps> = ({ htmlFile, tit
       <div className="bg-red-900/20 border border-red-500 rounded-lg p-6 text-center">
         <div className="text-red-400 mb-2">Failed to load HTML content</div>
         <div className="text-sm text-red-300">{error}</div>
+        <button 
+          onClick={() => {
+            setError(null);
+            setLoading(true);
+            setIframeKey(prev => prev + 1);
+          }}
+          className="mt-3 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+        >
+          Retry
+        </button>
       </div>
     );
   }
@@ -91,23 +200,30 @@ const HTMLContentRenderer: React.FC<HTMLContentRendererProps> = ({ htmlFile, tit
   return (
     <div className="w-full relative">
       {loading && (
-        <div className="flex justify-center items-center py-12 absolute inset-0 bg-gray-900/50 z-10">
-          <div className="text-text-secondary">Loading HTML content...</div>
+        <div className="flex justify-center items-center py-12 absolute inset-0 bg-gray-900/50 z-10 rounded-lg">
+          <div className="text-text-secondary flex items-center space-x-2">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+            <span>Loading HTML content...</span>
+          </div>
         </div>
       )}
       <iframe
+        ref={iframeRef}
         key={iframeKey}
         src={htmlFile}
         title={title}
-        className="w-full border-0"
+        className="w-full border-0 rounded-lg"
         style={{
-          minHeight: '800px',
+          height: `${iframeHeight}px`,
           maxWidth: '100%',
-          background: 'white'
+          background: 'white',
+          transition: 'height 0.3s ease'
         }}
         onLoad={handleIframeLoad}
         onError={handleIframeError}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-top-navigation allow-downloads"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-top-navigation allow-downloads allow-presentation"
+        loading="lazy"
+        allowFullScreen
       />
     </div>
   );
@@ -174,16 +290,23 @@ const IntelligenceDetailPage: React.FC = () => {
                     </div>
                 </header>
 
-                <div className="prose prose-invert max-w-none text-text-secondary text-lg leading-relaxed">
+                <div className="max-w-none text-text-secondary text-lg leading-relaxed">
                    {showPaywall ? (
-                       <p>{contentTeaser}</p>
+                       <div className="prose prose-invert max-w-none">
+                           <p>{contentTeaser}</p>
+                       </div>
                    ) : (
                        item.raw_html_content ? (
                            <RawHTMLContentRenderer htmlContent={item.raw_html_content} title={item.title} />
-                       ) : (item.html_file || item.content.startsWith('html:')) ? (
-                           <HTMLContentRenderer htmlFile={item.html_file || item.content.replace('html:', '')} title={item.title} />
+                       ) : (item.content_type === 'html_file' || item.html_file || item.content.startsWith('html:')) ? (
+                           <HTMLContentRenderer 
+                               htmlFile={item.content_type === 'html_file' ? item.content : (item.html_file || item.content.replace('html:', ''))} 
+                               title={item.title} 
+                           />
                        ) : (
-                           <p>{item.content}</p>
+                           <div className="prose prose-invert max-w-none">
+                               <p>{item.content}</p>
+                           </div>
                        )
                    )}
                 </div>

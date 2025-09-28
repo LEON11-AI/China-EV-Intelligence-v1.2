@@ -13,7 +13,7 @@ import AboutPage from './pages/AboutPage';
 import IntelligenceDetailPage from './pages/IntelligenceDetailPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import CMSTest from './pages/CMSTest';
-import ReportJapanMarket from './pages/ReportJapanMarket';
+
 
 const AppContent: React.FC = () => {
   const { user } = useAuth();
@@ -30,7 +30,7 @@ const AppContent: React.FC = () => {
               <Route path="/intelligence/:id" element={<IntelligenceDetailPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
               <Route path="/cms-test" element={<CMSTest />} />
-              <Route path="/reports/why-japan-is-rejecting-evs" element={<ReportJapanMarket />} />
+
 
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/about" element={<AboutPage />} />

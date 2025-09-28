@@ -15,7 +15,7 @@ export interface IntelligenceItem {
   tags: string[];
   summary: string;
   content: string;
-  content_type?: 'text' | 'html';
+  content_type?: 'text' | 'html' | 'html_file';
   html_file?: string;
   raw_html_content?: string;
   author: string;
@@ -30,6 +30,26 @@ export interface IntelligenceItem {
   }>;
   data_sources?: string[];
   featured: boolean;
+}
+
+export interface HtmlReportItem {
+  id: string;
+  title: string;
+  date: string;
+  brand: string;
+  category: string;
+  source: string;
+  confidence: 'high' | 'medium' | 'low';
+  is_pro: boolean;
+  tags: string[];
+  summary: string;
+  raw_html_content: string;
+  author: string;
+  reading_time: number;
+  importance: 'High' | 'Medium' | 'Low';
+  published: boolean;
+  type: 'html_report';
+  html_file?: string;
 }
 
 export interface ModelItem {
@@ -179,6 +199,7 @@ class ContentService {
   private static instance: ContentService;
   private intelligenceCache: IntelligenceItem[] | null = null;
   private modelsCache: ModelItem[] | null = null;
+  private htmlReportsCache: HtmlReportItem[] | null = null;
   private cacheTimestamp: number = 0;
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
@@ -200,6 +221,7 @@ class ContentService {
   public clearCache(): void {
     this.intelligenceCache = null;
     this.modelsCache = null;
+    this.htmlReportsCache = null;
     this.cacheTimestamp = 0;
   }
 
@@ -217,13 +239,9 @@ class ContentService {
       }
       const jsonData = await response.json();
       
-      // Merge with HTML reports
-      const htmlReports = await this.loadHtmlReports();
-      const combinedData = [...jsonData, ...htmlReports];
-      
-      this.intelligenceCache = combinedData;
+      this.intelligenceCache = jsonData;
       this.cacheTimestamp = Date.now();
-      return combinedData;
+      return jsonData;
     } catch (error) {
       console.error('Failed to load intelligence data:', error);
       return [];
@@ -294,57 +312,7 @@ class ContentService {
     }
   }
 
-  // Load HTML reports from CMS
-  private async loadHtmlReports(): Promise<IntelligenceItem[]> {
-    try {
-      const response = await fetch('/admin/content/html_reports.json');
-      if (!response.ok) {
-        // If no HTML reports exist, return empty array
-        return [];
-      }
-      
-      // Check if response is actually JSON
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        // Not JSON, probably an HTML error page
-        return [];
-      }
-      
-      const htmlReportsData = await response.json();
-      
-      // Transform HTML reports data to match IntelligenceItem interface
-      return htmlReportsData.map((item: any) => ({
-        id: item.id || `html-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        title: item.title,
-        date: item.date,
-        brand: item.brand,
-        model: item.model || '',
-        category: item.category,
-        source: item.source || '',
-        status: item.status || 'verified',
-        confidence: item.confidence || 'high',
-        is_pro: item.is_pro || false,
-        tags: item.tags || [],
-        summary: item.summary || '',
-        content: item.raw_html_content ? 'raw_html' : `html:${item.html_file}`, // Use raw_html_content if available
-        content_type: item.raw_html_content ? 'html' : 'text',
-        html_file: item.html_file,
-        raw_html_content: item.raw_html_content,
-        author: item.author || 'China EV Intelligence',
-        reading_time: item.reading_time || 10,
-        importance: item.importance || 'High',
-        published: item.published !== false,
-        seo_title: item.seo_title || item.title,
-        seo_description: item.seo_description || item.summary,
-        related_links: item.related_links || [],
-        data_sources: item.data_sources || [],
-        featured: item.featured || false
-      }));
-    } catch (error) {
-      // Silently return empty array - this is expected when no HTML reports exist
-      return [];
-    }
-  }
+
 
   // Load models from CMS
   private async loadModelsFromCMS(): Promise<ModelItem[]> {
@@ -579,6 +547,83 @@ class ContentService {
     }
     
     return intelligence;
+  }
+
+  // Get HTML Reports data
+  public async getHtmlReports(): Promise<HtmlReportItem[]> {
+    if (this.htmlReportsCache && this.isCacheValid()) {
+      return this.htmlReportsCache;
+    }
+
+    try {
+      const response = await fetch('/data/html_reports.json');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const jsonData = await response.json();
+      
+      this.htmlReportsCache = jsonData;
+      this.cacheTimestamp = Date.now();
+      return jsonData;
+    } catch (error) {
+      console.error('Failed to load HTML reports data:', error);
+      return [];
+    }
+  }
+
+  // Get single HTML report by ID
+  public async getHtmlReportById(id: string): Promise<HtmlReportItem | null> {
+    const reports = await this.getHtmlReports();
+    return reports.find(item => item.id === id) || null;
+  }
+
+  // Get latest HTML reports
+  public async getLatestHtmlReports(limit: number = 5): Promise<HtmlReportItem[]> {
+    const reports = await this.getHtmlReports();
+    return reports
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, limit);
+  }
+
+  // Get filtered HTML reports
+  public async getFilteredHtmlReports(filters: {
+    category?: string;
+    brand?: string;
+    importance?: 'High' | 'Medium' | 'Low';
+    is_pro?: boolean;
+    confidence?: 'high' | 'medium' | 'low';
+    limit?: number;
+  }): Promise<HtmlReportItem[]> {
+    let reports = await this.getHtmlReports();
+    
+    if (filters.category) {
+      reports = reports.filter(item => item.category === filters.category);
+    }
+    
+    if (filters.brand) {
+      reports = reports.filter(item => item.brand === filters.brand);
+    }
+    
+    if (filters.importance) {
+      reports = reports.filter(item => item.importance === filters.importance);
+    }
+    
+    if (filters.is_pro !== undefined) {
+      reports = reports.filter(item => item.is_pro === filters.is_pro);
+    }
+    
+    if (filters.confidence) {
+      reports = reports.filter(item => item.confidence === filters.confidence);
+    }
+    
+    // Sort by date (newest first)
+    reports = reports.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    if (filters.limit) {
+      reports = reports.slice(0, filters.limit);
+    }
+    
+    return reports;
   }
 }
 

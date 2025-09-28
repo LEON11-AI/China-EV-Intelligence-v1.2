@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test HTML Content - Complex Rendering</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+        .chart-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        .interactive-demo {
+            margin: 30px 0;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+        }
+        .button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .data-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table tr:hover {
+            background: #f5f5f5;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 2s ease;
+        }
+        .animated-element {
+            width: 100px;
+            height: 100px;
+            background: #667eea;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .svg-chart {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Complex HTML Content Test</h1>
+            <p>Testing advanced HTML rendering capabilities with styles, scripts, and interactive elements</p>
+        </div>
+
+        <div class="chart-container">
+            <h2>📊 Data Visualization</h2>
+            <p>This section demonstrates complex styling and SVG rendering:</p>
+            
+            <svg class="svg-chart" viewBox="0 0 400 200">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect x="50" y="150" width="60" height="40" fill="url(#gradient)" rx="5"/>
+                <rect x="120" y="120" width="60" height="70" fill="url(#gradient)" rx="5"/>
+                <rect x="190" y="100" width="60" height="90" fill="url(#gradient)" rx="5"/>
+                <rect x="260" y="80" width="60" height="110" fill="url(#gradient)" rx="5"/>
+                <text x="200" y="30" text-anchor="middle" fill="#333" font-size="16" font-weight="bold">EV Sales Growth</text>
+                <text x="80" y="210" text-anchor="middle" fill="#666" font-size="12">Q1</text>
+                <text x="150" y="210" text-anchor="middle" fill="#666" font-size="12">Q2</text>
+                <text x="220" y="210" text-anchor="middle" fill="#666" font-size="12">Q3</text>
+                <text x="290" y="210" text-anchor="middle" fill="#666" font-size="12">Q4</text>
+            </svg>
+        </div>
+
+        <div class="interactive-demo">
+            <h2>⚡ Interactive Elements</h2>
+            <p>Click the button below to test JavaScript functionality:</p>
+            <button class="button" onclick="updateProgress()">Update Progress</button>
+            <button class="button" onclick="changeColor()">Change Color</button>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 30%;"></div>
+            </div>
+            
+            <div class="animated-element" id="animatedElement"></div>
+        </div>
+
+        <div class="chart-container">
+            <h2>📋 Data Table</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Sales (Q4 2024)</th>
+                        <th>Market Share</th>
+                        <th>Growth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BYD</td>
+                        <td>Seal</td>
+                        <td>45,230</td>
+                        <td>18.5%</td>
+                        <td>+23.4%</td>
+                    </tr>
+                    <tr>
+                        <td>NIO</td>
+                        <td>ET7</td>
+                        <td>12,450</td>
+                        <td>5.1%</td>
+                        <td>+15.2%</td>
+                    </tr>
+                    <tr>
+                        <td>Xiaomi</td>
+                        <td>SU7</td>
+                        <td>8,920</td>
+                        <td>3.6%</td>
+                        <td>+156.7%</td>
+                    </tr>
+                    <tr>
+                        <td>Li Auto</td>
+                        <td>L9</td>
+                        <td>15,680</td>
+                        <td>6.4%</td>
+                        <td>+8.9%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h2>🎨 Advanced Styling Features</h2>
+            <p>This section demonstrates various CSS features:</p>
+            <ul>
+                <li>✅ Gradient backgrounds</li>
+                <li>✅ Box shadows and border radius</li>
+                <li>✅ CSS animations and transitions</li>
+                <li>✅ Hover effects</li>
+                <li>✅ Responsive design elements</li>
+                <li>✅ SVG integration</li>
+                <li>✅ Custom fonts and typography</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let progressValue = 30;
+        let colorIndex = 0;
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'];
+
+        function updateProgress() {
+            progressValue = Math.min(progressValue + 20, 100);
+            document.getElementById('progressBar').style.width = progressValue + '%';
+            
+            if (progressValue >= 100) {
+                setTimeout(() => {
+                    progressValue = 0;
+                    document.getElementById('progressBar').style.width = '0%';
+                }, 1000);
+            }
+        }
+
+        function changeColor() {
+            colorIndex = (colorIndex + 1) % colors.length;
+            const element = document.getElementById('animatedElement');
+            element.style.background = colors[colorIndex];
+            
+            // Add a temporary scale effect
+            element.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Auto-update progress on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                updateProgress();
+            }, 1000);
+        });
+
+        // Add some dynamic content
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Complex HTML content loaded successfully!');
+            
+            // Animate table rows on hover
+            const tableRows = document.querySelectorAll('.data-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.transition = 'transform 0.2s ease';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
