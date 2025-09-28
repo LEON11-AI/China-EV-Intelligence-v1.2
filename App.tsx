@@ -13,6 +13,7 @@ import AboutPage from './pages/AboutPage';
 import IntelligenceDetailPage from './pages/IntelligenceDetailPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import CMSTest from './pages/CMSTest';
+import HtmlReportDetailPage from './pages/HtmlReportDetailPage';
 
 
 const AppContent: React.FC = () => {
@@ -21,7 +22,13 @@ const AppContent: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <Layout>
+      <Routes>
+        {/* HTML Report route without Layout wrapper for full page rendering */}
+        <Route path="/reports/:id" element={<HtmlReportDetailPage />} />
+        
+        {/* All other routes with Layout wrapper */}
+        <Route path="/*" element={
+          <Layout>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/database" element={<DatabasePage />} />
@@ -30,14 +37,14 @@ const AppContent: React.FC = () => {
               <Route path="/intelligence/:id" element={<IntelligenceDetailPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
               <Route path="/cms-test" element={<CMSTest />} />
-
-
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/about" element={<AboutPage />} />
               {/* Admin route - handled by vite middleware redirect */}
               <Route path="/admin/*" element={<div>Redirecting to admin...</div>} />
             </Routes>
-      </Layout>
+          </Layout>
+        } />
+      </Routes>
     </BrowserRouter>
   );
 };

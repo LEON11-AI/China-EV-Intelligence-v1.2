@@ -17,7 +17,10 @@ export interface IntelligenceItem {
   content: string;
   content_type?: 'text' | 'html' | 'html_file';
   html_file?: string;
-  raw_html_content?: string;
+  raw_html_content?: {
+    lang: string;
+    code: string;
+  };
   author: string;
   reading_time: number;
   importance: 'High' | 'Medium' | 'Low';
@@ -43,7 +46,10 @@ export interface HtmlReportItem {
   is_pro: boolean;
   tags: string[];
   summary: string;
-  raw_html_content: string;
+  raw_html_content: {
+    lang: string;
+    code: string;
+  };
   author: string;
   reading_time: number;
   importance: 'High' | 'Medium' | 'Low';
@@ -201,7 +207,7 @@ class ContentService {
   private modelsCache: ModelItem[] | null = null;
   private htmlReportsCache: HtmlReportItem[] | null = null;
   private cacheTimestamp: number = 0;
-  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+  private readonly CACHE_DURATION = 30 * 1000; // 30 seconds cache (reduced for better responsiveness)
 
   private constructor() {}
 
@@ -225,6 +231,27 @@ class ContentService {
     this.cacheTimestamp = 0;
   }
 
+  // Force refresh data (bypass cache)
+  public async forceRefreshIntelligence(): Promise<IntelligenceItem[]> {
+    this.intelligenceCache = null;
+    this.cacheTimestamp = 0;
+    return this.getIntelligence();
+  }
+
+  // Force refresh models (bypass cache)
+  public async forceRefreshModels(): Promise<ModelItem[]> {
+    this.modelsCache = null;
+    this.cacheTimestamp = 0;
+    return this.getModels();
+  }
+
+  // Force refresh HTML reports (bypass cache)
+  public async forceRefreshHtmlReports(): Promise<HtmlReportItem[]> {
+    this.htmlReportsCache = null;
+    this.cacheTimestamp = 0;
+    return this.getHtmlReports();
+  }
+
   // Get intelligence articles data
   public async getIntelligence(): Promise<IntelligenceItem[]> {
     if (this.intelligenceCache && this.isCacheValid()) {
@@ -239,9 +266,12 @@ class ContentService {
       }
       const jsonData = await response.json();
       
-      this.intelligenceCache = jsonData;
+      // Filter out HTML reports to ensure only intelligence articles are returned
+      const intelligenceArticles = jsonData.filter((item: any) => item.type !== 'html_report');
+      
+      this.intelligenceCache = intelligenceArticles;
       this.cacheTimestamp = Date.now();
-      return jsonData;
+      return intelligenceArticles;
     } catch (error) {
       console.error('Failed to load intelligence data:', error);
       return [];
@@ -552,16 +582,21 @@ class ContentService {
   // Get HTML Reports data
   public async getHtmlReports(): Promise<HtmlReportItem[]> {
     if (this.htmlReportsCache && this.isCacheValid()) {
+      console.log('Returning cached HTML reports:', this.htmlReportsCache.length);
       return this.htmlReportsCache;
     }
 
     try {
+      // Load directly from html_reports.json
+      console.log('Fetching HTML reports from /data/html_reports.json');
       const response = await fetch('/data/html_reports.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const jsonData = await response.json();
+      console.log('HTML reports loaded successfully:', jsonData.length, 'reports');
       
+      // All data in html_reports.json are HTML reports, no filtering needed
       this.htmlReportsCache = jsonData;
       this.cacheTimestamp = Date.now();
       return jsonData;

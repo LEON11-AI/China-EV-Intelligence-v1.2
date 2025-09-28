@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Data Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .article { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+        .new-article { background-color: #e8f5e8; }
+        button { margin: 5px; padding: 10px; }
+        .status { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Frontend Data Verification Test</h1>
+    
+    <div class="status" id="status">Ready to test...</div>
+    
+    <button onclick="loadDirectData()">Load Direct JSON Data</button>
+    <button onclick="loadViaContentService()">Load via ContentService</button>
+    <button onclick="clearCacheAndReload()">Clear Cache & Reload</button>
+    <button onclick="compareData()">Compare Data Sources</button>
+    
+    <h2>Direct JSON Data (Latest)</h2>
+    <div id="direct-data"></div>
+    
+    <h2>ContentService Data (May be cached)</h2>
+    <div id="service-data"></div>
+    
+    <h2>Comparison Results</h2>
+    <div id="comparison"></div>
+
+    <script>
+        let directData = null;
+        let serviceData = null;
+        
+        async function loadDirectData() {
+            try {
+                document.getElementById('status').textContent = 'Loading direct JSON data...';
+                const response = await fetch('/data/intelligence.json?' + Date.now());
+                directData = await response.json();
+                
+                const container = document.getElementById('direct-data');
+                container.innerHTML = '';
+                
+                directData.forEach(article => {
+                    const div = document.createElement('div');
+                    div.className = 'article';
+                    if (article.id === 'nio-et7-2024-analysis') {
+                        div.className += ' new-article';
+                    }
+                    div.innerHTML = `
+                        <h3>${article.title}</h3>
+                        <p><strong>ID:</strong> ${article.id}</p>
+                        <p><strong>Date:</strong> ${article.date}</p>
+                        <p><strong>Brand:</strong> ${article.brand}</p>
+                        <p><strong>Category:</strong> ${article.category}</p>
+                    `;
+                    container.appendChild(div);
+                });
+                
+                document.getElementById('status').textContent = `Direct data loaded: ${directData.length} articles`;
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error loading direct data: ' + error.message;
+            }
+        }
+        
+        async function loadViaContentService() {
+            try {
+                document.getElementById('status').textContent = 'Loading via ContentService...';
+                
+                // Simulate ContentService call
+                const response = await fetch('/data/intelligence.json');
+                serviceData = await response.json();
+                
+                const container = document.getElementById('service-data');
+                container.innerHTML = '';
+                
+                serviceData.forEach(article => {
+                    const div = document.createElement('div');
+                    div.className = 'article';
+                    if (article.id === 'nio-et7-2024-analysis') {
+                        div.className += ' new-article';
+                    }
+                    div.innerHTML = `
+                        <h3>${article.title}</h3>
+                        <p><strong>ID:</strong> ${article.id}</p>
+                        <p><strong>Date:</strong> ${article.date}</p>
+                        <p><strong>Brand:</strong> ${article.brand}</p>
+                        <p><strong>Category:</strong> ${article.category}</p>
+                    `;
+                    container.appendChild(div);
+                });
+                
+                document.getElementById('status').textContent = `Service data loaded: ${serviceData.length} articles`;
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error loading service data: ' + error.message;
+            }
+        }
+        
+        function clearCacheAndReload() {
+            document.getElementById('status').textContent = 'Clearing cache...';
+            
+            // Clear browser cache
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                    });
+                });
+            }
+            
+            // Clear localStorage
+            localStorage.clear();
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            
+            setTimeout(() => {
+                document.getElementById('status').textContent = 'Cache cleared. Reloading data...';
+                loadDirectData();
+                loadViaContentService();
+            }, 1000);
+        }
+        
+        function compareData() {
+            const container = document.getElementById('comparison');
+            
+            if (!directData || !serviceData) {
+                container.innerHTML = '<p>Please load both data sources first.</p>';
+                return;
+            }
+            
+            const directIds = directData.map(a => a.id).sort();
+            const serviceIds = serviceData.map(a => a.id).sort();
+            
+            const comparison = {
+                directCount: directData.length,
+                serviceCount: serviceData.length,
+                idsMatch: JSON.stringify(directIds) === JSON.stringify(serviceIds),
+                directIds: directIds,
+                serviceIds: serviceIds,
+                hasNioAnalysis: {
+                    direct: directData.some(a => a.id === 'nio-et7-2024-analysis'),
+                    service: serviceData.some(a => a.id === 'nio-et7-2024-analysis')
+                }
+            };
+            
+            container.innerHTML = `
+                <h3>Data Comparison Results</h3>
+                <p><strong>Direct JSON Count:</strong> ${comparison.directCount}</p>
+                <p><strong>Service Count:</strong> ${comparison.serviceCount}</p>
+                <p><strong>IDs Match:</strong> ${comparison.idsMatch ? 'YES' : 'NO'}</p>
+                <p><strong>NIO Analysis in Direct:</strong> ${comparison.hasNioAnalysis.direct ? 'YES' : 'NO'}</p>
+                <p><strong>NIO Analysis in Service:</strong> ${comparison.hasNioAnalysis.service ? 'YES' : 'NO'}</p>
+                <h4>Article IDs in Direct JSON:</h4>
+                <ul>${comparison.directIds.map(id => `<li>${id}</li>`).join('')}</ul>
+                <h4>Article IDs in Service:</h4>
+                <ul>${comparison.serviceIds.map(id => `<li>${id}</li>`).join('')}</ul>
+            `;
+        }
+        
+        // Auto-load data on page load
+        window.onload = function() {
+            loadDirectData();
+            setTimeout(loadViaContentService, 1000);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Data Loading</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .article { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+        .article h3 { margin: 0 0 10px 0; color: #333; }
+        .meta { color: #666; font-size: 0.9em; }
+        button { padding: 10px 20px; margin: 10px 0; background: #007cba; color: white; border: none; cursor: pointer; }
+        button:hover { background: #005a87; }
+        #status { padding: 10px; background: #f0f0f0; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Debug: Intelligence Data Loading</h1>
+    
+    <div id="status">Loading...</div>
+    
+    <button onclick="loadData()">Reload Data</button>
+    <button onclick="clearCacheAndReload()">Clear Cache & Reload</button>
+    
+    <div id="articles"></div>
+
+    <script>
+        async function loadData() {
+            const statusDiv = document.getElementById('status');
+            const articlesDiv = document.getElementById('articles');
+            
+            try {
+                statusDiv.innerHTML = 'Loading intelligence data...';
+                
+                const response = await fetch('/data/intelligence.json?t=' + Date.now());
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                statusDiv.innerHTML = `Loaded ${data.length} articles at ${new Date().toLocaleTimeString()}`;
+                
+                articlesDiv.innerHTML = data.map(article => `
+                    <div class="article">
+                        <h3>${article.title}</h3>
+                        <div class="meta">
+                            ID: ${article.id} | 
+                            Date: ${article.date} | 
+                            Brand: ${article.brand} | 
+                            Category: ${article.category}
+                        </div>
+                        <p>${article.summary}</p>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                statusDiv.innerHTML = `Error: ${error.message}`;
+                console.error('Failed to load data:', error);
+            }
+        }
+        
+        function clearCacheAndReload() {
+            // Clear browser cache for this domain
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                    });
+                });
+            }
+            
+            // Clear localStorage
+            localStorage.clear();
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            
+            // Reload data
+            loadData();
+        }
+        
+        // Load data on page load
+        window.onload = loadData;
+    </script>
+</body>
+</html>

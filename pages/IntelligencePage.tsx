@@ -24,28 +24,43 @@ const IntelligencePage: React.FC = () => {
     const [filteredReports, setFilteredReports] = useState<HtmlReportItem[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
     const [loading, setLoading] = useState<boolean>(true);
+    const [refreshing, setRefreshing] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [intelligenceData, htmlReportsData] = await Promise.all([
-                    contentService.getIntelligence(),
-                    contentService.getHtmlReports()
-                ]);
-                
-                // Sort by date descending
-                intelligenceData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                htmlReportsData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                
-                setItems(intelligenceData);
-                setHtmlReports(htmlReportsData);
-            } catch (err: any) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
+    const fetchData = async (forceRefresh = false) => {
+        try {
+            if (forceRefresh) {
+                setRefreshing(true);
             }
-        };
+            
+            const [intelligenceData, htmlReportsData] = await Promise.all([
+                forceRefresh ? contentService.forceRefreshIntelligence() : contentService.getIntelligence(),
+                forceRefresh ? contentService.forceRefreshHtmlReports() : contentService.getHtmlReports()
+            ]);
+            
+            console.log('Intelligence data loaded:', intelligenceData.length, 'articles');
+            console.log('HTML reports data loaded:', htmlReportsData.length, 'reports');
+            
+            // Sort by date descending
+            intelligenceData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            htmlReportsData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            
+            setItems(intelligenceData);
+            setHtmlReports(htmlReportsData);
+            setError(null);
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
+
+    const handleRefresh = () => {
+        fetchData(true);
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -66,6 +81,9 @@ const IntelligencePage: React.FC = () => {
         // Filter HTML reports
         let filteredHtmlReports = htmlReports;
         
+        console.log('Filtering HTML reports:', htmlReports.length, 'total reports');
+        console.log('Selected category:', selectedCategory);
+        
         if (selectedCategory !== 'All') {
             filteredHtmlReports = filteredHtmlReports.filter(report => report.category === selectedCategory);
         }
@@ -73,16 +91,27 @@ const IntelligencePage: React.FC = () => {
         setFilteredReports(filteredHtmlReports);
     }, [items, htmlReports, selectedCategory, isPro]);
 
+    // Reset category when switching tabs to avoid showing wrong categories
+    useEffect(() => {
+        setSelectedCategory('All');
+    }, [activeTab]);
+
     const getAvailableCategories = () => {
-        const intelligenceCategories = items.map(item => item.category);
-        const reportCategories = htmlReports.map(report => report.category);
-        const allCategories = ['All', ...new Set([...intelligenceCategories, ...reportCategories])];
+        let categories: string[] = [];
+        
+        if (activeTab === 'articles') {
+            // Only show categories from intelligence articles
+            categories = ['All', ...new Set(items.map(item => item.category))];
+        } else {
+            // Only show categories from HTML reports
+            categories = ['All', ...new Set(htmlReports.map(report => report.category))];
+        }
         
         // Remove Supply Chain from categories for non-Pro users
         if (!isPro) {
-            return allCategories.filter(cat => cat !== 'Supply Chain');
+            return categories.filter(cat => cat !== 'Supply Chain');
         }
-        return allCategories;
+        return categories;
     };
 
     const getConfidenceGrade = (confidence: string) => {
@@ -111,7 +140,24 @@ const IntelligencePage: React.FC = () => {
         <div>
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h1 className="text-4xl font-bold mb-2">Intelligence Feed</h1>
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-4xl font-bold mb-2">Intelligence Feed</h1>
+                        <button
+                            onClick={handleRefresh}
+                            disabled={refreshing}
+                            className="bg-cta-orange hover:bg-orange-600 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+                        >
+                            <svg 
+                                className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            {refreshing ? 'Refreshing...' : 'Refresh'}
+                        </button>
+                    </div>
                     <p className="text-text-secondary">Real-time updates from the Chinese EV market, rated for confidence.</p>
                 </div>
                 <div className="text-right">
@@ -246,10 +292,15 @@ const IntelligencePage: React.FC = () => {
                 <div className="space-y-6">
                     {filteredReports.map(report => (
                         <div key={report.id} className="bg-dark-card rounded-lg shadow-lg overflow-hidden">
-                            <div className="p-6 border-b border-gray-700">
+                            <div className="p-6">
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="flex-1">
-                                        <h3 className="text-xl font-bold text-text-main mb-2">{report.title}</h3>
+                                        <Link 
+                                            to={`/reports/${report.id}`}
+                                            className="text-xl font-bold text-text-main mb-2 hover:text-link-blue transition-colors duration-200 block"
+                                        >
+                                            {report.title}
+                                        </Link>
                                         <div className="flex items-center space-x-4 text-sm text-text-secondary">
                                             <span className="font-mono">{formatDateSmart(report.date)}</span>
                                             <span className={`px-2 py-1 rounded text-xs font-medium ${
@@ -265,14 +316,20 @@ const IntelligencePage: React.FC = () => {
                                         {report.summary && (
                                             <p className="text-text-secondary mt-2 text-sm">{report.summary}</p>
                                         )}
+                                        <div className="mt-4">
+                                            <Link 
+                                                to={`/reports/${report.id}`}
+                                                className="inline-flex items-center px-4 py-2 bg-cta-orange hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200"
+                                            >
+                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                View Full Report
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="bg-white">
-                                <div 
-                                    className="w-full h-auto min-h-[600px]"
-                                    dangerouslySetInnerHTML={{ __html: report.html_content }}
-                                />
                             </div>
                         </div>
                     ))}

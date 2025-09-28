@@ -75,7 +75,7 @@ function syncIntelligenceContent() {
       console.log(`File data:`, data);
       
       // Check if this is an HTML report
-      if (data.type === 'html_report' && data.html_file) {
+      if (data.type === 'html_report' && (data.html_file || data.raw_html_content)) {
         console.log(`Found HTML report: ${file}`);
         const item = {
           id: data.id || (file === 'test-html-report.md' ? 'test_001' : file.replace('.md', '')),
@@ -96,6 +96,7 @@ function syncIntelligenceContent() {
           status: data.status || 'verified',
           featured: data.featured || false,
           html_file: data.html_file,
+          raw_html_content: data.raw_html_content,
           content_type: 'html'
         };
         
