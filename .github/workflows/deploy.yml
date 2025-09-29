@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Sync CMS content
+        run: npm run sync:content
+
       - name: Build project
         run: npm run build
         env: # 将您的密钥安全地传递给构建过程

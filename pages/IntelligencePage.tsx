@@ -56,8 +56,29 @@ const IntelligencePage: React.FC = () => {
         }
     };
 
-    const handleRefresh = () => {
-        fetchData(true);
+    const handleRefresh = async () => {
+        console.log('🔄 IntelligencePage: Refresh button clicked');
+        setRefreshing(true);
+        try {
+            // Clear cache and force refresh
+            console.log('🧹 IntelligencePage: Clearing cache...');
+            contentService.clearCache();
+            
+            console.log('📥 IntelligencePage: Fetching fresh data...');
+            const [freshIntelligence, freshReports] = await Promise.all([
+                contentService.getIntelligence(true),
+                contentService.getHtmlReports(true)
+            ]);
+            
+            console.log(`✅ IntelligencePage: Loaded ${freshIntelligence.length} intelligence items and ${freshReports.length} reports`);
+            setItems(freshIntelligence);
+            setHtmlReports(freshReports);
+        } catch (error) {
+            console.error('❌ IntelligencePage: Error refreshing data:', error);
+        } finally {
+            setRefreshing(false);
+            console.log('🏁 IntelligencePage: Refresh completed');
+        }
     };
 
     useEffect(() => {
@@ -312,45 +333,43 @@ const IntelligencePage: React.FC = () => {
                         return (
                             <div key={item.id} className="bg-dark-card rounded-lg shadow-lg overflow-hidden">
                                 <div className="p-6">
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div className="flex-1">
+                                    <div className="flex-1">
+                                        <Link 
+                                            to={linkPath}
+                                            className="text-xl font-bold text-text-main mb-2 hover:text-link-blue transition-colors duration-200 block"
+                                        >
+                                            {item.title}
+                                        </Link>
+                                        <div className="flex items-center space-x-4 text-sm text-text-secondary">
+                                            <span className="font-mono">{formatDateSmart(item.date)}</span>
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getCategoryStyle(item.category)}`}>
+                                                {item.category}
+                                            </span>
+                                            {item.brand && <span>Brand: {item.brand}</span>}
+                                            <span>Source: {item.source}</span>
+                                            {isDepthAnalysis && item.confidence && (
+                                                <div className="flex items-center">
+                                                    <span className="mr-1">Confidence:</span>
+                                                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-white font-bold text-xs ${getConfidenceClass(item.confidence)}`}>
+                                                        {getConfidenceGrade(item.confidence)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {item.summary && (
+                                            <p className="text-text-secondary mt-2 text-sm">{item.summary}</p>
+                                        )}
+                                        <div className="mt-4">
                                             <Link 
                                                 to={linkPath}
-                                                className="text-xl font-bold text-text-main mb-2 hover:text-link-blue transition-colors duration-200 block"
+                                                className="inline-flex items-center px-4 py-2 bg-cta-orange hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200"
                                             >
-                                                {item.title}
+                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                {isDepthAnalysis ? 'Read Full Analysis' : 'View Full Report'}
                                             </Link>
-                                            <div className="flex items-center space-x-4 text-sm text-text-secondary">
-                                                <span className="font-mono">{formatDateSmart(item.date)}</span>
-                                                <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getCategoryStyle(item.category)}`}>
-                                                    {item.category}
-                                                </span>
-                                                {item.brand && <span>Brand: {item.brand}</span>}
-                                                <span>Source: {item.source}</span>
-                                                {isDepthAnalysis && item.confidence && (
-                                                    <div className="flex items-center">
-                                                        <span className="mr-1">Confidence:</span>
-                                                        <span className={`w-5 h-5 rounded-full flex items-center justify-center text-white font-bold text-xs ${getConfidenceClass(item.confidence)}`}>
-                                                            {getConfidenceGrade(item.confidence)}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            {item.summary && (
-                                                <p className="text-text-secondary mt-2 text-sm">{item.summary}</p>
-                                            )}
-                                            <div className="mt-4">
-                                                <Link 
-                                                    to={linkPath}
-                                                    className="inline-flex items-center px-4 py-2 bg-cta-orange hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200"
-                                                >
-                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                    </svg>
-                                                    {isDepthAnalysis ? 'Read Full Analysis' : 'View Full Report'}
-                                                </Link>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

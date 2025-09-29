@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ContentService from '../src/services/ContentService';
 import type { IntelligenceItem, ModelItem } from '../src/services/ContentService';
+import { formatDateSmart } from '../src/services/DateUtils';
 
 const CMSTest: React.FC = () => {
   const [intelligence, setIntelligence] = useState<IntelligenceItem[]>([]);
@@ -91,7 +92,7 @@ const CMSTest: React.FC = () => {
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
                   <p className="text-gray-600 text-sm mb-3">{item.summary}</p>
                   <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>{item.date}</span>
+                    <span>{formatDateSmart(item.date)}</span>
                     <span className="capitalize">{item.status}</span>
                   </div>
                 </div>

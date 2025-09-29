@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
 import { contentService, IntelligenceItem, ModelItem } from '../src/services/ContentService';
 import AdvancedSearch from '../components/AdvancedSearch';
+import { formatDateSmart } from '../src/services/DateUtils';
 
 interface SearchResult {
   type: 'intelligence' | 'model';
@@ -282,7 +283,7 @@ const SearchResultsPage: React.FC = () => {
             </span>
           )}
         </div>
-        <span className="text-sm text-gray-500">{item.date}</span>
+        <span className="text-sm text-gray-500">{formatDateSmart(item.date)}</span>
       </div>
       
       <Link to={`/intelligence/${item.id}`} className="block">

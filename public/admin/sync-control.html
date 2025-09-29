@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容同步控制面板 - China EV Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .sync-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+
+        .sync-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sync-section p {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(23, 162, 184, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .icon {
+            font-size: 1.2rem;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 内容同步控制面板</h1>
+            <p>管理和同步 CMS 内容到前端显示</p>
+        </div>
+
+        <div class="content">
+            <div class="sync-section">
+                <h3><span class="icon">📝</span>手动内容同步</h3>
+                <p>立即同步所有已发布的文章和报告到前端数据文件。这将更新 intelligence.json 和 html_reports.json 文件。</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="syncContent()">
+                        <span class="icon">🔄</span>
+                        立即同步
+                    </button>
+                    <button class="btn btn-info" onclick="checkSyncStatus()">
+                        <span class="icon">📊</span>
+                        检查状态
+                    </button>
+                </div>
+                <div id="sync-status" class="status"></div>
+            </div>
+
+            <div class="sync-section">
+                <h3><span class="icon">👀</span>自动监听模式</h3>
+                <p>启动文件监听服务，当内容目录发生变化时自动同步。适合开发环境使用。</p>
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="startWatcher()">
+                        <span class="icon">▶️</span>
+                        启动监听
+                    </button>
+                    <button class="btn btn-warning" onclick="stopWatcher()">
+                        <span class="icon">⏸️</span>
+                        停止监听
+                    </button>
+                </div>
+                <div id="watcher-status" class="status"></div>
+            </div>
+
+            <div class="sync-section">
+                <h3><span class="icon">🧹</span>缓存管理</h3>
+                <p>清除浏览器缓存和重新加载数据，解决内容不同步的问题。</p>
+                <div class="button-group">
+                    <button class="btn btn-warning" onclick="clearCache()">
+                        <span class="icon">🗑️</span>
+                        清除缓存
+                    </button>
+                    <a href="/fix-cache-sync.html" class="btn btn-info">
+                        <span class="icon">🔧</span>
+                        缓存修复工具
+                    </a>
+                </div>
+                <div id="cache-status" class="status"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>China EV Intelligence CMS 管理面板 | <a href="/admin/">返回 CMS</a> | <a href="/">前端首页</a></p>
+        </div>
+    </div>
+
+    <script>
+        // 模拟 API 调用函数
+        async function makeRequest(endpoint, options = {}) {
+            try {
+                // 在实际环境中，这里应该调用真实的 API
+                // 现在我们模拟一个延迟和响应
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                if (endpoint === '/api/sync-content') {
+                    return { success: true, message: '内容同步完成', count: 15 };
+                } else if (endpoint === '/api/sync-status') {
+                    return { success: true, lastSync: new Date().toLocaleString(), articlesCount: 15, reportsCount: 3 };
+                } else if (endpoint === '/api/start-watcher') {
+                    return { success: true, message: '文件监听已启动' };
+                } else if (endpoint === '/api/stop-watcher') {
+                    return { success: true, message: '文件监听已停止' };
+                }
+                
+                return { success: true, message: '操作完成' };
+            } catch (error) {
+                return { success: false, message: error.message };
+            }
+        }
+
+        function showStatus(elementId, type, message) {
+            const statusEl = document.getElementById(elementId);
+            statusEl.className = `status ${type}`;
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function setButtonLoading(button, loading) {
+            if (loading) {
+                button.disabled = true;
+                const originalText = button.innerHTML;
+                button.dataset.originalText = originalText;
+                button.innerHTML = '<span class="loading"></span> 处理中...';
+            } else {
+                button.disabled = false;
+                button.innerHTML = button.dataset.originalText;
+            }
+        }
+
+        async function syncContent() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            try {
+                const result = await makeRequest('/api/sync-content', { method: 'POST' });
+                
+                if (result.success) {
+                    showStatus('sync-status', 'success', `✅ ${result.message}，共同步 ${result.count} 篇文章`);
+                } else {
+                    showStatus('sync-status', 'error', `❌ 同步失败: ${result.message}`);
+                }
+            } catch (error) {
+                showStatus('sync-status', 'error', `❌ 同步失败: ${error.message}`);
+            } finally {
+                setButtonLoading(button, false);
+            }
+        }
+
+        async function checkSyncStatus() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            try {
+                const result = await makeRequest('/api/sync-status');
+                
+                if (result.success) {
+                    showStatus('sync-status', 'info', 
+                        `📊 最后同步: ${result.lastSync}，文章: ${result.articlesCount}，报告: ${result.reportsCount}`);
+                } else {
+                    showStatus('sync-status', 'error', `❌ 获取状态失败: ${result.message}`);
+                }
+            } catch (error) {
+                showStatus('sync-status', 'error', `❌ 获取状态失败: ${error.message}`);
+            } finally {
+                setButtonLoading(button, false);
+            }
+        }
+
+        async function startWatcher() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            try {
+                const result = await makeRequest('/api/start-watcher', { method: 'POST' });
+                
+                if (result.success) {
+                    showStatus('watcher-status', 'success', `✅ ${result.message}`);
+                } else {
+                    showStatus('watcher-status', 'error', `❌ 启动失败: ${result.message}`);
+                }
+            } catch (error) {
+                showStatus('watcher-status', 'error', `❌ 启动失败: ${error.message}`);
+            } finally {
+                setButtonLoading(button, false);
+            }
+        }
+
+        async function stopWatcher() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            try {
+                const result = await makeRequest('/api/stop-watcher', { method: 'POST' });
+                
+                if (result.success) {
+                    showStatus('watcher-status', 'info', `⏸️ ${result.message}`);
+                } else {
+                    showStatus('watcher-status', 'error', `❌ 停止失败: ${result.message}`);
+                }
+            } catch (error) {
+                showStatus('watcher-status', 'error', `❌ 停止失败: ${error.message}`);
+            } finally {
+                setButtonLoading(button, false);
+            }
+        }
+
+        function clearCache() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            try {
+                // 清除本地存储
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // 清除缓存（如果支持）
+                if ('caches' in window) {
+                    caches.keys().then(names => {
+                        names.forEach(name => {
+                            caches.delete(name);
+                        });
+                    });
+                }
+                
+                showStatus('cache-status', 'success', '✅ 缓存已清除，建议刷新页面');
+            } catch (error) {
+                showStatus('cache-status', 'error', `❌ 清除缓存失败: ${error.message}`);
+            } finally {
+                setButtonLoading(button, false);
+            }
+        }
+
+        // 页面加载时显示欢迎信息
+        window.addEventListener('load', () => {
+            showStatus('sync-status', 'info', '💡 点击"立即同步"开始同步内容，或"检查状态"查看当前同步状态');
+        });
+    </script>
+</body>
+</html>

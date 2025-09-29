@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import BrandLogos from '../components/BrandLogos';
 import NewsletterSubscription from '../src/components/NewsletterSubscription';
+import { formatDateSmart } from '../src/services/DateUtils';
 
 const CheckIcon: React.FC<{className?: string}> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -124,7 +125,7 @@ const HomePage: React.FC = () => {
                     {latestIntel.map(item => (
                         <div key={item.id} className="bg-dark-card p-6 rounded-lg shadow-lg flex flex-col transform hover:-translate-y-1 transition-transform duration-300">
                            <div className="flex-grow">
-                             <p className="text-sm text-text-secondary mb-2">{item.date} &middot; {item.brand}</p>
+                             <p className="text-sm text-text-secondary mb-2">{formatDateSmart(item.date)} &middot; {item.brand}</p>
                              <h3 className="text-xl font-bold mb-4 text-text-main">{item.title}</h3>
                            </div>
                            <Link to={`/intelligence/${item.id}`} className="mt-4 text-link-blue font-semibold hover:text-link-hover self-start">

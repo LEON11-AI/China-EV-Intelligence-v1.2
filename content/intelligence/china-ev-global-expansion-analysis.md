@@ -15,7 +15,7 @@ summary: A new "Age of Great Voyages" is unfolding on the global automotive
   world with unprecedented momentum. Many observers attribute this phenomenon
   simply to "internal competition" within the Chinese domestic market, viewing
   it as a forced "great escape."
-author: leon
+author: leon for volt china
 reading_time: 10
 importance: High
 published: true

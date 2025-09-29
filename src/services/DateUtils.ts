@@ -79,28 +79,31 @@ export function formatDateToSimple(dateString: string): string {
  * @param dateString - 日期字符串
  * @returns 格式化后的日期字符串 (YYYY-MM-DD格式)
  */
-export function formatDateSmart(dateString: string): string {
-  if (!dateString) return '';
-  
-  try {
-    // 移除多余的空格
-    const trimmedDate = dateString.trim();
-    
-    // 如果已经是简单格式 (YYYY-MM-DD 或 YYYY-M-D)，标准化格式
-    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(trimmedDate)) {
-      return formatDateToSimple(trimmedDate);
-    }
-    
-    // 检测并处理各种ISO格式
-    // 支持: 2024-01-15T10:00:00Z, 2024-01-15T10:00:00.000Z 等
-    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?$/.test(trimmedDate)) {
-      return formatDateToSimple(trimmedDate);
-    }
-    
-    // 对于其他格式，尝试直接解析
-    return formatDateToSimple(trimmedDate);
-  } catch (error) {
-    console.warn('智能日期格式化失败:', error, '原始日期:', dateString);
-    return dateString; // 出错时返回原字符串
+export const formatDateSmart = (dateString: string): string => {
+  if (!dateString) {
+    return '';
   }
-}
+  
+  // Check if it's already in simple format (YYYY-MM-DD)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+    return dateString;
+  }
+  
+  // Check if it's an ISO format with time
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(dateString)) {
+    return formatDateToSimple(dateString);
+  }
+  
+  // Try to parse as Date and format
+  try {
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      return formatDateToSimple(dateString);
+    }
+  } catch (error) {
+    // Silent error handling
+  }
+  
+  // If all else fails, return the original string
+  return dateString;
+};

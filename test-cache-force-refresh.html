@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Force Cache Refresh Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .test-section {
+            background-color: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        .warning {
+            color: #ffc107;
+        }
+        .log {
+            background-color: #000;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .article-content {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔄 Force Cache Refresh Test</h1>
+    <p>This tool will force refresh the ContentService cache and verify the latest data is loaded.</p>
+
+    <div class="test-section">
+        <h2>Cache Management</h2>
+        <button class="button" onclick="clearCache()">Clear Cache</button>
+        <button class="button" onclick="forceRefreshIntelligence()">Force Refresh Intelligence</button>
+        <button class="button" onclick="checkCacheStatus()">Check Cache Status</button>
+        <div id="cache-status" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Article Data Verification</h2>
+        <button class="button" onclick="loadSpecificArticle()">Load "The Age of Great Voyages" Article</button>
+        <button class="button" onclick="compareWithJsonFile()">Compare with JSON File</button>
+        <div id="article-data" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Content Comparison</h2>
+        <div id="content-comparison"></div>
+    </div>
+
+    <script type="module">
+        // Import ContentService
+        import { contentService } from './src/services/ContentService.js';
+
+        // Make functions globally available
+        window.clearCache = async function() {
+            const statusDiv = document.getElementById('cache-status');
+            statusDiv.innerHTML = '🔄 Clearing cache...\n';
+            
+            try {
+                contentService.clearCache();
+                statusDiv.innerHTML += '✅ Cache cleared successfully\n';
+                statusDiv.innerHTML += `⏰ Timestamp: ${new Date().toISOString()}\n`;
+            } catch (error) {
+                statusDiv.innerHTML += `❌ Error clearing cache: ${error.message}\n`;
+            }
+        };
+
+        window.forceRefreshIntelligence = async function() {
+            const statusDiv = document.getElementById('cache-status');
+            statusDiv.innerHTML = '🔄 Force refreshing intelligence data...\n';
+            
+            try {
+                const data = await contentService.forceRefreshIntelligence();
+                statusDiv.innerHTML += `✅ Intelligence data refreshed successfully\n`;
+                statusDiv.innerHTML += `📊 Loaded ${data.length} articles\n`;
+                statusDiv.innerHTML += `⏰ Timestamp: ${new Date().toISOString()}\n`;
+                
+                // Check if our target article exists
+                const targetArticle = data.find(item => item.title.includes('The Age of Great Voyages'));
+                if (targetArticle) {
+                    statusDiv.innerHTML += `🎯 Found target article: "${targetArticle.title}"\n`;
+                    statusDiv.innerHTML += `📅 Article date: ${targetArticle.date}\n`;
+                    statusDiv.innerHTML += `📝 Content length: ${targetArticle.content?.length || 0} characters\n`;
+                } else {
+                    statusDiv.innerHTML += `⚠️ Target article "The Age of Great Voyages" not found\n`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML += `❌ Error refreshing data: ${error.message}\n`;
+            }
+        };
+
+        window.checkCacheStatus = async function() {
+            const statusDiv = document.getElementById('cache-status');
+            statusDiv.innerHTML = '🔍 Checking cache status...\n';
+            
+            try {
+                // Get data without forcing refresh to check cache
+                const data = await contentService.getIntelligence();
+                statusDiv.innerHTML += `📊 Current cache contains ${data.length} articles\n`;
+                statusDiv.innerHTML += `⏰ Check timestamp: ${new Date().toISOString()}\n`;
+                
+                // List first few articles
+                statusDiv.innerHTML += '\n📋 First 5 articles in cache:\n';
+                data.slice(0, 5).forEach((article, index) => {
+                    statusDiv.innerHTML += `${index + 1}. ${article.title} (${article.date})\n`;
+                });
+            } catch (error) {
+                statusDiv.innerHTML += `❌ Error checking cache: ${error.message}\n`;
+            }
+        };
+
+        window.loadSpecificArticle = async function() {
+            const dataDiv = document.getElementById('article-data');
+            dataDiv.innerHTML = '🔍 Loading specific article...\n';
+            
+            try {
+                // Force refresh first
+                await contentService.forceRefreshIntelligence();
+                
+                // Find the article by ID or title
+                const article = await contentService.getIntelligenceById('intel_001');
+                
+                if (article) {
+                    dataDiv.innerHTML += `✅ Article found: "${article.title}"\n`;
+                    dataDiv.innerHTML += `📅 Date: ${article.date}\n`;
+                    dataDiv.innerHTML += `🏷️ Brand: ${article.brand}\n`;
+                    dataDiv.innerHTML += `📝 Content length: ${article.content?.length || 0} characters\n`;
+                    dataDiv.innerHTML += `🔗 Content type: ${article.content_type || 'text'}\n`;
+                    
+                    // Show first 200 characters of content
+                    const contentPreview = article.content?.substring(0, 200) || 'No content';
+                    dataDiv.innerHTML += `\n📄 Content preview:\n${contentPreview}...\n`;
+                    
+                    // Store for comparison
+                    window.currentArticle = article;
+                } else {
+                    dataDiv.innerHTML += `❌ Article with ID 'intel_001' not found\n`;
+                    
+                    // Try to find by title
+                    const allArticles = await contentService.getIntelligence();
+                    const byTitle = allArticles.find(item => item.title.includes('The Age of Great Voyages'));
+                    
+                    if (byTitle) {
+                        dataDiv.innerHTML += `🎯 Found by title: "${byTitle.title}" (ID: ${byTitle.id})\n`;
+                        window.currentArticle = byTitle;
+                    } else {
+                        dataDiv.innerHTML += `❌ Article not found by title either\n`;
+                    }
+                }
+            } catch (error) {
+                dataDiv.innerHTML += `❌ Error loading article: ${error.message}\n`;
+            }
+        };
+
+        window.compareWithJsonFile = async function() {
+            const comparisonDiv = document.getElementById('content-comparison');
+            comparisonDiv.innerHTML = '<h3>🔍 Comparing with JSON file...</h3>';
+            
+            try {
+                // Load directly from JSON file
+                const response = await fetch('/data/intelligence.json?t=' + Date.now());
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const jsonData = await response.json();
+                
+                // Find the target article in JSON
+                const jsonArticle = jsonData.find(item => item.id === 'intel_001' || item.title.includes('The Age of Great Voyages'));
+                
+                if (jsonArticle && window.currentArticle) {
+                    comparisonDiv.innerHTML += '<div class="article-content">';
+                    comparisonDiv.innerHTML += '<h4 class="success">✅ JSON File Data:</h4>';
+                    comparisonDiv.innerHTML += `<strong>Title:</strong> ${jsonArticle.title}<br>`;
+                    comparisonDiv.innerHTML += `<strong>Date:</strong> ${jsonArticle.date}<br>`;
+                    comparisonDiv.innerHTML += `<strong>Content Length:</strong> ${jsonArticle.content?.length || 0} characters<br>`;
+                    comparisonDiv.innerHTML += `<strong>Content Preview:</strong> ${(jsonArticle.content || '').substring(0, 200)}...<br>`;
+                    comparisonDiv.innerHTML += '</div>';
+                    
+                    comparisonDiv.innerHTML += '<div class="article-content">';
+                    comparisonDiv.innerHTML += '<h4 class="info">📊 ContentService Data:</h4>';
+                    comparisonDiv.innerHTML += `<strong>Title:</strong> ${window.currentArticle.title}<br>`;
+                    comparisonDiv.innerHTML += `<strong>Date:</strong> ${window.currentArticle.date}<br>`;
+                    comparisonDiv.innerHTML += `<strong>Content Length:</strong> ${window.currentArticle.content?.length || 0} characters<br>`;
+                    comparisonDiv.innerHTML += `<strong>Content Preview:</strong> ${(window.currentArticle.content || '').substring(0, 200)}...<br>`;
+                    comparisonDiv.innerHTML += '</div>';
+                    
+                    // Compare content
+                    const contentMatch = jsonArticle.content === window.currentArticle.content;
+                    const titleMatch = jsonArticle.title === window.currentArticle.title;
+                    const dateMatch = jsonArticle.date === window.currentArticle.date;
+                    
+                    comparisonDiv.innerHTML += '<div class="article-content">';
+                    comparisonDiv.innerHTML += '<h4>🔍 Comparison Results:</h4>';
+                    comparisonDiv.innerHTML += `<strong>Title Match:</strong> <span class="${titleMatch ? 'success' : 'error'}">${titleMatch ? '✅ Yes' : '❌ No'}</span><br>`;
+                    comparisonDiv.innerHTML += `<strong>Date Match:</strong> <span class="${dateMatch ? 'success' : 'error'}">${dateMatch ? '✅ Yes' : '❌ No'}</span><br>`;
+                    comparisonDiv.innerHTML += `<strong>Content Match:</strong> <span class="${contentMatch ? 'success' : 'error'}">${contentMatch ? '✅ Yes' : '❌ No'}</span><br>`;
+                    
+                    if (!contentMatch) {
+                        comparisonDiv.innerHTML += '<br><strong class="warning">⚠️ Content differs! This indicates a cache sync issue.</strong><br>';
+                    }
+                    comparisonDiv.innerHTML += '</div>';
+                } else {
+                    comparisonDiv.innerHTML += '<div class="error">❌ Could not find article for comparison</div>';
+                }
+            } catch (error) {
+                comparisonDiv.innerHTML += `<div class="error">❌ Error comparing data: ${error.message}</div>`;
+            }
+        };
+
+        // Auto-run initial cache check
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                window.checkCacheStatus();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

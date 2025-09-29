@@ -9,7 +9,11 @@
     "build:vercel": "vite build --config vite.config.vercel.ts",
     "preview": "vite preview",
     "publish": "git add . && git commit -m \"chore: Update content and deploy\" && git push",
-    "sync:html-reports": "node scripts/sync-html-reports.js"
+    "sync:html-reports": "node scripts/sync-html-reports.js",
+    "sync:content": "node scripts/sync-cms-content.js",
+    "sync:watch": "node scripts/sync-cms-content.js watch",
+    "watch:content": "node scripts/content-watcher.js",
+    "cms:sync": "npm run sync:content && npm run sync:html-reports"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

@@ -225,10 +225,12 @@ class ContentService {
 
   // Clear cache
   public clearCache(): void {
+    console.log('🔄 ContentService: Clearing all caches');
     this.intelligenceCache = null;
     this.modelsCache = null;
     this.htmlReportsCache = null;
     this.cacheTimestamp = 0;
+    console.log('✅ ContentService: All caches cleared');
   }
 
   // Force refresh data (bypass cache)
@@ -253,28 +255,32 @@ class ContentService {
   }
 
   // Get intelligence articles data
-  public async getIntelligence(): Promise<IntelligenceItem[]> {
-    if (this.intelligenceCache && this.isCacheValid()) {
+  public async getIntelligence(forceRefresh: boolean = false): Promise<IntelligenceItem[]> {
+    console.log(`📊 ContentService: Getting intelligence data (forceRefresh: ${forceRefresh})`);
+    
+    if (!forceRefresh && this.isCacheValid() && this.intelligenceCache) {
+      console.log('💾 ContentService: Using cached intelligence data');
       return this.intelligenceCache;
     }
 
-    // Load directly from JSON file (skip CMS API for now)
     try {
+      console.log('🌐 ContentService: Fetching fresh intelligence data from /data/intelligence.json');
       const response = await fetch('/data/intelligence.json');
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Failed to fetch intelligence data: ${response.status}`);
       }
-      const jsonData = await response.json();
+      const data: IntelligenceItem[] = await response.json();
       
-      // Filter out HTML reports to ensure only intelligence articles are returned
-      const intelligenceArticles = jsonData.filter((item: any) => item.type !== 'html_report');
+      // Filter out html_report type articles
+      const filteredData = data.filter(item => item.category !== 'html_report');
+      console.log(`✅ ContentService: Loaded ${filteredData.length} intelligence items`);
       
-      this.intelligenceCache = intelligenceArticles;
+      this.intelligenceCache = filteredData;
       this.cacheTimestamp = Date.now();
-      return intelligenceArticles;
+      return filteredData;
     } catch (error) {
-      console.error('Failed to load intelligence data:', error);
-      return [];
+      console.error('❌ ContentService: Error fetching intelligence data:', error);
+      throw error;
     }
   }
 
@@ -484,8 +490,18 @@ class ContentService {
 
   // Get single intelligence article by ID
   public async getIntelligenceById(id: string): Promise<IntelligenceItem | null> {
+    console.log(`🔍 ContentService: Getting intelligence article by ID: ${id}`);
     const intelligence = await this.getIntelligence();
-    return intelligence.find(item => item.id === id) || null;
+    const article = intelligence.find(item => item.id === id);
+    
+    if (article) {
+      console.log(`✅ ContentService: Found article "${article.title}"`);
+      console.log(`📄 ContentService: Article content length: ${article.content?.length || 0} characters`);
+    } else {
+      console.log(`❌ ContentService: Article with ID "${id}" not found`);
+    }
+    
+    return article || null;
   }
 
   // Get single model by ID

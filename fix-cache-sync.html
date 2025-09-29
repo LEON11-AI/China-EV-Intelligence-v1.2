@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Cache Sync Issue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .action-section {
+            background-color: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .button.success {
+            background-color: #28a745;
+        }
+        .button.warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .button.danger {
+            background-color: #dc3545;
+        }
+        .status {
+            background-color: #000;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 10px 0;
+            border: 1px solid #333;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        .warning { color: #ffc107; }
+        .highlight { background-color: #333; padding: 2px 4px; border-radius: 2px; }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .comparison-item {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #555;
+        }
+        .diff-highlight {
+            background-color: #ffeb3b;
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Fix Cache Sync Issue</h1>
+    <p>This tool will diagnose and fix the cache synchronization issue between the JSON file and ContentService.</p>
+
+    <div class="action-section">
+        <h2>🚀 Quick Fix</h2>
+        <p>Click this button to automatically fix the cache sync issue:</p>
+        <button class="button success" onclick="performQuickFix()">🔧 Auto Fix Cache Sync</button>
+        <div id="quick-fix-status" class="status"></div>
+    </div>
+
+    <div class="action-section">
+        <h2>🔍 Detailed Diagnosis</h2>
+        <button class="button" onclick="diagnoseIssue()">🔍 Diagnose Issue</button>
+        <button class="button" onclick="clearAllCaches()">🗑️ Clear All Caches</button>
+        <button class="button" onclick="forceReloadData()">🔄 Force Reload Data</button>
+        <button class="button" onclick="verifySync()">✅ Verify Sync</button>
+        <div id="diagnosis-status" class="status"></div>
+    </div>
+
+    <div class="action-section">
+        <h2>📊 Content Comparison</h2>
+        <button class="button" onclick="compareContent()">📋 Compare JSON vs Cache</button>
+        <div id="comparison-results"></div>
+    </div>
+
+    <div class="action-section">
+        <h2>🌐 Browser Actions</h2>
+        <button class="button warning" onclick="clearBrowserCache()">🗑️ Clear Browser Cache</button>
+        <button class="button danger" onclick="hardRefresh()">🔄 Hard Refresh Page</button>
+        <div id="browser-status" class="status"></div>
+    </div>
+
+    <script type="module">
+        import { contentService } from './src/services/ContentService.js';
+
+        let jsonData = null;
+        let cacheData = null;
+
+        window.performQuickFix = async function() {
+            const statusDiv = document.getElementById('quick-fix-status');
+            statusDiv.innerHTML = '🚀 Starting automatic cache sync fix...\n\n';
+            
+            try {
+                // Step 1: Clear all caches
+                statusDiv.innerHTML += '1️⃣ Clearing ContentService cache...\n';
+                contentService.clearCache();
+                statusDiv.innerHTML += '   ✅ ContentService cache cleared\n\n';
+                
+                // Step 2: Clear browser cache for the JSON file
+                statusDiv.innerHTML += '2️⃣ Clearing browser cache for JSON file...\n';
+                await fetch('/data/intelligence.json', { cache: 'reload' });
+                statusDiv.innerHTML += '   ✅ Browser cache cleared for JSON file\n\n';
+                
+                // Step 3: Force refresh intelligence data
+                statusDiv.innerHTML += '3️⃣ Force refreshing intelligence data...\n';
+                const freshData = await contentService.forceRefreshIntelligence();
+                statusDiv.innerHTML += `   ✅ Loaded ${freshData.length} fresh articles\n\n`;
+                
+                // Step 4: Verify the target article
+                statusDiv.innerHTML += '4️⃣ Verifying target article...\n';
+                const targetArticle = await contentService.getIntelligenceById('intel_001');
+                
+                if (targetArticle) {
+                    statusDiv.innerHTML += `   ✅ Found article: "${targetArticle.title}"\n`;
+                    statusDiv.innerHTML += `   📅 Date: ${targetArticle.date}\n`;
+                    statusDiv.innerHTML += `   📝 Content length: ${targetArticle.content?.length || 0} characters\n\n`;
+                    
+                    // Step 5: Compare with JSON file
+                    statusDiv.innerHTML += '5️⃣ Comparing with JSON file...\n';
+                    const jsonResponse = await fetch('/data/intelligence.json?t=' + Date.now());
+                    const jsonData = await jsonResponse.json();
+                    const jsonArticle = jsonData.find(item => item.id === 'intel_001');
+                    
+                    if (jsonArticle) {
+                        const contentMatch = jsonArticle.content === targetArticle.content;
+                        const titleMatch = jsonArticle.title === targetArticle.title;
+                        
+                        if (contentMatch && titleMatch) {
+                            statusDiv.innerHTML += '   ✅ Perfect sync! JSON and cache data match\n\n';
+                            statusDiv.innerHTML += '🎉 SUCCESS: Cache sync issue has been resolved!\n';
+                            statusDiv.innerHTML += '\n📋 Next steps:\n';
+                            statusDiv.innerHTML += '   • Navigate to the article page to verify the display\n';
+                            statusDiv.innerHTML += '   • The content should now show the latest updates\n';
+                        } else {
+                            statusDiv.innerHTML += '   ⚠️ Data still doesn\'t match. Investigating...\n';
+                            statusDiv.innerHTML += `   📊 Title match: ${titleMatch ? 'Yes' : 'No'}\n`;
+                            statusDiv.innerHTML += `   📊 Content match: ${contentMatch ? 'Yes' : 'No'}\n`;
+                            
+                            if (!titleMatch) {
+                                statusDiv.innerHTML += `   🔍 JSON title: "${jsonArticle.title}"\n`;
+                                statusDiv.innerHTML += `   🔍 Cache title: "${targetArticle.title}"\n`;
+                            }
+                        }
+                    } else {
+                        statusDiv.innerHTML += '   ❌ Article not found in JSON file\n';
+                    }
+                } else {
+                    statusDiv.innerHTML += '   ❌ Target article not found in cache\n';
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML += `\n❌ Error during fix: ${error.message}\n`;
+                statusDiv.innerHTML += `\n🔧 Manual steps to try:\n`;
+                statusDiv.innerHTML += `   1. Check if the JSON file exists and is valid\n`;
+                statusDiv.innerHTML += `   2. Restart the development server\n`;
+                statusDiv.innerHTML += `   3. Clear browser cache manually (Ctrl+Shift+R)\n`;
+            }
+        };
+
+        window.diagnoseIssue = async function() {
+            const statusDiv = document.getElementById('diagnosis-status');
+            statusDiv.innerHTML = '🔍 Starting comprehensive diagnosis...\n\n';
+            
+            try {
+                // Check JSON file
+                statusDiv.innerHTML += '1️⃣ Checking JSON file...\n';
+                const jsonResponse = await fetch('/data/intelligence.json?t=' + Date.now());
+                if (jsonResponse.ok) {
+                    jsonData = await jsonResponse.json();
+                    statusDiv.innerHTML += `   ✅ JSON file loaded: ${jsonData.length} articles\n`;
+                    
+                    const targetInJson = jsonData.find(item => item.id === 'intel_001' || item.title.includes('The Age of Great Voyages'));
+                    if (targetInJson) {
+                        statusDiv.innerHTML += `   ✅ Target article found in JSON: "${targetInJson.title}"\n`;
+                        statusDiv.innerHTML += `   📝 JSON content length: ${targetInJson.content?.length || 0}\n`;
+                    } else {
+                        statusDiv.innerHTML += `   ❌ Target article NOT found in JSON\n`;
+                    }
+                } else {
+                    statusDiv.innerHTML += `   ❌ Failed to load JSON file: ${jsonResponse.status}\n`;
+                }
+                
+                statusDiv.innerHTML += '\n';
+                
+                // Check ContentService cache
+                statusDiv.innerHTML += '2️⃣ Checking ContentService cache...\n';
+                cacheData = await contentService.getIntelligence();
+                statusDiv.innerHTML += `   ✅ Cache loaded: ${cacheData.length} articles\n`;
+                
+                const targetInCache = cacheData.find(item => item.id === 'intel_001' || item.title.includes('The Age of Great Voyages'));
+                if (targetInCache) {
+                    statusDiv.innerHTML += `   ✅ Target article found in cache: "${targetInCache.title}"\n`;
+                    statusDiv.innerHTML += `   📝 Cache content length: ${targetInCache.content?.length || 0}\n`;
+                } else {
+                    statusDiv.innerHTML += `   ❌ Target article NOT found in cache\n`;
+                }
+                
+                statusDiv.innerHTML += '\n';
+                
+                // Compare data
+                if (jsonData && cacheData) {
+                    statusDiv.innerHTML += '3️⃣ Comparing data sources...\n';
+                    
+                    if (jsonData.length === cacheData.length) {
+                        statusDiv.innerHTML += `   ✅ Article count matches: ${jsonData.length}\n`;
+                    } else {
+                        statusDiv.innerHTML += `   ⚠️ Article count differs: JSON(${jsonData.length}) vs Cache(${cacheData.length})\n`;
+                    }
+                    
+                    // Check specific article
+                    const jsonTarget = jsonData.find(item => item.id === 'intel_001');
+                    const cacheTarget = cacheData.find(item => item.id === 'intel_001');
+                    
+                    if (jsonTarget && cacheTarget) {
+                        const titleMatch = jsonTarget.title === cacheTarget.title;
+                        const contentMatch = jsonTarget.content === cacheTarget.content;
+                        const dateMatch = jsonTarget.date === cacheTarget.date;
+                        
+                        statusDiv.innerHTML += `   📊 Title match: ${titleMatch ? '✅' : '❌'}\n`;
+                        statusDiv.innerHTML += `   📊 Content match: ${contentMatch ? '✅' : '❌'}\n`;
+                        statusDiv.innerHTML += `   📊 Date match: ${dateMatch ? '✅' : '❌'}\n`;
+                        
+                        if (!contentMatch) {
+                            statusDiv.innerHTML += `\n   🔍 Content length comparison:\n`;
+                            statusDiv.innerHTML += `      JSON: ${jsonTarget.content?.length || 0} characters\n`;
+                            statusDiv.innerHTML += `      Cache: ${cacheTarget.content?.length || 0} characters\n`;
+                        }
+                    }
+                }
+                
+                statusDiv.innerHTML += '\n✅ Diagnosis complete!\n';
+                
+            } catch (error) {
+                statusDiv.innerHTML += `\n❌ Diagnosis error: ${error.message}\n`;
+            }
+        };
+
+        window.clearAllCaches = function() {
+            const statusDiv = document.getElementById('diagnosis-status');
+            statusDiv.innerHTML = '🗑️ Clearing all caches...\n';
+            
+            try {
+                // Clear ContentService cache
+                contentService.clearCache();
+                statusDiv.innerHTML += '✅ ContentService cache cleared\n';
+                
+                // Clear local variables
+                jsonData = null;
+                cacheData = null;
+                statusDiv.innerHTML += '✅ Local data cleared\n';
+                
+                statusDiv.innerHTML += '\n🎯 All caches cleared successfully!\n';
+            } catch (error) {
+                statusDiv.innerHTML += `❌ Error clearing caches: ${error.message}\n`;
+            }
+        };
+
+        window.forceReloadData = async function() {
+            const statusDiv = document.getElementById('diagnosis-status');
+            statusDiv.innerHTML = '🔄 Force reloading all data...\n';
+            
+            try {
+                // Force refresh intelligence
+                const intelligence = await contentService.forceRefreshIntelligence();
+                statusDiv.innerHTML += `✅ Intelligence reloaded: ${intelligence.length} articles\n`;
+                
+                // Reload JSON with cache busting
+                const jsonResponse = await fetch('/data/intelligence.json?t=' + Date.now());
+                jsonData = await jsonResponse.json();
+                statusDiv.innerHTML += `✅ JSON reloaded: ${jsonData.length} articles\n`;
+                
+                statusDiv.innerHTML += '\n🎯 All data force reloaded successfully!\n';
+            } catch (error) {
+                statusDiv.innerHTML += `❌ Error reloading data: ${error.message}\n`;
+            }
+        };
+
+        window.verifySync = async function() {
+            const statusDiv = document.getElementById('diagnosis-status');
+            statusDiv.innerHTML = '✅ Verifying synchronization...\n';
+            
+            try {
+                // Get fresh data
+                const freshCache = await contentService.getIntelligence();
+                const freshJsonResponse = await fetch('/data/intelligence.json?t=' + Date.now());
+                const freshJson = await freshJsonResponse.json();
+                
+                // Find target article
+                const cacheArticle = freshCache.find(item => item.id === 'intel_001');
+                const jsonArticle = freshJson.find(item => item.id === 'intel_001');
+                
+                if (cacheArticle && jsonArticle) {
+                    const isSync = (
+                        cacheArticle.title === jsonArticle.title &&
+                        cacheArticle.content === jsonArticle.content &&
+                        cacheArticle.date === jsonArticle.date
+                    );
+                    
+                    if (isSync) {
+                        statusDiv.innerHTML += '🎉 SUCCESS: Data is perfectly synchronized!\n';
+                        statusDiv.innerHTML += `✅ Article: "${cacheArticle.title}"\n`;
+                        statusDiv.innerHTML += `✅ Content length: ${cacheArticle.content?.length || 0} characters\n`;
+                        statusDiv.innerHTML += '\n🚀 You can now navigate to the article page to see the updated content.\n';
+                    } else {
+                        statusDiv.innerHTML += '⚠️ WARNING: Data is still not synchronized!\n';
+                        statusDiv.innerHTML += 'This may require manual intervention or server restart.\n';
+                    }
+                } else {
+                    statusDiv.innerHTML += '❌ ERROR: Target article not found in one or both sources\n';
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML += `❌ Verification error: ${error.message}\n`;
+            }
+        };
+
+        window.compareContent = async function() {
+            const resultsDiv = document.getElementById('comparison-results');
+            resultsDiv.innerHTML = '<h3>📋 Loading comparison...</h3>';
+            
+            try {
+                // Get both data sources
+                const cacheData = await contentService.getIntelligence();
+                const jsonResponse = await fetch('/data/intelligence.json?t=' + Date.now());
+                const jsonData = await jsonResponse.json();
+                
+                // Find target articles
+                const cacheArticle = cacheData.find(item => item.id === 'intel_001');
+                const jsonArticle = jsonData.find(item => item.id === 'intel_001');
+                
+                if (cacheArticle && jsonArticle) {
+                    resultsDiv.innerHTML = `
+                        <div class="comparison-grid">
+                            <div class="comparison-item">
+                                <h4 class="info">📄 JSON File Data</h4>
+                                <p><strong>Title:</strong> ${jsonArticle.title}</p>
+                                <p><strong>Date:</strong> ${jsonArticle.date}</p>
+                                <p><strong>Content Length:</strong> ${jsonArticle.content?.length || 0} chars</p>
+                                <p><strong>Content Preview:</strong></p>
+                                <div class="status" style="max-height: 150px;">${(jsonArticle.content || '').substring(0, 300)}...</div>
+                            </div>
+                            <div class="comparison-item">
+                                <h4 class="success">💾 Cache Data</h4>
+                                <p><strong>Title:</strong> ${cacheArticle.title}</p>
+                                <p><strong>Date:</strong> ${cacheArticle.date}</p>
+                                <p><strong>Content Length:</strong> ${cacheArticle.content?.length || 0} chars</p>
+                                <p><strong>Content Preview:</strong></p>
+                                <div class="status" style="max-height: 150px;">${(cacheArticle.content || '').substring(0, 300)}...</div>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>🔍 Comparison Results</h4>
+                            <p><strong>Title Match:</strong> <span class="${jsonArticle.title === cacheArticle.title ? 'success' : 'error'}">${jsonArticle.title === cacheArticle.title ? '✅ Yes' : '❌ No'}</span></p>
+                            <p><strong>Date Match:</strong> <span class="${jsonArticle.date === cacheArticle.date ? 'success' : 'error'}">${jsonArticle.date === cacheArticle.date ? '✅ Yes' : '❌ No'}</span></p>
+                            <p><strong>Content Match:</strong> <span class="${jsonArticle.content === cacheArticle.content ? 'success' : 'error'}">${jsonArticle.content === cacheArticle.content ? '✅ Yes' : '❌ No'}</span></p>
+                        </div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = '<div class="error">❌ Could not find target article in one or both sources</div>';
+                }
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ Comparison error: ${error.message}</div>`;
+            }
+        };
+
+        window.clearBrowserCache = function() {
+            const statusDiv = document.getElementById('browser-status');
+            statusDiv.innerHTML = '🗑️ Clearing browser cache...\n';
+            
+            // Clear localStorage
+            localStorage.clear();
+            statusDiv.innerHTML += '✅ localStorage cleared\n';
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            statusDiv.innerHTML += '✅ sessionStorage cleared\n';
+            
+            statusDiv.innerHTML += '\n💡 Note: For complete cache clearing, use Ctrl+Shift+R or the Hard Refresh button.\n';
+        };
+
+        window.hardRefresh = function() {
+            const statusDiv = document.getElementById('browser-status');
+            statusDiv.innerHTML = '🔄 Performing hard refresh...\n';
+            
+            // Force reload with cache bypass
+            setTimeout(() => {
+                location.reload(true);
+            }, 1000);
+        };
+
+        // Auto-run diagnosis on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('🔧 Cache sync fix tool loaded');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

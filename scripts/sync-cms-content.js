@@ -12,16 +12,21 @@ const __dirname = dirname(__filename);
 // Paths
 const CONTENT_DIR = path.join(__dirname, '..', 'content', 'intelligence');
 const DATA_FILE = path.join(__dirname, '..', 'public', 'data', 'intelligence.json');
+const HTML_REPORTS_FILE = path.join(__dirname, '..', 'public', 'data', 'html_reports.json');
 const REPORTS_DIR = path.join(__dirname, '..', 'public', 'reports');
 
 // Function to read markdown files and convert to JSON
 function syncIntelligenceContent() {
-  console.log('Syncing intelligence content...');
-  console.log('CONTENT_DIR:', CONTENT_DIR);
-  console.log('REPORTS_DIR:', REPORTS_DIR);
-  console.log('DATA_FILE:', DATA_FILE);
+  console.log('🔄 Starting content synchronization...');
+  console.log('📁 CONTENT_DIR:', CONTENT_DIR);
+  console.log('📁 REPORTS_DIR:', REPORTS_DIR);
+  console.log('📄 DATA_FILE:', DATA_FILE);
+  console.log('📄 HTML_REPORTS_FILE:', HTML_REPORTS_FILE);
   
   const intelligenceData = [];
+  const htmlReportsData = [];
+  let publishedCount = 0;
+  let unpublishedCount = 0;
   
   // Read markdown files from content/intelligence
   if (fs.existsSync(CONTENT_DIR)) {
@@ -56,6 +61,11 @@ function syncIntelligenceContent() {
       // Only include published content
       if (data.published !== false) {
         intelligenceData.push(item);
+        publishedCount++;
+        console.log(`✅ Published: ${data.title || file}`);
+      } else {
+        unpublishedCount++;
+        console.log(`⏸️  Unpublished: ${data.title || file}`);
       }
     });
   }
@@ -102,7 +112,12 @@ function syncIntelligenceContent() {
         
         // Only include published content
         if (data.published !== false) {
-          intelligenceData.push(item);
+          htmlReportsData.push(item);
+          publishedCount++;
+          console.log(`✅ Published HTML Report: ${data.title || file}`);
+        } else {
+          unpublishedCount++;
+          console.log(`⏸️  Unpublished HTML Report: ${data.title || file}`);
         }
       }
     });
@@ -110,15 +125,29 @@ function syncIntelligenceContent() {
   
   // Sort by date (newest first)
   intelligenceData.sort((a, b) => new Date(b.date) - new Date(a.date));
+  htmlReportsData.sort((a, b) => new Date(b.date) - new Date(a.date));
   
-  // Write to data file
+  // Write to data files
   const dataDir = path.dirname(DATA_FILE);
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
   }
   
+  // Write intelligence data
   fs.writeFileSync(DATA_FILE, JSON.stringify(intelligenceData, null, 2));
-  console.log(`Synced ${intelligenceData.length} intelligence articles to ${DATA_FILE}`);
+  console.log(`📝 Synced ${intelligenceData.length} intelligence articles to ${DATA_FILE}`);
+  
+  // Write HTML reports data
+  fs.writeFileSync(HTML_REPORTS_FILE, JSON.stringify(htmlReportsData, null, 2));
+  console.log(`📊 Synced ${htmlReportsData.length} HTML reports to ${HTML_REPORTS_FILE}`);
+  
+  // Summary
+  console.log(`\n📊 Sync Summary:`);
+  console.log(`   ✅ Published: ${publishedCount}`);
+  console.log(`   ⏸️  Unpublished: ${unpublishedCount}`);
+  console.log(`   📝 Intelligence Articles: ${intelligenceData.length}`);
+  console.log(`   📊 HTML Reports: ${htmlReportsData.length}`);
+  console.log(`✅ Content synchronization completed successfully!\n`);
 }
 
 // Function to watch for changes

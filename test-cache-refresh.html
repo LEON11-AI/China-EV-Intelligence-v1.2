@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache Refresh Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 3px;
+            white-space: pre-wrap;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <h1>缓存刷新测试工具</h1>
+    
+    <div class="test-section">
+        <h2>1. 测试数据加载</h2>
+        <button class="button" onclick="testDataLoad()">加载Intelligence数据</button>
+        <button class="button" onclick="testArticleLoad()">加载特定文章</button>
+        <div id="dataResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. 测试缓存清除</h2>
+        <button class="button" onclick="clearBrowserCache()">清除浏览器缓存</button>
+        <button class="button" onclick="forceRefresh()">强制刷新数据</button>
+        <div id="cacheResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. 验证文章内容</h2>
+        <button class="button" onclick="verifyArticleContent()">验证"The Age of Great Voyages"内容</button>
+        <div id="verifyResult" class="result"></div>
+    </div>
+
+    <script>
+        // 模拟ContentService的基本功能
+        class TestContentService {
+            constructor() {
+                this.cache = null;
+                this.cacheTimestamp = 0;
+            }
+            
+            clearCache() {
+                console.log('🔄 TestContentService: Clearing cache');
+                this.cache = null;
+                this.cacheTimestamp = 0;
+                console.log('✅ TestContentService: Cache cleared');
+            }
+            
+            async getIntelligence(forceRefresh = false) {
+                console.log(`📊 TestContentService: Getting intelligence data (forceRefresh: ${forceRefresh})`);
+                
+                if (!forceRefresh && this.cache && this.isCacheValid()) {
+                    console.log('💾 TestContentService: Using cached data');
+                    return this.cache;
+                }
+                
+                try {
+                    console.log('🌐 TestContentService: Fetching fresh data from /data/intelligence.json');
+                    const response = await fetch('/data/intelligence.json');
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    console.log(`✅ TestContentService: Loaded ${data.length} items`);
+                    
+                    this.cache = data;
+                    this.cacheTimestamp = Date.now();
+                    return data;
+                } catch (error) {
+                    console.error('❌ TestContentService: Error fetching data:', error);
+                    throw error;
+                }
+            }
+            
+            async getIntelligenceById(id) {
+                console.log(`🔍 TestContentService: Getting article by ID: ${id}`);
+                const intelligence = await this.getIntelligence();
+                const article = intelligence.find(item => item.id === id);
+                
+                if (article) {
+                    console.log(`✅ TestContentService: Found article "${article.title}"`);
+                    console.log(`📄 TestContentService: Content length: ${article.content?.length || 0} characters`);
+                } else {
+                    console.log(`❌ TestContentService: Article with ID "${id}" not found`);
+                }
+                
+                return article || null;
+            }
+            
+            isCacheValid() {
+                const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+                return this.cacheTimestamp && (Date.now() - this.cacheTimestamp) < CACHE_DURATION;
+            }
+        }
+        
+        const testService = new TestContentService();
+        
+        async function testDataLoad() {
+            const resultDiv = document.getElementById('dataResult');
+            resultDiv.className = 'result';
+            resultDiv.textContent = '正在加载数据...';
+            
+            try {
+                const data = await testService.getIntelligence();
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `成功加载 ${data.length} 篇文章\n\n前3篇文章标题:\n${data.slice(0, 3).map(item => `- ${item.title}`).join('\n')}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `加载失败: ${error.message}`;
+            }
+        }
+        
+        async function testArticleLoad() {
+            const resultDiv = document.getElementById('dataResult');
+            resultDiv.className = 'result';
+            resultDiv.textContent = '正在加载特定文章...';
+            
+            try {
+                const article = await testService.getIntelligenceById('china-ev-global-expansion-analysis');
+                if (article) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `成功加载文章:\n标题: ${article.title}\n日期: ${article.date}\n内容长度: ${article.content?.length || 0} 字符\n\n内容预览:\n${article.content?.substring(0, 200)}...`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '未找到指定文章';
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `加载失败: ${error.message}`;
+            }
+        }
+        
+        function clearBrowserCache() {
+            const resultDiv = document.getElementById('cacheResult');
+            
+            // 清除各种缓存
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                    });
+                });
+            }
+            
+            // 清除localStorage和sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // 清除我们的测试服务缓存
+            testService.clearCache();
+            
+            resultDiv.className = 'result success';
+            resultDiv.textContent = '浏览器缓存已清除\n- Service Worker缓存已清除\n- localStorage已清除\n- sessionStorage已清除\n- 应用缓存已清除';
+        }
+        
+        async function forceRefresh() {
+            const resultDiv = document.getElementById('cacheResult');
+            resultDiv.className = 'result';
+            resultDiv.textContent = '正在强制刷新数据...';
+            
+            try {
+                testService.clearCache();
+                const data = await testService.getIntelligence(true);
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `强制刷新成功\n重新加载了 ${data.length} 篇文章\n时间戳: ${new Date().toLocaleString()}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `强制刷新失败: ${error.message}`;
+            }
+        }
+        
+        async function verifyArticleContent() {
+            const resultDiv = document.getElementById('verifyResult');
+            resultDiv.className = 'result';
+            resultDiv.textContent = '正在验证文章内容...';
+            
+            try {
+                const article = await testService.getIntelligenceById('china-ev-global-expansion-analysis');
+                if (article) {
+                    const expectedKeywords = [
+                        'Age of Great Voyages',
+                        'China\'s electric vehicles',
+                        'global expansion',
+                        'furnace of competition',
+                        'price war'
+                    ];
+                    
+                    const foundKeywords = expectedKeywords.filter(keyword => 
+                        article.content?.includes(keyword) || article.title?.includes(keyword)
+                    );
+                    
+                    const isContentValid = foundKeywords.length >= 3;
+                    
+                    resultDiv.className = `result ${isContentValid ? 'success' : 'error'}`;
+                    resultDiv.textContent = `文章验证结果:\n标题: ${article.title}\n内容长度: ${article.content?.length || 0} 字符\n\n关键词检查 (${foundKeywords.length}/${expectedKeywords.length}):\n${expectedKeywords.map(kw => `${foundKeywords.includes(kw) ? '✅' : '❌'} ${kw}`).join('\n')}\n\n${isContentValid ? '✅ 文章内容验证通过' : '❌ 文章内容可能不是最新版本'}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ 未找到指定文章，请检查文章ID';
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `验证失败: ${error.message}`;
+            }
+        }
+        
+        // 页面加载时自动运行基本测试
+        window.addEventListener('load', () => {
+            console.log('🚀 Cache Refresh Test Tool loaded');
+            console.log('📋 Available tests: Data Load, Cache Clear, Content Verify');
+        });
+    </script>
+</body>
+</html>
