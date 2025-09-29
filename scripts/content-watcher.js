@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { execSync } from 'child_process';
 import { syncIntelligenceContent } from './sync-cms-content.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,21 +21,53 @@ class ContentWatcher {
     this.watchers = [];
   }
 
+  // Auto-push changes to GitHub
+  async autoPush() {
+    try {
+      console.log('🚀 Auto-pushing changes to GitHub...');
+      
+      // Check if there are changes
+      const status = execSync('git status --porcelain', { encoding: 'utf8' });
+      if (!status.trim()) {
+        console.log('✅ No changes to push');
+        return;
+      }
+      
+      // Generate commit message with timestamp
+      const timestamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
+      const commitMessage = `content: auto-sync CMS changes (${timestamp})`;
+      
+      // Add, commit and push
+      execSync('git add .', { stdio: 'inherit' });
+      execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });
+      execSync('git push origin main', { stdio: 'inherit' });
+      
+      console.log('✅ Auto-push completed successfully!');
+      console.log('🌐 Changes will be deployed automatically via GitHub Actions');
+    } catch (error) {
+      console.error('❌ Auto-push failed:', error.message);
+      // Don't fail the sync if push fails
+    }
+  }
+
   // Debounced sync function to avoid multiple rapid syncs
   debouncedSync() {
     if (this.debounceTimeout) {
       clearTimeout(this.debounceTimeout);
     }
     
-    this.debounceTimeout = setTimeout(() => {
+    this.debounceTimeout = setTimeout(async () => {
       console.log('🔄 Content changed, syncing...');
       try {
         syncIntelligenceContent();
         console.log('✅ Content sync completed successfully');
+        
+        // Auto-push changes to GitHub
+        await this.autoPush();
       } catch (error) {
         console.error('❌ Content sync failed:', error.message);
       }
-    }, 1000); // Wait 1 second after last change
+    }, 2000); // Wait 2 seconds after last change to allow for multiple file operations
   }
 
   // Watch content directory

@@ -13,7 +13,10 @@
     "sync:content": "node scripts/sync-cms-content.js",
     "sync:watch": "node scripts/sync-cms-content.js watch",
     "watch:content": "node scripts/content-watcher.js",
-    "cms:sync": "npm run sync:content && npm run sync:html-reports"
+    "cms:sync": "npm run sync:content && npm run sync:html-reports",
+    "auto-push": "node scripts/auto-push.js push",
+    "auto-push:watch": "node scripts/auto-push.js watch",
+    "cms:full-sync": "npm run sync:content && npm run auto-push"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
