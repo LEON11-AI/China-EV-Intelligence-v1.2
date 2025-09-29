@@ -65,8 +65,8 @@ const IntelligencePage: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        // Filter intelligence articles
-        let filteredIntelligence = items;
+        // Filter intelligence articles (exclude In-depth Analysis articles)
+        let filteredIntelligence = items.filter(item => item.category !== 'In-depth Analysis');
         
         if (selectedCategory !== 'All') {
             filteredIntelligence = filteredIntelligence.filter(item => item.category === selectedCategory);
@@ -78,14 +78,20 @@ const IntelligencePage: React.FC = () => {
         
         setFilteredItems(filteredIntelligence);
         
-        // Filter HTML reports
-        let filteredHtmlReports = htmlReports;
+        // Filter HTML reports and include In-depth Analysis articles
+        const depthAnalysisArticles = items.filter(item => item.category === 'In-depth Analysis');
+        let filteredHtmlReports = [...htmlReports, ...depthAnalysisArticles];
         
         console.log('Filtering HTML reports:', htmlReports.length, 'total reports');
+        console.log('Depth analysis articles:', depthAnalysisArticles.length);
         console.log('Selected category:', selectedCategory);
         
         if (selectedCategory !== 'All') {
-            filteredHtmlReports = filteredHtmlReports.filter(report => report.category === selectedCategory);
+            filteredHtmlReports = filteredHtmlReports.filter(item => {
+                // Handle both report.category and item.category
+                const category = item.category || (item as any).category;
+                return category === selectedCategory;
+            });
         }
         
         setFilteredReports(filteredHtmlReports);
@@ -100,11 +106,14 @@ const IntelligencePage: React.FC = () => {
         let categories: string[] = [];
         
         if (activeTab === 'articles') {
-            // Only show categories from intelligence articles
-            categories = ['All', ...new Set(items.map(item => item.category))];
+            // Only show categories from intelligence articles (exclude In-depth Analysis)
+            const articleCategories = items.filter(item => item.category !== 'In-depth Analysis').map(item => item.category);
+            categories = ['All', ...new Set(articleCategories)];
         } else {
-            // Only show categories from HTML reports
-            categories = ['All', ...new Set(htmlReports.map(report => report.category))];
+            // Show categories from HTML reports and In-depth Analysis articles
+            const reportCategories = htmlReports.map(report => report.category);
+            const depthAnalysisCategories = items.filter(item => item.category === 'In-depth Analysis').map(item => item.category);
+            categories = ['All', ...new Set([...reportCategories, ...depthAnalysisCategories])];
         }
         
         // Remove Supply Chain from categories for non-Pro users
@@ -243,6 +252,7 @@ const IntelligencePage: React.FC = () => {
                                                 item.category === 'market_analysis' ? 'bg-emerald-600 text-white' :
                                                 item.category === 'technology' ? 'bg-cyan-600 text-white' :
                                                 item.category === 'general' ? 'bg-slate-600 text-white' :
+                                                item.category === 'In-depth Analysis' ? 'bg-orange-600 text-white' :
                                                 'bg-gray-600 text-white'
                                             }`}>
                                                 {item.category}
@@ -265,49 +275,64 @@ const IntelligencePage: React.FC = () => {
                 </div>
             ) : (
                 <div className="space-y-6">
-                    {filteredReports.map(report => (
-                        <div key={report.id} className="bg-dark-card rounded-lg shadow-lg overflow-hidden">
-                            <div className="p-6">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="flex-1">
-                                        <Link 
-                                            to={`/reports/${report.id}`}
-                                            className="text-xl font-bold text-text-main mb-2 hover:text-link-blue transition-colors duration-200 block"
-                                        >
-                                            {report.title}
-                                        </Link>
-                                        <div className="flex items-center space-x-4 text-sm text-text-secondary">
-                                            <span className="font-mono">{formatDateSmart(report.date)}</span>
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                report.category === 'Market Analysis' ? 'bg-emerald-600 text-white' :
-                                                report.category === 'technology' ? 'bg-cyan-600 text-white' :
-                                                'bg-gray-600 text-white'
-                                            }`}>
-                                                {report.category}
-                                            </span>
-                                            {report.brand && <span>Brand: {report.brand}</span>}
-                                            <span>Source: {report.source}</span>
-                                        </div>
-                                        {report.summary && (
-                                            <p className="text-text-secondary mt-2 text-sm">{report.summary}</p>
-                                        )}
-                                        <div className="mt-4">
+                    {filteredReports.map(item => {
+                        // Check if this is a depth analysis article (from intelligence) or HTML report
+                        const isDepthAnalysis = item.category === 'In-depth Analysis';
+                        const linkPath = isDepthAnalysis ? `/intelligence/${item.id}` : `/reports/${item.id}`;
+                        
+                        return (
+                            <div key={item.id} className="bg-dark-card rounded-lg shadow-lg overflow-hidden">
+                                <div className="p-6">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex-1">
                                             <Link 
-                                                to={`/reports/${report.id}`}
-                                                className="inline-flex items-center px-4 py-2 bg-cta-orange hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200"
+                                                to={linkPath}
+                                                className="text-xl font-bold text-text-main mb-2 hover:text-link-blue transition-colors duration-200 block"
                                             >
-                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                </svg>
-                                                View Full Report
+                                                {item.title}
                                             </Link>
+                                            <div className="flex items-center space-x-4 text-sm text-text-secondary">
+                                                <span className="font-mono">{formatDateSmart(item.date)}</span>
+                                                <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                    item.category === 'Market Analysis' ? 'bg-emerald-600 text-white' :
+                                                    item.category === 'technology' ? 'bg-cyan-600 text-white' :
+                                                    item.category === 'In-depth Analysis' ? 'bg-orange-600 text-white' :
+                                                    'bg-gray-600 text-white'
+                                                }`}>
+                                                    {item.category}
+                                                </span>
+                                                {item.brand && <span>Brand: {item.brand}</span>}
+                                                <span>Source: {item.source}</span>
+                                                {isDepthAnalysis && item.confidence && (
+                                                    <div className="flex items-center">
+                                                        <span className="mr-1">Confidence:</span>
+                                                        <span className={`w-5 h-5 rounded-full flex items-center justify-center text-white font-bold text-xs ${getConfidenceClass(item.confidence)}`}>
+                                                            {getConfidenceGrade(item.confidence)}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {item.summary && (
+                                                <p className="text-text-secondary mt-2 text-sm">{item.summary}</p>
+                                            )}
+                                            <div className="mt-4">
+                                                <Link 
+                                                    to={linkPath}
+                                                    className="inline-flex items-center px-4 py-2 bg-cta-orange hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200"
+                                                >
+                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                    </svg>
+                                                    {isDepthAnalysis ? 'Read Full Analysis' : 'View Full Report'}
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
              {!isPro && (

@@ -1,10 +1,9 @@
 ---
-id: "intel_005"
 title: "BYD to start production of Seal model in new Hungary plant in Q4 2024."
-date: "2024-07-10"
+date: "2024-07-10T00:00:00Z"
 brand: "BYD"
 model: "Seal"
-category: "manufacturing"
+category: "Corporate News"
 source: "Supply Chain Sources"
 status: "verified"
 confidence: "high"
@@ -13,7 +12,7 @@ tags: ["BYD", "Seal", "Hungary", "manufacturing", "Europe"]
 summary: "BYD is targeting Q4 2024 to begin trial production of the BYD Seal at its new manufacturing plant in Szeged, Hungary, marking a significant step in BYD's localization strategy for the European market."
 author: "China EV Intelligence"
 reading_time: 5
-importance: "medium"
+importance: "Medium"
 published: true
 featured: false
 ---

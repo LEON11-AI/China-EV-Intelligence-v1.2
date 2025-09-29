@@ -1,5 +1,5 @@
 backend:
-  name: test-repo
+  name: git-gateway
   
 # Enable local development mode
 local_backend: true
@@ -15,7 +15,7 @@ collections:
     label: "Intelligence Articles"
     folder: "content/intelligence"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
     fields:
@@ -23,7 +23,7 @@ collections:
       - {label: "Date", name: "date", widget: "datetime"}
       - {label: "Brand", name: "brand", widget: "select", options: ["BYD", "Tesla", "NIO", "XPeng", "Li Auto", "Geely", "GAC", "SAIC", "Other"]}
       - {label: "Model", name: "model", widget: "string", required: false}
-      - {label: "Category", name: "category", widget: "select", options: ["market_analysis", "technology", "policy", "competition", "financial", "supply_chain", "regulatory", "partnerships"]}
+      - {label: "Category", name: "category", widget: "select", options: ["Market Dynamics", "Technical Analysis", "Policy Analysis", "Corporate News", "In-depth Analysis"]}
       - {label: "Source", name: "source", widget: "string"}
       - {label: "Status", name: "status", widget: "select", options: ["verified", "pending", "rumor"], default: "pending"}
       - {label: "Confidence Level", name: "confidence", widget: "select", options: ["high", "medium", "low"], default: "medium"}
@@ -31,7 +31,7 @@ collections:
       - {label: "Tags", name: "tags", widget: "list", default: []}
       - {label: "Summary", name: "summary", widget: "text"}
       - {label: "Featured Image", name: "image", widget: "image", required: false}
-      - {label: "Content", name: "content", widget: "markdown"}
+      - {label: "Content", name: "body", widget: "markdown"}
       - {label: "Author", name: "author", widget: "string", default: "China EV Intelligence"}
       - {label: "Reading Time", name: "reading_time", widget: "number", default: 5}
       - {label: "Importance", name: "importance", widget: "select", options: ["High", "Medium", "Low"], default: "Medium"}

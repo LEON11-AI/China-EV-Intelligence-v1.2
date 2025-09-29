@@ -1,10 +1,9 @@
 ---
-id: "intel_004"
 title: "Zeekr confirms expansion plans for 5 new European markets in 2025."
-date: "2024-07-12"
+date: "2024-07-12T00:00:00Z"
 brand: "Zeekr"
 model: ""
-category: "market_analysis"
+category: "Market Dynamics"
 source: "Zeekr Official Press Release"
 status: "verified"
 confidence: "high"
@@ -13,7 +12,7 @@ tags: ["Zeekr", "Europe", "expansion", "market entry", "2025"]
 summary: "Zeekr has officially confirmed its expansion roadmap for Europe in 2025, entering five new markets: Spain, Italy, France, Portugal, and Austria with flagship stores in major cities."
 author: "China EV Intelligence"
 reading_time: 5
-importance: "medium"
+importance: "Medium"
 published: true
 featured: false
 ---

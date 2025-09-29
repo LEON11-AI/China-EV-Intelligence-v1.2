@@ -1,20 +1,25 @@
 ---
-id: "nio-et7-2024-analysis"
 title: "NIO ET7 Market Performance Analysis Report"
 date: "2024-01-15T10:00:00Z"
 brand: "NIO"
-category: "market_analysis"
+model: ""
+category: "Market Dynamics"
+source: "NIO Official Data, Third-party Market Research"
+status: "verified"
+confidence: "high"
+is_pro: false
 tags: ["NIO", "ET7", "Market Analysis", "Electric Vehicles"]
 summary: "In-depth analysis of NIO ET7's market performance in Q1 2024, including sales data, user feedback, and competitive landscape."
-featured_image: "/uploads/nio-et7-featured.jpg"
+image: "/uploads/nio-et7-featured.jpg"
 author: "Market Analysis Team"
-read_time: 8
-importance: "high"
-status: "published"
+reading_time: 8
+importance: "High"
+published: true
+featured: true
 seo_title: "NIO ET7 2024 Market Analysis - Sales and Competitiveness Deep Dive"
 seo_description: "Comprehensive analysis of NIO ET7's performance in the luxury electric sedan market, including sales trends, user satisfaction, and future prospects."
-data_source: "NIO Official Data, Third-party Market Research"
-featured: true
+related_links: []
+data_sources: ["NIO Official Data", "Third-party Market Research"]
 ---
 
 # NIO ET7 Market Performance Analysis Report

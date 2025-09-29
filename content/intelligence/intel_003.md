@@ -1,10 +1,9 @@
 ---
-id: "intel_003"
 title: "Leaked photos show facelifted Li Auto L9 with minor cosmetic changes."
-date: "2024-07-15"
+date: "2024-07-15T00:00:00Z"
 brand: "Li Auto"
 model: "L9"
-category: "technology"
+category: "Technical Analysis"
 source: "Weibo Social Media"
 status: "rumor"
 confidence: "medium"
@@ -13,7 +12,7 @@ tags: ["Li Auto", "L9", "facelift", "leaked photos", "design update"]
 summary: "Several photos have surfaced on Chinese social media platform Weibo, allegedly showing a facelifted version of the Li Auto L9 with minor cosmetic changes including redesigned front bumper and new wheel design."
 author: "China EV Intelligence"
 reading_time: 5
-importance: "medium"
+importance: "Medium"
 published: true
 featured: false
 ---

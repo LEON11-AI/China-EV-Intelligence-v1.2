@@ -1,10 +1,9 @@
 ---
-id: "intel_001"
 title: "NIO ET9 final production specs revealed in MIIT filing."
-date: "2024-07-20"
+date: "2024-07-20T00:00:00Z"
 brand: "NIO"
 model: "ET9"
-category: "technology"
+category: "Technical Analysis"
 source: "MIIT Official Filing"
 status: "verified"
 confidence: "high"
@@ -13,7 +12,7 @@ tags: ["NIO", "ET9", "MIIT", "specifications", "production"]
 summary: "The Ministry of Industry and Information Technology (MIIT) of China has officially published the declaration for NIO's upcoming flagship, the ET9. This filing provides the final, verified specifications for the production model ahead of its market launch."
 author: "China EV Intelligence"
 reading_time: 5
-importance: "medium"
+importance: "Medium"
 published: true
 featured: false
 ---

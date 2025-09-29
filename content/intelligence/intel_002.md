@@ -1,10 +1,9 @@
 ---
-id: "intel_002"
 title: "Xiaomi announces OTA update 2.1, enhancing ADAS features."
-date: "2024-07-18"
+date: "2024-07-18T00:00:00Z"
 brand: "Xiaomi"
 model: "SU7"
-category: "technology"
+category: "Technical Analysis"
 source: "Xiaomi Official Announcement"
 status: "verified"
 confidence: "high"
@@ -13,7 +12,7 @@ tags: ["Xiaomi", "SU7", "OTA", "ADAS", "software update"]
 summary: "Xiaomi has announced a major OTA update 2.1 for the SU7, bringing enhanced ADAS features and improved autonomous driving capabilities."
 author: "China EV Intelligence"
 reading_time: 4
-importance: "medium"
+importance: "Medium"
 published: true
 featured: false
 ---
