@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: leon11-ai/China-EV-Intelligence-v1.2
   
 # Enable local development mode
 local_backend: true

@@ -6,6 +6,7 @@ import { HtmlReportItem } from '../types/ContentTypes';
 const HtmlReportDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [report, setReport] = useState<HtmlReportItem | null>(null);
+  const [htmlContent, setHtmlContent] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,9 +24,41 @@ const HtmlReportDetailPage: React.FC = () => {
         
         if (!reportData) {
           setError('Report not found');
-        } else {
-          setReport(reportData);
+          setLoading(false);
+          return;
         }
+
+        setReport(reportData);
+
+        // Load HTML content from file path or use direct content
+        let htmlContent = '';
+        if (typeof reportData.raw_html_content === 'string') {
+          // Check if it's a file path (starts with / or contains .html)
+          if (reportData.raw_html_content.startsWith('/') || reportData.raw_html_content.includes('.html')) {
+            // It's a file path, fetch the content
+            try {
+              const response = await fetch(reportData.raw_html_content);
+              if (response.ok) {
+                htmlContent = await response.text();
+              } else {
+                throw new Error(`Failed to load HTML file: ${response.status}`);
+              }
+            } catch (fetchError) {
+              console.error('Error fetching HTML file:', fetchError);
+              setError('Failed to load HTML content');
+              setLoading(false);
+              return;
+            }
+          } else {
+            // It's direct HTML content
+            htmlContent = reportData.raw_html_content;
+          }
+        } else if (reportData.raw_html_content?.code) {
+          // Handle object format with code property
+          htmlContent = reportData.raw_html_content.code;
+        }
+
+        setHtmlContent(htmlContent);
       } catch (err) {
         console.error('Error fetching HTML report:', err);
         setError('Failed to load report');
@@ -83,13 +116,8 @@ const HtmlReportDetailPage: React.FC = () => {
     );
   }
 
-  // Get the raw HTML content - handle both string and object formats
-  const rawHtmlContent = typeof report.raw_html_content === 'string' 
-    ? report.raw_html_content 
-    : report.raw_html_content?.code || '';
-
   // No HTML content available
-  if (!rawHtmlContent) {
+  if (!htmlContent) {
     return (
       <div style={{ 
         display: 'flex', 
@@ -106,7 +134,7 @@ const HtmlReportDetailPage: React.FC = () => {
   // Render raw HTML content with complete control - no wrapper styling
   return (
     <iframe
-      srcDoc={rawHtmlContent}
+      srcDoc={htmlContent}
       style={{
         width: '100%',
         height: '100vh',
