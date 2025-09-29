@@ -68,28 +68,6 @@
     "featured": false
   },
   {
-    "id": "test-auto-push",
-    "title": "Test Auto Push Feature",
-    "date": "2024-12-19",
-    "brand": "Test",
-    "model": "",
-    "category": "test",
-    "tags": [
-      "test",
-      "auto-push"
-    ],
-    "summary": "",
-    "content": "\n# Test Auto Push Feature\n\nThis is a test article to verify that the auto-push functionality works correctly.\n\nWhen this file is created, the content watcher should:\n1. Detect the file change\n2. Sync the content to intelligence.json\n3. Automatically push changes to GitHub\n\nThis ensures that CMS updates are immediately reflected in the frontend without manual intervention.",
-    "author": "China EV Intelligence Team",
-    "read_time": 5,
-    "importance": "medium",
-    "is_pro": false,
-    "confidence": "medium",
-    "source": "Internal Analysis",
-    "status": "verified",
-    "featured": false
-  },
-  {
     "id": "intel_001",
     "title": "NIO ET9 final production specs revealed in MIIT filing.",
     "date": "2024-07-20T00:00:00Z",
