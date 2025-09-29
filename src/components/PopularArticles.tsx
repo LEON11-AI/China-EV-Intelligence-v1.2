@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPopularArticles, ArticleStats } from '../utils/analytics';
+import { contentService } from '../services/ContentService';
 import { Eye, TrendingUp, Calendar } from 'lucide-react';
 
 interface PopularArticlesProps {
@@ -11,10 +12,11 @@ interface PopularArticlesProps {
 }
 
 interface ArticleWithStats extends ArticleStats {
-  title?: string;
-  date?: string;
-  brand?: string;
-  summary?: string;
+  title: string;
+  date: string;
+  brand: string;
+  summary: string;
+  realId?: string;
 }
 
 export const PopularArticles: React.FC<PopularArticlesProps> = ({
@@ -31,16 +33,52 @@ export const PopularArticles: React.FC<PopularArticlesProps> = ({
     const fetchPopularArticles = async () => {
       try {
         setLoading(true);
-        const articles = await getPopularArticles(limit);
+        const popularStats = await getPopularArticles(limit);
+        const intelligenceArticles = await contentService.getIntelligence();
         
-        // 模拟获取文章详细信息（在实际应用中，这里应该调用内容服务）
-        const articlesWithDetails = articles.map(article => ({
-          ...article,
-          title: `Article ${article.articleId}`,
-          date: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          brand: ['Tesla', 'BYD', 'NIO', 'XPeng', 'Li Auto'][Math.floor(Math.random() * 5)],
-          summary: `This is a summary for article ${article.articleId}. It contains important insights about the EV industry.`
-        }));
+        // 将analytics统计数据与真实文章数据匹配
+        const articlesWithDetails: ArticleWithStats[] = [];
+        
+        for (const stat of popularStats) {
+          // 尝试在intelligence文章中找到匹配的文章
+          const realArticle = intelligenceArticles.find(article => 
+            article.id === stat.id || article.title === stat.title
+          );
+          
+          if (realArticle) {
+            articlesWithDetails.push({
+              ...stat,
+              title: realArticle.title,
+              date: new Date(realArticle.date).toISOString().split('T')[0],
+              brand: realArticle.brand || 'Other',
+              summary: realArticle.summary,
+              realId: realArticle.id
+            });
+          }
+        }
+        
+        // 如果没有足够的匹配文章，用最新的intelligence文章补充
+        if (articlesWithDetails.length < limit && intelligenceArticles.length > 0) {
+          const remainingSlots = limit - articlesWithDetails.length;
+          const usedIds = new Set(articlesWithDetails.map(a => a.realId));
+          
+          const additionalArticles = intelligenceArticles
+            .filter(article => !usedIds.has(article.id))
+            .slice(0, remainingSlots)
+            .map(article => ({
+              id: article.id,
+              title: article.title,
+              views: 0,
+              lastViewed: 0,
+              dailyViews: {},
+              date: new Date(article.date).toISOString().split('T')[0],
+              brand: article.brand || 'Other',
+              summary: article.summary,
+              realId: article.id
+            }));
+          
+          articlesWithDetails.push(...additionalArticles);
+        }
         
         setPopularArticles(articlesWithDetails);
       } catch (err) {
@@ -105,8 +143,8 @@ export const PopularArticles: React.FC<PopularArticlesProps> = ({
       <div className="space-y-3">
         {popularArticles.map((article, index) => (
           <Link
-            key={article.articleId}
-            to={`/intelligence/${article.articleId}`}
+            key={article.realId || article.id}
+            to={`/intelligence/${article.realId || article.id}`}
             className="block group hover:bg-gray-800/50 p-3 rounded-lg transition-colors duration-200"
           >
             {variant === 'compact' ? (

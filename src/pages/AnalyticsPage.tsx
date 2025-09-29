@@ -63,7 +63,7 @@ const AnalyticsPage: React.FC = () => {
   const [authError, setAuthError] = useState('');
   
   // 管理员密码
-  const ADMIN_PASSWORD = '520205';
+  const ADMIN_PASSWORD = 'Admin2024!';
 
   useEffect(() => {
     const fetchAnalytics = async () => {
