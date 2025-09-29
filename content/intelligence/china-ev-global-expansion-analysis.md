@@ -18,7 +18,7 @@ summary: A new "Age of Great Voyages" is unfolding on the global automotive
 author: leon
 reading_time: 10
 importance: High
-published: false
+published: true
 featured: false
 ---
 A new "Age of Great Voyages" is unfolding on the global automotive industry map, and this time, the mother port of the mighty fleet is in China. Since 2023, I have witnessed China's electric vehicles (EVs) sail into the world with unprecedented momentum. Many observers attribute this phenomenon simply to "internal competition" within the Chinese domestic market, viewing it as a forced "great escape."
