@@ -13,7 +13,8 @@ import AboutPage from './pages/AboutPage';
 import IntelligenceDetailPage from './pages/IntelligenceDetailPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import CMSTest from './pages/CMSTest';
-import HtmlReportDetailPage from './pages/HtmlReportDetailPage';
+import HtmlReportDetailPage from './src/pages/HtmlReportDetailPage';
+import AnalyticsPage from './src/pages/AnalyticsPage';
 
 
 const AppContent: React.FC = () => {
@@ -37,6 +38,7 @@ const AppContent: React.FC = () => {
               <Route path="/intelligence/:id" element={<IntelligenceDetailPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
               <Route path="/cms-test" element={<CMSTest />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/about" element={<AboutPage />} />
               {/* Admin route - handled by vite middleware redirect */}

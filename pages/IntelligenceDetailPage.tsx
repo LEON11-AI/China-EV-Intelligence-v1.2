@@ -8,6 +8,7 @@ import { formatDateSmart } from '../src/services/DateUtils';
 import { useAuth } from '../components/AuthContext';
 import AuthorSignature from '../components/AuthorSignature';
 import NewsletterSubscription from '../src/components/NewsletterSubscription';
+import ViewCounter from '../src/components/ViewCounter';
 import {
   TwitterShareButton,
   LinkedinShareButton,
@@ -288,6 +289,9 @@ const IntelligenceDetailPage: React.FC = () => {
                         <span>&middot;</span>
                         <span>Source: {item.source}</span>
                          {item.is_pro && <span className="text-xs font-bold text-cta-orange">[PRO]</span>}
+                    </div>
+                    <div className="mt-3">
+                        <ViewCounter articleId={item.id} autoIncrement={true} className="text-text-secondary" />
                     </div>
                 </header>
 

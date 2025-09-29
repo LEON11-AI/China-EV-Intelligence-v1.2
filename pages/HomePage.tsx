@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { contentService, IntelligenceItem } from '../src/services/ContentService';
 import BrandLogos from '../components/BrandLogos';
 import NewsletterSubscription from '../src/components/NewsletterSubscription';
+import { PopularArticles } from '../src/components/PopularArticles';
 import { formatDateSmart } from '../src/services/DateUtils';
 
 const CheckIcon: React.FC<{className?: string}> = ({ className }) => (
@@ -135,6 +136,17 @@ const HomePage: React.FC = () => {
                     ))}
                     </div>
                 )}
+            </section>
+
+            {/* Popular Articles Section */}
+            <section className="max-w-6xl mx-auto">
+                <div className="bg-dark-card p-8 rounded-lg shadow-lg">
+                    <PopularArticles 
+                        limit={5} 
+                        variant="detailed" 
+                        className="" 
+                    />
+                </div>
             </section>
 
             {/* Why Choose Us Section */}
